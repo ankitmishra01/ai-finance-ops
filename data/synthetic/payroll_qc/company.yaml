@@ -1,0 +1,21 @@
+# Synthetic Montreal employer and pay period. Not a real business.
+company:
+  name: Atelier Exemple Montréal Inc.
+  short_name: ATELIER EXEMPLE
+  payroll_account: 000000000RP0002
+  rq_id: 0000000000RS0001
+  originator_id: SAMPLE0002
+  address: 200 rue Exemple, Montréal QC H0A 0A0
+  province: QC
+  street: 200 rue Exemple
+  city: Montréal
+  postal_code: H0A 0A0
+  contact_name: Paie Exemple
+  contact_phone: 514-555-0100
+  contact_email: paie@atelier-sample.test
+period:
+  start: '2026-11-01'
+  end: '2026-11-15'
+  pay_date: '2026-11-13'
+  periods_per_year: 24
+  number: 21

@@ -34,7 +34,7 @@ flowchart LR
     FIX[("module/fixtures/*.json<br/>recorded responses")]
     TOK[("runs/token_log.jsonl<br/>tokens, cache hits,<br/>cost by module + task")]
     HUMAN{{"Person:<br/>approve / reject / hold"}}
-    OUT["Outputs: invoice PDFs, AP aging,<br/>payslips, PD7A summary, CPA 005 sample,<br/>GST34 working paper, exceptions report"]
+    OUT["Outputs: invoice PDFs, AP aging,<br/>payslips, PD7A and Revenu Québec summaries,<br/>CPA 005 sample, T4/RL-1 and SAMPLE T4 XML, ROE data,<br/>GST34 working paper, exceptions report"]
 
     MB --> MAIL --> modules
     OPS --> modules

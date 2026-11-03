@@ -12,7 +12,16 @@ Metrics:
   (numbers within 0.005, None must equal None).
 
 The RulesExtractor is always scored. The ClaudeExtractor is scored only when
-AFO_LLM_MODE is live or record.
+AFO_LLM_MODE is live or record. The Montreal inbox (data/synthetic/payroll_qc, 2 emails)
+is scored separately so the original 21-email figures stay comparable.
+
+Deductions: evals/payroll_deduction_cases.json holds expected figures from outside this
+code (CRA PDOC, Revenu Québec's TP-1015.F-V worked examples, one hand calculation). Each
+field must match to the cent. The same figures are unit tests, so a perfect score means
+"no regression against external figures", not generalisation.
+
+Year-end: reconciliation checks on the replayed 2026 year for both employers (T4 Summary
+line 80 vs remittances, RL-1 totals vs Revenu Québec remittances, ROE block 15B).
 """
 
 from __future__ import annotations
@@ -32,6 +41,8 @@ from payroll_extract import FIELDS, ClaudeExtractor, RulesExtractor  # noqa: E40
 from shared.mail import read_mailbox  # noqa: E402
 
 DATA = ROOT / "data" / "synthetic" / "payroll"
+QC_DATA = ROOT / "data" / "synthetic" / "payroll_qc"
+CASES = ROOT / "evals" / "payroll_deduction_cases.json"
 COMPARED = [f for f in FIELDS if f != "type"]
 
 
@@ -100,8 +111,81 @@ def score(extractor, data: Path = DATA) -> dict:
     }
 
 
+def score_deductions(path: Path = CASES) -> dict:
+    from decimal import Decimal as Dec
+
+    from payroll_calc import (PeriodInput, compute, qpp2_contribution, qpp_contribution, quebec_tax_lump_sum,
+                              quebec_tax_regular)
+
+    cases = json.loads(path.read_text())["cases"]
+    fields_ok = fields_total = cases_ok = 0
+    misses = []
+    for c in cases:
+        i = {k: (v if k == "province" else Dec(v)) for k, v in c["input"].items()}
+        if c["kind"] == "period":
+            d = compute(PeriodInput(int(i["P"]), i["regular"], province=i["province"],
+                                    federal_claim=i.get("federal_claim"), ontario_claim=i.get("ontario_claim")))
+            got = {k: getattr(d, k) for k in c["expected"]}
+        elif c["kind"] == "quebec_regular":
+            got = quebec_tax_regular(P=int(i.pop("P")), **i)
+        elif c["kind"] == "quebec_lump_sum":
+            got = quebec_tax_lump_sum(P=int(i.pop("P")), **i)
+        else:
+            got = {"C": qpp_contribution(i["S3"], int(i["P"]), i["A5"])[0],
+                   "C2": qpp2_contribution(i["S3"], i["S5"], i["A8"])[0]}
+        ok = True
+        for k, v in c["expected"].items():
+            fields_total += 1
+            if Dec(str(got[k])) == Dec(v):
+                fields_ok += 1
+            else:
+                ok = False
+                misses.append(f"{c['id']}.{k}: expected {v}, got {got[k]}")
+        cases_ok += ok
+    return {"cases": len(cases), "cases_exact": cases_ok, "fields": fields_total, "fields_exact": fields_ok,
+            "misses": misses}
+
+
+def score_yearend() -> dict:
+    from payroll_roe import roe_for
+    from payroll_yearend import build_year, rl1_slips, rl1_totals, t4_slips, t4_summary
+
+    out = {}
+    for name, data in (("ontario", DATA), ("montreal", QC_DATA)):
+        inputs, runs = build_year(data, "rules")
+        slips = t4_slips(runs)
+        summ = t4_summary(runs, slips, inputs.company, inputs.period.pay_date.year)
+        rl1 = rl1_slips(runs)
+        tot = rl1_totals(runs, rl1)
+        by_id = {s["employee_id"]: s for s in slips}
+        checks = {
+            "t4_line80_within_2_dollars_of_remittances": abs(
+                summ["line80_total_deductions"] - summ["line82_remittances"]) <= 2,
+            "t4_line14_equals_pay_runs": summ["line14_employment_income"] == sum(
+                l.gross for pr in runs for l in pr.run.lines),
+            "one_slip_per_employee_paid": len(slips) == len({l.employee.id for pr in runs for l in pr.run.lines}),
+        }
+        if tot:
+            checks["rl1_totals_equal_rq_remittances"] = tot["total_due_to_revenu_quebec"] == tot["remitted_in_year"]
+            checks["rl1_box_a_equals_t4_box_14"] = all(
+                r["A_employment_income"] == by_id[r["employee_id"]]["box14_employment_income"] for r in rl1)
+        roes = [roe_for(e, runs, inputs.company) for e in inputs.employees if e.end_date]
+        for r in roes:
+            pp = r["block15C_insurable_earnings_by_pay_period"]
+            checks["roe_15B_equals_last_13_periods"] = r["block15B_total_insurable_earnings"] == sum(
+                p["insurable_earnings"] for p in pp[:13])
+        out[name] = {"pay_runs": len(runs), "t4_slips": len(slips), "rl1_slips": len(rl1), "roes": len(roes),
+                     "t4_line80_minus_line82": str(summ["line80_total_deductions"] - summ["line82_remittances"]),
+                     "checks_passed": sum(checks.values()), "checks": len(checks),
+                     "failed": [k for k, v in checks.items() if not v]}
+    return out
+
+
 def run() -> dict:
-    out = {"task": "change-request email -> structured pay adjustments", "rules": score(RulesExtractor())}
+    out = {"task": "change-request email -> structured pay adjustments", "rules": score(RulesExtractor()),
+           "rules_montreal_inbox": score(RulesExtractor(), QC_DATA),
+           "deductions_vs_external_figures": score_deductions(),
+           "yearend_reconciliation": score_yearend()}
     if os.environ.get("AFO_LLM_MODE") in {"live", "record"}:
         out["claude"] = score(ClaudeExtractor())
     else:

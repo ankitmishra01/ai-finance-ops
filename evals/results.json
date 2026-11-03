@@ -393,6 +393,45 @@
         "eval/15_moves_rate.eml"
       ]
     },
+    "rules_montreal_inbox": {
+      "emails": 2,
+      "labelled_adjustments": 2,
+      "email_exact_match": 1.0,
+      "adjustment_precision": 1.0,
+      "adjustment_recall": 1.0,
+      "adjustment_f1": 1.0,
+      "field_accuracy": 1.0,
+      "missed_emails": []
+    },
+    "deductions_vs_external_figures": {
+      "cases": 12,
+      "cases_exact": 12,
+      "fields": 37,
+      "fields_exact": 37,
+      "misses": []
+    },
+    "yearend_reconciliation": {
+      "ontario": {
+        "pay_runs": 24,
+        "t4_slips": 9,
+        "rl1_slips": 0,
+        "roes": 0,
+        "t4_line80_minus_line82": "0.09",
+        "checks_passed": 3,
+        "checks": 3,
+        "failed": []
+      },
+      "montreal": {
+        "pay_runs": 24,
+        "t4_slips": 6,
+        "rl1_slips": 6,
+        "roes": 1,
+        "t4_line80_minus_line82": "0.11",
+        "checks_passed": 6,
+        "checks": 6,
+        "failed": []
+      }
+    },
     "claude": "not scored (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
   }
 }

@@ -1,7 +1,8 @@
 """Artifacts produced after a person approves pay lines.
 
-(a) payslip PDFs, (b) a PD7A-style remittance summary, (c) a SAMPLE CPA Standard 005
-credit file, (d) a balanced pay-run journal entry in shared.ledger. All deterministic.
+(a) payslip PDFs, (b) a PD7A-style remittance summary (plus a Revenu Québec remittance
+summary when Quebec employees are paid), (c) a SAMPLE CPA Standard 005 credit file,
+(d) a balanced pay-run journal entry in shared.ledger. All deterministic.
 """
 
 from __future__ import annotations
@@ -12,7 +13,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from payroll import PayLine, PayRun, totals
-from payroll_calc import RATES
+from payroll_calc import QC, RATES
 from shared import ledger
 
 # ---------------------------------------------------------------- (a) payslips
@@ -33,14 +34,17 @@ def write_payslip(line: PayLine, run: PayRun, path: Path) -> Path:
         return f"{x:,.2f}"
 
     ytd_gross = e.ytd_gross + line.gross
+    plan = "QPP" if d.quebec else "CPP"
     rows = [["Earnings", "Current", ""]] + [[k, m(v), ""] for k, v in line.earnings]
     rows += [["Gross pay", m(line.gross), ""]]
     ded = [["Deductions", "Current", "Year to date"],
-           ["CPP", m(d.cpp), m(e.ytd.cpp + d.cpp)],
-           ["CPP2", m(d.cpp2), m(e.ytd.cpp2 + d.cpp2)],
-           ["EI", m(d.ei), m(e.ytd.ei + d.ei)],
-           ["Federal income tax", m(d.federal_tax), ""],
-           ["Ontario income tax", m(d.ontario_tax), ""],
+           [plan, m(d.cpp), m(e.ytd.cpp + d.cpp)],
+           [f"{plan}2", m(d.cpp2), m(e.ytd.cpp2 + d.cpp2)],
+           ["EI", m(d.ei), m(e.ytd.ei + d.ei)]]
+    if d.quebec:
+        ded.append(["QPIP", m(d.qpip), m(e.ytd.qpip + d.qpip)])
+    ded += [["Federal income tax", m(d.federal_tax), ""],
+           ["Quebec income tax" if d.quebec else "Ontario income tax", m(d.provincial_tax), ""],
            ["Total income tax", m(d.income_tax), m(e.ytd_tax + d.income_tax)],
            ["Total deductions", m(d.employee_total), ""],
            ["Net pay", m(line.net), ""],
@@ -61,9 +65,12 @@ def write_payslip(line: PayLine, run: PayRun, path: Path) -> Path:
         Spacer(1, 10),
         Table(ded, colWidths=[260, 100, 100], style=style),
         Spacer(1, 10),
-        Paragraph(f"Employer contributions this period: CPP {m(d.employer_cpp)}, CPP2 {m(d.employer_cpp2)}, "
-                  f"EI {m(d.employer_ei)}.", styles["Normal"]),
-        Paragraph(f"Deductions per CRA {RATES['edition']}.", styles["Normal"]),
+        Paragraph(f"Employer contributions this period: {plan} {m(d.employer_cpp)}, {plan}2 {m(d.employer_cpp2)}, "
+                  f"EI {m(d.employer_ei)}"
+                  + (f", QPIP {m(d.employer_qpip)}, health services fund {m(d.employer_hsf)}." if d.quebec else "."),
+                  styles["Normal"]),
+        Paragraph(f"Deductions per CRA {RATES['edition']}"
+                  + (f" and Revenu Québec {QC['edition'].split(' and ')[0]}." if d.quebec else "."), styles["Normal"]),
     ]
     doc.build(story)
     return path
@@ -85,12 +92,18 @@ def remittance_due_date(pay_date: date) -> tuple[date, date]:
 
 
 def pd7a_summary(lines: list[PayLine], run: PayRun) -> dict:
+    """CRA remittance. For Quebec employees only federal tax and EI go to the CRA; QPP,
+    QPIP and Quebec tax go to Revenu Québec (rq_summary)."""
     t = totals(lines)
+    cra = [l for l in lines if not l.deductions.quebec]
+    qc = [l for l in lines if l.deductions.quebec]
+    tc, tq = totals(cra), totals(qc)
     due, effective = remittance_due_date(run.inputs.period.pay_date)
-    cpp_total = t["cpp"] + t["employer_cpp"] + t["cpp2"] + t["employer_cpp2"]
+    cpp_total = tc["cpp"] + tc["employer_cpp"] + tc["cpp2"] + tc["employer_cpp2"]
     ei_total = t["ei"] + t["employer_ei"]
-    amount = cpp_total + ei_total + t["income_tax"]
-    assert amount == t["remittance"], "remittance does not reconcile to pay lines"
+    income_tax = tc["income_tax"] + tq["federal_tax"]
+    amount = cpp_total + ei_total + income_tax
+    assert amount == t["cra_remittance"], "remittance does not reconcile to pay lines"
     return {
         "label": "PD7A-style summary (SYNTHETIC; not a CRA form)",
         "payroll_account": run.inputs.company.payroll_account,
@@ -99,11 +112,11 @@ def pd7a_summary(lines: list[PayLine], run: PayRun) -> dict:
         "remuneration_period": run.inputs.period.pay_date.strftime("%Y-%m"),
         "gross_payroll": str(t["gross"]),
         "employees_paid": len(lines),
-        "cpp_employee": str(t["cpp"] + t["cpp2"]),
-        "cpp_employer": str(t["employer_cpp"] + t["employer_cpp2"]),
+        "cpp_employee": str(tc["cpp"] + tc["cpp2"]),
+        "cpp_employer": str(tc["employer_cpp"] + tc["employer_cpp2"]),
         "ei_employee": str(t["ei"]),
         "ei_employer": str(t["employer_ei"]),
-        "income_tax": str(t["income_tax"]),
+        "income_tax": str(income_tax),
         "amount_due": str(amount),
         "due_date": due.isoformat(),
         "due_date_note": ("15th of the month after the pay date" if due == effective
@@ -130,6 +143,64 @@ AMOUNT DUE TO CRA:          {Decimal(s['amount_due']):>12,.2f}
 Due date:                   {s['due_date']} ({s['due_date_note']})
 """
     p = folder / "pd7a_summary.txt"
+    p.write_text(text)
+    return p
+
+
+def rq_summary(lines: list[PayLine], run: PayRun) -> dict | None:
+    """Revenu Québec remittance summary for Quebec lines: QPP, QPP2, QPIP (employee and
+    employer), Quebec income tax and the health services fund. None if no Quebec lines.
+    The due date is not computed: Revenu Québec's remittance schedule was not verified for
+    this build (see README)."""
+    qc = [l for l in lines if l.deductions.quebec]
+    if not qc:
+        return None
+    t = totals(qc)
+    parts = {
+        "qpp_employee": t["cpp"] + t["cpp2"],
+        "qpp_employer": t["employer_cpp"] + t["employer_cpp2"],
+        "qpip_employee": t["qpip"],
+        "qpip_employer": t["employer_qpip"],
+        "quebec_income_tax": t["provincial_tax"],
+        "health_services_fund": t["employer_hsf"],
+    }
+    amount = sum(parts.values(), Decimal("0"))
+    assert amount == t["rq_remittance"], "Revenu Québec remittance does not reconcile to pay lines"
+    return {
+        "label": "Revenu Québec remittance summary (SYNTHETIC; not a TPZ-1015.R form)",
+        "rq_id": run.inputs.company.rq_id,
+        "pay_date": run.inputs.period.pay_date.isoformat(),
+        "remuneration_period": run.inputs.period.pay_date.strftime("%Y-%m"),
+        "quebec_gross_payroll": str(t["gross"]),
+        "employees_paid": len(qc),
+        **{k: str(v) for k, v in parts.items()},
+        "amount_due": str(amount),
+        "due_date": None,
+        "due_date_note": "not computed: check your Revenu Québec remittance frequency and schedule",
+        "health_services_fund_rate": str(QC["health_services_fund"]["rate_total_payroll_1m_or_less"]),
+        "source": QC["sources"]["tp1015fv_2026_01_pdf"],
+    }
+
+
+def write_rq_summary(summary: dict, folder: Path) -> Path:
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "rq_remittance_summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n")
+    s = summary
+    text = f"""{s['label']}
+RQ identification number:   {s['rq_id']}
+Remuneration paid in:       {s['remuneration_period']} (pay date {s['pay_date']})
+Quebec gross payroll:       {Decimal(s['quebec_gross_payroll']):>12,.2f}
+Employees paid:             {s['employees_paid']:>12}
+QPP + QPP2, employee:       {Decimal(s['qpp_employee']):>12,.2f}
+QPP + QPP2, employer:       {Decimal(s['qpp_employer']):>12,.2f}
+QPIP, employee:             {Decimal(s['qpip_employee']):>12,.2f}
+QPIP, employer:             {Decimal(s['qpip_employer']):>12,.2f}
+Quebec income tax:          {Decimal(s['quebec_income_tax']):>12,.2f}
+Health services fund:       {Decimal(s['health_services_fund']):>12,.2f}  (rate {Decimal(s['health_services_fund_rate']) * 100:.2f}%)
+AMOUNT DUE TO REVENU QUÉBEC:{Decimal(s['amount_due']):>12,.2f}
+Due date:                   {s['due_date_note']}
+"""
+    p = folder / "rq_remittance_summary.txt"
     p.write_text(text)
     return p
 
@@ -225,21 +296,35 @@ ACCOUNTS = {
     "wages": "5100 Wages and salaries",
     "er_cpp": "5110 Employer CPP expense",
     "er_ei": "5120 Employer EI expense",
+    "er_qpp": "5115 Employer QPP expense",
+    "er_qpip": "5125 Employer QPIP expense",
+    "er_hsf": "5130 Health services fund expense",
     "cra": "2310 Source deductions payable - CRA",
+    "rq": "2315 Source deductions payable - Revenu Quebec",
     "net": "2300 Net pay payable",
 }
 
 
 def journal_lines(lines: list[PayLine], run: PayRun) -> list[dict]:
     t = totals(lines)
+    on = totals([l for l in lines if not l.deductions.quebec])
+    qc = totals([l for l in lines if l.deductions.quebec])
     cents = lambda x: int((x * 100).to_integral_value())  # noqa: E731
     rows = [
         (ACCOUNTS["wages"], cents(t["gross"])),
-        (ACCOUNTS["er_cpp"], cents(t["employer_cpp"] + t["employer_cpp2"])),
+        (ACCOUNTS["er_cpp"], cents(on["employer_cpp"] + on["employer_cpp2"])),
         (ACCOUNTS["er_ei"], cents(t["employer_ei"])),
-        (ACCOUNTS["cra"], -cents(t["remittance"])),
-        (ACCOUNTS["net"], -cents(t["net"])),
     ]
+    if qc["gross"]:
+        rows += [
+            (ACCOUNTS["er_qpp"], cents(qc["employer_cpp"] + qc["employer_cpp2"])),
+            (ACCOUNTS["er_qpip"], cents(qc["employer_qpip"])),
+            (ACCOUNTS["er_hsf"], cents(qc["employer_hsf"])),
+        ]
+    rows.append((ACCOUNTS["cra"], -cents(t["cra_remittance"])))
+    if qc["gross"]:
+        rows.append((ACCOUNTS["rq"], -cents(t["rq_remittance"])))
+    rows.append((ACCOUNTS["net"], -cents(t["net"])))
     assert sum(a for _, a in rows) == 0, "pay-run journal does not balance"
     return [{"account": a, "amount_cents": c} for a, c in rows]
 

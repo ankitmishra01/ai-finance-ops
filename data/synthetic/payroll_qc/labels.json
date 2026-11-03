@@ -1,0 +1,30 @@
+{
+  "inbox/01_bonus.eml": [
+    {
+      "type": "bonus",
+      "employee_name": "Zoé Lapointe",
+      "effective_date": null,
+      "bonus_amount": 2000,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "inbox/02_rate.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Philippe Martel",
+      "effective_date": "2026-11-09",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": 30.5,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ]
+}

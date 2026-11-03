@@ -1,11 +1,12 @@
-"""Semi-monthly pay run for a small Ontario employer (synthetic data).
+"""Semi-monthly pay run for a small Ontario or Montreal employer (synthetic data).
 
   uv run python 03_payroll/run.py                   # dry run: proposals + review table only
+  uv run python 03_payroll/run.py --data data/synthetic/payroll_qc   # the Montreal employer
   uv run python 03_payroll/run.py --approve         # review each pay line interactively
   uv run python 03_payroll/run.py --auto-approve    # demo: approve unflagged lines, hold flagged
   uv run python 03_payroll/run.py --extractor claude  # read emails with Claude (needs AFO_LLM_MODE=live|record)
 
-Outputs go to out/payroll/.
+Outputs go to out/payroll/ (or --out). Year-end slips and the ROE: 03_payroll/yearend.py.
 """
 
 from __future__ import annotations
@@ -24,8 +25,8 @@ sys.path.insert(0, str(HERE))
 
 from payroll import DATA, build_pay_run, load_inputs, propose, totals  # noqa: E402
 from payroll_extract import default_extractor  # noqa: E402
-from payroll_outputs import (pd7a_summary, post_journal, write_cpa005, write_payslip,  # noqa: E402
-                             write_pd7a)
+from payroll_outputs import (pd7a_summary, post_journal, rq_summary, write_cpa005, write_payslip,  # noqa: E402
+                             write_pd7a, write_rq_summary)
 from shared import ledger  # noqa: E402
 from shared.approvals import ApprovalQueue  # noqa: E402
 from shared.mail import read_mailbox  # noqa: E402
@@ -90,6 +91,9 @@ def main(argv: list[str] | None = None) -> int:
         write_payslip(l, run, out / "payslips" / f"{per.pay_date}_{l.employee.id}.pdf")
     summary = pd7a_summary(lines, run)
     write_pd7a(summary, out)
+    rq = rq_summary(lines, run)
+    if rq:
+        write_rq_summary(rq, out)
     write_cpa005(lines, run, out)
     con = ledger.connect(out / "ledger.db")
     prior = con.execute("select id from pay_runs where period_start = ? and status = 'approved'",
@@ -102,6 +106,9 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"\nPayslips:      {len(lines)} PDFs in {_rel(out / 'payslips')}")
     print(f"PD7A summary:  ${summary['amount_due']} due to the CRA by {summary['due_date']} ({_rel(out / 'pd7a_summary.txt')})")
+    if rq:
+        print(f"RQ summary:    ${rq['amount_due']} due to Revenu Québec; due date not computed "
+              f"({_rel(out / 'rq_remittance_summary.txt')})")
     print(f"Bank file:     {_rel(out / 'SAMPLE_NOT_FOR_UPLOAD_cpa005.txt')} (CPA 005, SAMPLE, not for upload)")
     print(f"Journal:       pay run #{pr_id} posted to {_rel(out / 'ledger.db')}")
     return 0
@@ -114,27 +121,38 @@ def _rel(p: Path) -> str:
 def _write_register(run, path: Path) -> None:
     with path.open("w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["employee_id", "name", "gross", "cpp", "cpp2", "ei", "federal_tax", "ontario_tax", "net",
-                    "employer_cpp", "employer_cpp2", "employer_ei", "flags"])
+        w.writerow(["employee_id", "name", "province", "gross", "cpp_or_qpp", "cpp2_or_qpp2", "ei", "qpip",
+                    "federal_tax", "provincial_tax", "net", "employer_cpp_or_qpp", "employer_cpp2_or_qpp2",
+                    "employer_ei", "employer_qpip", "employer_hsf", "flags"])
         for l in run.lines:
             d = l.deductions
-            w.writerow([l.employee.id, l.employee.name, l.gross, d.cpp, d.cpp2, d.ei, d.federal_tax, d.ontario_tax,
-                        l.net, d.employer_cpp, d.employer_cpp2, d.employer_ei, " | ".join(l.flags)])
+            w.writerow([l.employee.id, l.employee.name, d.province, l.gross, d.cpp, d.cpp2, d.ei, d.qpip,
+                        d.federal_tax, d.provincial_tax, l.net, d.employer_cpp, d.employer_cpp2, d.employer_ei,
+                        d.employer_qpip, d.employer_hsf, " | ".join(l.flags)])
 
 
 def _print_table(run) -> None:
-    hdr = f"{'ID':<4} {'Employee':<20} {'Gross':>10} {'CPP+2':>8} {'EI':>7} {'Tax':>9} {'Net':>10}  Flags"
+    qc = any(l.deductions.quebec for l in run.lines)
+    plan = "QPP+2" if qc and all(l.deductions.quebec for l in run.lines) else "CPP+2"
+    extra = f" {'QPIP':>6}" if qc else ""
+    hdr = f"{'ID':<4} {'Employee':<20} {'Gross':>10} {plan:>8} {'EI':>7}{extra} {'Tax':>9} {'Net':>10}  Flags"
     print(hdr)
     print("-" * len(hdr))
     for l in run.lines:
         d = l.deductions
+        q = f" {d.qpip:>6,.2f}" if qc else ""
         print(f"{l.employee.id:<4} {l.employee.name[:20]:<20} {l.gross:>10,.2f} {d.cpp + d.cpp2:>8,.2f} "
-              f"{d.ei:>7,.2f} {d.income_tax:>9,.2f} {l.net:>10,.2f}  {'; '.join(l.flags)}")
+              f"{d.ei:>7,.2f}{q} {d.income_tax:>9,.2f} {l.net:>10,.2f}  {'; '.join(l.flags)}")
     t = totals(run.lines)
     print("-" * len(hdr))
-    print(f"{'':<4} {'TOTAL':<20} {t['gross']:>10,.2f} {t['cpp'] + t['cpp2']:>8,.2f} {t['ei']:>7,.2f} "
+    q = f" {t['qpip']:>6,.2f}" if qc else ""
+    print(f"{'':<4} {'TOTAL':<20} {t['gross']:>10,.2f} {t['cpp'] + t['cpp2']:>8,.2f} {t['ei']:>7,.2f}{q} "
           f"{t['income_tax']:>9,.2f} {t['net']:>10,.2f}")
-    print(f"Remittance if all lines approved: ${t['remittance']:,.2f}")
+    if qc:
+        print(f"Remittances if all lines approved: CRA ${t['cra_remittance']:,.2f} (federal tax, EI); "
+              f"Revenu Québec ${t['rq_remittance']:,.2f} (QPP, QPIP, Quebec tax, health services fund)")
+    else:
+        print(f"Remittance if all lines approved: ${t['remittance']:,.2f}")
     for x in run.exceptions:
         print(f"EXCEPTION: {x['type']} for '{x.get('employee_name')}' ({x.get('source')}): {x['reason']}")
 

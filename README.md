@@ -2,9 +2,9 @@
 
 Five human-in-the-loop agents that do recurring finance admin for a Canadian small business: invoicing, bills, payroll, GST/HST and bookkeeping.
 
-Claude extractors read the messy documents through schema-forced tool calls; tax, payroll and file-format maths is plain tested code (payroll matches the CRA's PDOC calculator to the cent on both cases checked), and nothing is posted, paid or filed without a person's approval.
+Claude extractors read the messy documents through schema-forced tool calls; tax, payroll and file-format maths is plain tested code (Ontario payroll matches the CRA's PDOC calculator to the cent on both cases checked; Quebec payroll matches Revenu Québec's published worked examples), and nothing is posted, paid or filed without a person's approval.
 
-296 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
+325 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
 
 Each agent takes a recurring back-office job, does the reading, matching and drafting, and stops at an approval queue so a person decides what is posted, paid or filed.
 
@@ -16,7 +16,7 @@ All data in this repository is synthetic. Nothing here connects to a real bank, 
 |---|---|---|---|
 | [01_invoicing](01_invoicing/) | Month-end client invoicing | Finds billable clients in the ops data, reads billing changes from email, builds lines (hourly, retainer, milestone), applies GST/HST by place of supply, renders invoice PDFs | New customers, customer changes, each invoice |
 | [02_bills](02_bills/) | Accounts payable intake | Classifies a shared finance mailbox, extracts bills from PDFs and email bodies, checks totals, tax rate and GST/HST number, decides ITC eligibility, detects duplicates, buckets by due date | Each bill before it is posted |
-| [03_payroll](03_payroll/) | Ontario pay run | Reads pay-change emails, computes gross pay and CPP/CPP2, EI, federal and Ontario tax with the CRA T4127 formulas, produces payslips, PD7A remittance summary, a sample CPA 005 payment file and the journal | Each pay line, then the run |
+| [03_payroll](03_payroll/) | Ontario or Montreal pay run, and year-end | Reads pay-change emails, computes gross pay and CPP/CPP2 or QPP/QPP2, EI, QPIP, federal tax and Ontario or Quebec tax (CRA T4127, Revenu Québec TP-1015.F-V), produces payslips, CRA and Revenu Québec remittance summaries, a sample CPA 005 payment file and the journal; at year end, T4 and RL-1 slips, a SAMPLE T4 XML file and ROE data | Each pay line, then the run |
 | [04_gst_hst](04_gst_hst/) | Quarterly GST/HST return | Applies a cited rules file to every transaction, classifies supply type and ITC treatment, computes the GST34 lines with a transaction-level working paper, computes the filing deadline | Flagged transactions, then the return |
 | [05_bookkeeping](05_bookkeeping/) | Records and evidence | Reads receipts, matches them to bank and card lines (FX, splits, tips), proposes recategorisations, files evidence by period, reports exceptions | Each evidence link and category change |
 
@@ -81,11 +81,11 @@ Every model step has two implementations: a deterministic rules baseline, which 
 |---|---|---|---|
 | 01_invoicing | 96.1% mean field accuracy on customer details (34 cases) | 7 of 8 misses fall on 9 untuned phrasings | 54 |
 | 02_bills | 100% classification, 100% fields (30 templated emails) | 50% classification, 40% fields (6 held-out formats) | 65 |
-| 03_payroll | Change-request extraction: precision 1.00, recall 0.75 (21 emails) | Deductions (CPP, CPP2, EI, federal and Ontario tax) match CRA PDOC to the cent for the 2 hand-checked employees ([PDOC check](03_payroll/README.md#pdoc-check), 3 Nov 2026) | 50 |
+| 03_payroll | Change-request extraction: precision 1.00, recall 0.75 (21 emails); Montreal inbox 2 of 2 (familiar phrasing) | Ontario deductions match CRA PDOC to the cent for 2 employees ([PDOC check](03_payroll/README.md#pdoc-check), 3 Nov 2026). Quebec deductions match Revenu Québec's TP-1015.F-V worked examples (9 cases) and 1 hand calculation to the cent; not compared with WebRAS ([Quebec check](03_payroll/README.md#quebec-check)). Year-end: T4 XML valid against the CRA 2027 schema; RL-1 totals reconcile to remittances | 79 |
 | 04_gst_hst | 93.3% category and ITC treatment (30 labelled) | Gold labels reproduce all 18 GST34 lines exactly; rules labels match 10 of 18, every error flagged for review | 61 |
 | 05_bookkeeping | Matching precision 1.00, recall 0.98; categorisation 93.9% (82 lines) | French receipt with comma decimals is missed and shows as an orphan | 50 |
 | shared/ | Unit tests: ledger migrations and update whitelists, GST/HST number validator, MIME boundary, record/replay | | 16 |
-| **Total** | | | **296** |
+| **Total** | | | **325** |
 
 
 ## How to score Claude
