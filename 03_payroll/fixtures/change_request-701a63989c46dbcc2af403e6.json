@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "new_hire",
+        "employee_name": "Lisa Smith",
+        "effective_date": "2026-11-09",
+        "bonus_amount": null,
+        "new_annual_salary": 62000,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": false,
+        "td1_provided": false,
+        "evidence": "Lisa Smith starts 11-09 as a production planner at $62,000 a year."
+      }
+    ]
+  }
+}

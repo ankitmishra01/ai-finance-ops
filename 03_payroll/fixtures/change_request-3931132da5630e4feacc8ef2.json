@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "new_hire",
+        "employee_name": "Linda Wolfe",
+        "effective_date": "2026-11-16",
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": 23.0,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": true,
+        "td1_provided": true,
+        "evidence": "Linda Wolfe joins us Monday 2026-11-16 at $23.00 an hour. SIN and TD1 received."
+      }
+    ]
+  }
+}

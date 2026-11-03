@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "King Systems Corp.",
+    "billing_email": null,
+    "province": "MB",
+    "address": "16719 Edward Valleys Suite 131, Winnipeg, MB R8X 8R5",
+    "po_number": "837715",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "King Systems Corp. (\"Client\"), having its office at 16719 Edward Valleys Suite 131, Winnipeg, MB R8X 8R5.",
+      "province": "having its office at 16719 Edward Valleys Suite 131, Winnipeg, MB R8X 8R5",
+      "address": "16719 Edward Valleys Suite 131, Winnipeg, MB R8X 8R5",
+      "po_number": "Our finance team has opened purchase order 837715 for this work."
+    }
+  }
+}

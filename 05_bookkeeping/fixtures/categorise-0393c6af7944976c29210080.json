@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.9,
+    "reason": "Receipt shows an espresso and ham sandwich at Northbound Coffee Roasters (TST* is just the payment processor), which is a food/coffee purchase fitting Meals & Entertainment."
+  }
+}

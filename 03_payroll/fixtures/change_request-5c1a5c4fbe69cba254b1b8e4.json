@@ -1,0 +1,34 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "raise",
+        "employee_name": "Patricia Miller",
+        "effective_date": "2026-11-01",
+        "bonus_amount": null,
+        "new_annual_salary": 88500,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "raise to $88,500 effective 11-01"
+      },
+      {
+        "type": "bonus",
+        "employee_name": "Patricia Miller",
+        "effective_date": null,
+        "bonus_amount": 1000,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "a $1,000 anniversary bonus"
+      }
+    ]
+  }
+}

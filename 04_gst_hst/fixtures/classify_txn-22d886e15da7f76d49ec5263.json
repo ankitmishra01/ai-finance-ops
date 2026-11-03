@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.85,
+    "evidence": "e-Transfer deposit from Walker Dental Inc., Hamilton ON re INV-4136",
+    "needs_human_reason": "The description does not say what service was sold; confirm INV-4136 was for advisory services and that the 390.00 tax shown (13% of 3000.00) matches the invoice."
+  }
+}

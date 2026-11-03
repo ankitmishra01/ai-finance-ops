@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.4,
+    "evidence": "Online marketplace order #ORD-30289",
+    "needs_human_reason": "The description names only a marketplace and an order number, not what was bought, so it could be personal or a business purchase (or a capital item); a person should check the receipt for the item and its business use before claiming the ITC on the 9.24 of GST/HST shown."
+  }
+}

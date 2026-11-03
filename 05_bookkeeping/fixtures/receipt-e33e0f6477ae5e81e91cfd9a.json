@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": false,
+    "merchant": "Paperline Office Supply",
+    "date": "2026-10-29",
+    "currency": "CAD",
+    "subtotal": 212.39,
+    "gst_hst": 27.61,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 240.0,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "EST-2290",
+    "payment_date": null,
+    "summary": "Estimate for an ergonomic chair"
+  }
+}

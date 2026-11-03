@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.8,
+    "reason": "Receipt shows a ZipRide rideshare trip with booking fee, which fits Travel (rideshare between client sites), though business purpose isn't explicit."
+  }
+}

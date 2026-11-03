@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5040",
+    "confidence": 0.93,
+    "reason": "Receipt summary shows a refund for a black toner cartridge, which goes to the same account as the original purchase, Office Supplies & Small Equipment (toner)."
+  }
+}

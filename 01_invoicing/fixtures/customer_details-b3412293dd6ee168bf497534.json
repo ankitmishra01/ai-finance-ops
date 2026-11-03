@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Gray Analytics Limited",
+    "billing_email": "payables@grayanalytics.test",
+    "province": "NB",
+    "address": "946 Kevin Fords, Saint John, NB E8T 4T9",
+    "po_number": "785197",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Gray Analytics Limited (\"Client\"), having its office at 946 Kevin Fords, Saint John, NB E8T 4T9",
+      "billing_email": "The right address is now payables@grayanalytics.test.",
+      "province": "946 Kevin Fords, Saint John, NB E8T 4T9",
+      "address": "946 Kevin Fords, Saint John, NB E8T 4T9",
+      "po_number": "Please send invoices to ap@grayanalytics.test and reference PO 785197."
+    }
+  }
+}

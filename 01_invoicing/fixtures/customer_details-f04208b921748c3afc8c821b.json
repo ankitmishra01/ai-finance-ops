@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Vaughn Logistics Ltd.",
+    "billing_email": "comptabilite@vaughnlogistics.test",
+    "province": "QC",
+    "address": "1444 boul. Le Corbusier, Laval, QC H7S 5C5",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "This engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Vaughn Logistics Ltd. (\"Client\").",
+      "billing_email": "Send invoices to comptabilite@vaughnlogistics.test",
+      "province": "the billing address is 1444 boul. Le Corbusier, Laval, QC H7S 5C5",
+      "address": "the billing address is 1444 boul. Le Corbusier, Laval, QC H7S 5C5",
+      "po_number": "We do not issue purchase orders."
+    }
+  }
+}

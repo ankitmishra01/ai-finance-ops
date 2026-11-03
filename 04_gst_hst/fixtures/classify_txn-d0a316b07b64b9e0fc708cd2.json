@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Fowler Analytics Inc., Toronto ON re INV-4129",
+    "needs_human_reason": "Description does not say what service was sold; confirm INV-4129 was a consulting service to the Toronto customer (HST of 819.00 on 6300.00 is consistent with 13% ON HST)."
+  }
+}

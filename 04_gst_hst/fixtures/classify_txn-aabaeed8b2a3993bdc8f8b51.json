@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Doyle Labs Inc., Kingston ON re INV-4124",
+    "needs_human_reason": ""
+  }
+}

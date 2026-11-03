@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "meals_entertainment",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "restricted_50",
+    "confidence": 0.85,
+    "evidence": "Team dinner - Foster's Cafe",
+    "needs_human_reason": ""
+  }
+}

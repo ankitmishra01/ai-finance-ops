@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "2200",
+    "confidence": 0.93,
+    "reason": "Descriptor 'GOVT CANADA GST34' refers to the CRA GST/HST return (form GST34), so this outgoing payment is a GST/HST remittance."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.88,
+    "reason": "Receipt summary shows a restaurant lunch for two at Fennel & Ash Bistro, which is Meals & Entertainment; the card charge of 112.00 exceeds the 94.92 receipt total, likely due to a tip added at payment.",
+    "confidence_note": null
+  }
+}

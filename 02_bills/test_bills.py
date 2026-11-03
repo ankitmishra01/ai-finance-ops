@@ -218,11 +218,12 @@ def test_get_extractor_follows_llm_mode(monkeypatch):
     assert isinstance(get_extractor("rules"), RulesExtractor)
 
 
-def test_claude_extractor_has_no_invented_fixtures(monkeypatch):
-    from shared.llm import FixtureMissing
+def test_claude_extractor_replays_recorded_fixture(monkeypatch):
+    # Fixtures were recorded from a real claude-cli run on 2026-11-03 (see evals/results/).
+    # Replay must return a schema-valid extraction without any network or CLI call.
     monkeypatch.setenv("AFO_LLM_MODE", "replay")
-    with pytest.raises(FixtureMissing):
-        ClaudeExtractor().extract(read_mailbox(DATA / "inbox")[0])
+    ex = ClaudeExtractor().extract(read_mailbox(DATA / "inbox")[0])
+    assert ex.doc_type and (ex.vendor_name or ex.doc_type != "bill")
 
 
 # --- provincial sales tax and QST input tax refunds -------------------------------------------

@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Flynn Systems Inc.",
+    "billing_email": "ap@flynnsystems.test",
+    "province": "NB",
+    "address": "148 Davis Terrace, Saint John, NB E3K 1J1",
+    "po_number": "4500095477",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Flynn Systems Inc. (\"Client\"), having its office at 148 Davis Terrace, Saint John, NB E3K 1J1",
+      "billing_email": "please send invoices to ap@flynnsystems.test",
+      "province": "148 Davis Terrace, Saint John, NB E3K 1J1",
+      "address": "148 Davis Terrace, Saint John, NB E3K 1J1",
+      "po_number": "Our PO number for this engagement is 4500095477."
+    }
+  }
+}

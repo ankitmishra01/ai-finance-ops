@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Payne Dental Group Ltd.",
+    "billing_email": "comptabilite@paynedentalgroup.test",
+    "province": "QC",
+    "address": "752, boul. Ren\u00e9-L\u00e9vesque Ouest, Montr\u00e9al, QC H3B 2R1",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Payne Dental Group Ltd.",
+      "billing_email": "Invoices go to comptabilite@paynedentalgroup.test.",
+      "province": "Montr\u00e9al (Qu\u00e9bec) H3B 2R1",
+      "address": "752, boul. Ren\u00e9-L\u00e9vesque Ouest\nMontr\u00e9al (Qu\u00e9bec) H3B 2R1"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Santos Dental Group Inc.",
+    "billing_email": "ap@santosdentalgroup.test",
+    "province": "SK",
+    "address": "Unit 11, 865 Brennan Camp Apt. 343, Regina, SK S8E 3E5",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Santos Dental Group Inc. (\"Client\"), having its office at 865 Brennan Camp Apt. 343, Regina, SK S8E 3E5.",
+      "billing_email": "Invoices to ap@santosdentalgroup.test, please.",
+      "province": "The billing address is Unit 11, 865 Brennan Camp Apt. 343, Regina, SK S8E 3E5.",
+      "address": "The billing address is Unit 11, 865 Brennan Camp Apt. 343, Regina, SK S8E 3E5."
+    }
+  }
+}

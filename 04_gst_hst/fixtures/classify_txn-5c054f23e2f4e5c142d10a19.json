@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "AB",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.9,
+    "evidence": "e-Transfer deposit from Miller Health Inc., Edmonton AB re INV-4159",
+    "needs_human_reason": ""
+  }
+}

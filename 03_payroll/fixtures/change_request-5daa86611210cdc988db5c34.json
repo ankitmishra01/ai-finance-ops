@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "hours_correction",
+        "employee_name": "Debra Gardner",
+        "effective_date": null,
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": 6,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Please add 6 hours to this pay."
+      }
+    ]
+  }
+}

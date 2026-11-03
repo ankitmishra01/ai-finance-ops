@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5090",
+    "confidence": 0.96,
+    "reason": "Receipt shows Halden & Co CPA provided Q3 bookkeeping review accounting services, which are accountant fees under Professional & Contractor Fees."
+  }
+}

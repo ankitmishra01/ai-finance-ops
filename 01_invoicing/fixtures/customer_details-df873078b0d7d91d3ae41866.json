@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Charles Builders Limited",
+    "billing_email": "invoices@charlesbuilders.test",
+    "province": "ON",
+    "address": "434 Flores Plains, London, ON L7G 3K4",
+    "po_number": "4500059672",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "between Tamarack Lane Advisory Inc. (\"Consultant\") and Charles Builders Limited (\"Client\")",
+      "billing_email": "Invoices go to invoices@charlesbuilders.test.",
+      "province": "434 Flores Plains\nLondon, ON L7G 3K4",
+      "address": "434 Flores Plains\nLondon, ON L7G 3K4",
+      "po_number": "Please quote purchase order P.O. #4500059672"
+    }
+  }
+}

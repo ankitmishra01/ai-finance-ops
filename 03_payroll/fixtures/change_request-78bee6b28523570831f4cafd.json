@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "raise",
+        "employee_name": "Danielle Johnson",
+        "effective_date": "2026-11-01",
+        "bonus_amount": null,
+        "new_annual_salary": 78000,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Salary goes to $78,000 effective Nov 1."
+      }
+    ]
+  }
+}

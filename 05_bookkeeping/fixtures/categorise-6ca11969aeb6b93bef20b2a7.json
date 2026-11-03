@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5090",
+    "confidence": 0.88,
+    "reason": "Receipt from Doyle Studio for brand identity design services (invoice $2,825) matches a freelance designer contractor payment; the $1,500 e-transfer is a partial payment, not an owner draw."
+  }
+}

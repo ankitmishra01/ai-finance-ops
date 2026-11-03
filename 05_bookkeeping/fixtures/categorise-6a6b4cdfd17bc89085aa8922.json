@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5080",
+    "confidence": 0.8,
+    "reason": "Descriptor 'CITYPARK LOT 214' on the business Visa looks like a parking lot charge of $12.00, which maps to Vehicle - Fuel & Parking, though no receipt confirms the business purpose."
+  }
+}

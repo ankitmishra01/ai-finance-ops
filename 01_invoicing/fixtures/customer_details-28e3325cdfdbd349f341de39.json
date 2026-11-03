@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Thornton Outfitters Inc.",
+    "billing_email": "ap@thorntonoutfitters.test",
+    "province": "SK",
+    "address": "2702 Kane Well Suite 187, Saskatoon, SK S2S 8G5",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "On paper we're registered as Thornton Outfitters Inc., so that's what should go on the invoice.",
+      "billing_email": "Send invoices to ap@thorntonoutfitters.test.",
+      "province": "having its office at 2702 Kane Well Suite 187, Saskatoon, SK S2S 8G5",
+      "address": "having its office at 2702 Kane Well Suite 187, Saskatoon, SK S2S 8G5"
+    }
+  }
+}

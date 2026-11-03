@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "9999",
+    "confidence": 0.2,
+    "reason": "The descriptor 'KESTREL MKTP CA' looks like a generic online marketplace with no receipt, so the purchase type of this $73.44 card charge can't be determined."
+  }
+}

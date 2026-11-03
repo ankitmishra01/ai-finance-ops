@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.93,
+    "reason": "Receipt summary describes a team dinner at a restaurant (Fennel & Ash Bistro, paid via Square processor), which is a business meal under Meals & Entertainment."
+  }
+}

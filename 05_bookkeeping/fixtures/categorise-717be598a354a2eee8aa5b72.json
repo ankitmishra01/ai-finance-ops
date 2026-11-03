@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "4020",
+    "confidence": 0.9,
+    "reason": "Positive EFT credit from a company name (Mapleford Analytics) matches client EFT deposits, which belong in Sales - Client Payments."
+  }
+}

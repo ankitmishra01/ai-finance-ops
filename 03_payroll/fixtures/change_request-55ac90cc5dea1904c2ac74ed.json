@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "new_hire",
+        "employee_name": "Matthew Moore",
+        "effective_date": "2026-11-23",
+        "bonus_amount": null,
+        "new_annual_salary": 70000,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": true,
+        "td1_provided": false,
+        "evidence": "Matthew Moore starts on November 23 at $70,000. We have the SIN; TD1 forms are pending."
+      }
+    ]
+  }
+}

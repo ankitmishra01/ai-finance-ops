@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5060",
+    "confidence": 0.97,
+    "reason": "Receipt summary shows a business mobile plan from Aurora Mobile, which is a mobile phone service expense."
+  }
+}

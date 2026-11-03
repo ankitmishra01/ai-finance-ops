@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5140",
+    "confidence": 0.95,
+    "reason": "Receipt summary shows Learnwell sold an accessible web design certificate course, which is training and professional development."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "BC",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Johnson Partners Inc., Vancouver BC re INV-4161",
+    "needs_human_reason": "The description does not say what service was sold; confirm INV-4161 is a consulting sale to a BC customer. The 290.00 GST/HST shown on 6090.00 (6090.00 less 290.00 is 5800.00, 5% GST) matches BC GST, but verify against the invoice."
+  }
+}

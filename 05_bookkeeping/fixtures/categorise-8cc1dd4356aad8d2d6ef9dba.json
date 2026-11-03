@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.85,
+    "reason": "Receipt shows an oat latte and croissant at Blue Door Cafe (SQ * is just the processor), which is coffee/food that fits Meals & Entertainment, though the business purpose is assumed."
+  }
+}

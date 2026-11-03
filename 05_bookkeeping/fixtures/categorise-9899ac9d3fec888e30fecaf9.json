@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.93,
+    "reason": "Receipt shows a food delivery order of grain bowls for a client working lunch via the DASHLY processor from Green Bowl Co, which is a business meal."
+  }
+}

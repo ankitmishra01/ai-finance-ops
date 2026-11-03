@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "foreign_digital_service",
+    "supply_type": "out_of_scope",
+    "place_of_supply": "OUTSIDE_CANADA",
+    "itc_treatment": "none",
+    "confidence": 0.8,
+    "evidence": "WilliamsCanvas Inc. subscription USD 49.00 - San Francisco CA (FX converted)",
+    "needs_human_reason": "Foreign vendor with no BN and no GST/HST charged; a person should confirm the subscription is a digital service used exclusively in commercial activities, or whether self-assessment on line 405 applies, and that it is not personal."
+  }
+}

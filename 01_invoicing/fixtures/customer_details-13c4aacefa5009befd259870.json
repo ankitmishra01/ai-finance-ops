@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Santiago Analytics Corp.",
+    "billing_email": "ap@santiagoanalytics.test",
+    "province": "ON",
+    "address": "6746 Shawn Island, Toronto, ON M9E 1R9",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "On paper we're registered as Santiago Analytics Corp., so that's what should go on the invoice.",
+      "billing_email": "Send invoices to ap@santiagoanalytics.test.",
+      "province": "having its office at 6746 Shawn Island, Toronto, ON M9E 1R9",
+      "address": "having its office at 6746 Shawn Island, Toronto, ON M9E 1R9"
+    }
+  }
+}

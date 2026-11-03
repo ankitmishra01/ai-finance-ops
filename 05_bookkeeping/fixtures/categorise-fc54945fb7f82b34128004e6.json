@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.8,
+    "reason": "Descriptor 'SQ *BLUE DOOR CAFE' is a Square-processed cafe purchase of $16.95, consistent with a coffee/food meal expense, though no receipt confirms the business purpose."
+  }
+}

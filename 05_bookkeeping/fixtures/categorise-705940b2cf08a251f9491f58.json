@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5050",
+    "confidence": 0.96,
+    "reason": "Receipt summary shows a Cloudnest Team plan monthly subscription (3 seats), a SaaS/cloud storage expense; the CAD amount reflects USD conversion."
+  }
+}

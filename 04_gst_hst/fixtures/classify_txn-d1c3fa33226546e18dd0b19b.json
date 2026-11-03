@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_exempt_residential_rent",
+    "supply_type": "exempt",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.96,
+    "evidence": "Rent received - residential tenant - 18 Birch Ave Unit 2 Hamilton ON - October",
+    "needs_human_reason": ""
+  }
+}

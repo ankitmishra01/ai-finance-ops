@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5100",
+    "confidence": 0.97,
+    "reason": "Receipt summary states October 2026 studio rent for Unit 204 from Kingsway Properties, matching the pre-authorized debit amount."
+  }
+}

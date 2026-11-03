@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5020",
+    "confidence": 0.97,
+    "reason": "The descriptor 'MONTHLY ACCOUNT FEE' on the chequing account is a bank account fee, which belongs in Bank Charges & Fees."
+  }
+}

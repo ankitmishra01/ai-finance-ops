@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "AB",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Henderson Outfitters Inc., Red Deer AB re INV-4160",
+    "needs_human_reason": "The description does not say what was sold, and the GST/HST shown (442.50) is 5% of 8850.00, consistent with AB GST, so confirm INV-4160 was a consulting service to an Alberta customer."
+  }
+}

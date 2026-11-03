@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "4020",
+    "confidence": 0.6,
+    "reason": "A positive mobile deposit to the chequing account is most likely a client cheque payment, but there is no receipt or payer detail to confirm it."
+  }
+}

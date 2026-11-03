@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "raise",
+        "employee_name": "Jeffrey Lawrence",
+        "effective_date": "2026-11-02",
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": 26.25,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Bump Jeffrey to $26.25/hr starting November 2."
+      }
+    ]
+  }
+}

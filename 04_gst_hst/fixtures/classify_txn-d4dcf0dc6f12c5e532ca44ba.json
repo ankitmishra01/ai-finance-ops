@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "capital_asset",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.93,
+    "evidence": "Purchase of 3 laptops - capital equipment - Burton Computers Ltd.",
+    "needs_human_reason": ""
+  }
+}

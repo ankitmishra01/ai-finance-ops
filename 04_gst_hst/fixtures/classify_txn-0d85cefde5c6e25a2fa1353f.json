@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "meals_entertainment",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "restricted_50",
+    "confidence": 0.7,
+    "evidence": "Coffee meeting - Jones's Brasserie",
+    "needs_human_reason": "Description does not name the business purpose or attendees; confirm this was a business meeting and not a personal expense, and that the GST/HST shown is valid given no supplier BN is present."
+  }
+}

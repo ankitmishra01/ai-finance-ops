@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Green Bowl Co",
+    "date": "2026-10-23",
+    "currency": "CAD",
+    "subtotal": 24.29,
+    "gst_hst": 0,
+    "other_tax": 3.16,
+    "tip": 0,
+    "total": 27.45,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "DL-57310",
+    "payment_date": null,
+    "summary": "Delivery order of 2 grain bowls for a client working lunch"
+  }
+}

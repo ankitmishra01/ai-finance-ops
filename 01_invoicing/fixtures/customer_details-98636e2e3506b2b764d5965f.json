@@ -1,0 +1,15 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": null,
+    "billing_email": null,
+    "province": null,
+    "address": null,
+    "po_number": null,
+    "split_invoices": true,
+    "evidence": {
+      "split_invoices": "Could we get the retainer and the hourly work billed separately from this month?"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Jones Clinics Ltd.",
+    "billing_email": "ap@jonesclinics.test",
+    "province": "NS",
+    "address": "49190 Patel Shore, Halifax, NS B1X 7N8",
+    "po_number": "4500085880",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Jones Clinics Ltd. (\"Client\"), having its office at 49190 Patel Shore, Halifax, Nova Scotia B1X 7N8",
+      "billing_email": "Please direct all invoices to ap@jonesclinics.test.",
+      "province": "Halifax, Nova Scotia B1X 7N8",
+      "address": "49190 Patel Shore, Halifax, Nova Scotia B1X 7N8",
+      "po_number": "Our purchase order number is 4500085880; it needs to appear on every invoice."
+    }
+  }
+}

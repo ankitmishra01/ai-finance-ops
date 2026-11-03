@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Huerta Builders Ltd.",
+    "billing_email": "comptabilite@huertabuilders.test",
+    "province": "QC",
+    "address": "3444 rue Sherbrooke Est, Montr\u00e9al, QC H2L 8P5",
+    "po_number": "4500039219",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Huerta Builders Ltd. (\"Client\")",
+      "billing_email": "Please send invoices to comptabilite@huertabuilders.test.",
+      "province": "3444 rue Sherbrooke Est, Montr\u00e9al, Qu\u00e9bec H2L 8P5",
+      "address": "3444 rue Sherbrooke Est, Montr\u00e9al, Qu\u00e9bec H2L 8P5",
+      "po_number": "Our purchase order for this mandate is 4500039219."
+    }
+  }
+}

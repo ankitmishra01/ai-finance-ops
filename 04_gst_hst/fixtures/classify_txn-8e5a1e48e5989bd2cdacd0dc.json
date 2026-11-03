@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.9,
+    "evidence": "Software - GrayPlan Inc. (Toronto) project tool subscription",
+    "needs_human_reason": ""
+  }
+}

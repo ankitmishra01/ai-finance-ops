@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.88,
+    "reason": "Receipt summary shows a dinner for 2 at Rideau Grill, a restaurant meal, which fits Meals & Entertainment."
+  }
+}

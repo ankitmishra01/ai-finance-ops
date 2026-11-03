@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.95,
+    "reason": "Receipt summary describes a business lunch for 2 at Caf\u00e9 du Plateau, a restaurant meal that belongs in Meals & Entertainment."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "credit_note",
+    "supply_type": "taxable",
+    "place_of_supply": "QC",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.96,
+    "evidence": "Refund to customer - credit note CN-0012 against INV-4401 - Conner Media Inc. (Quebec City QC)",
+    "needs_human_reason": "This is a credit note/refund; confirm it reverses the original INV-4401 sale and that the GST/HST credited matches what was charged (QC is 5% GST, with QST handled separately)."
+  }
+}

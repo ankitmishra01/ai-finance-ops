@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5050",
+    "confidence": 0.93,
+    "reason": "Receipt summary shows a Slatebox Pro additional seat (prorated), which is a SaaS subscription charge."
+  }
+}

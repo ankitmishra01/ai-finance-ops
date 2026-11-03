@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "bonus",
+        "employee_name": "Anthony Gonzalez",
+        "effective_date": null,
+        "bonus_amount": 1500,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Please add a one-time bonus of $1,500 for Anthony on this run."
+      }
+    ]
+  }
+}

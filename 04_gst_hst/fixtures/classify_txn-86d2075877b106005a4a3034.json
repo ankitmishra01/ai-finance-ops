@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "meals_entertainment",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "restricted_50",
+    "confidence": 0.88,
+    "evidence": "Client lunch - Valencia's Brasserie, Montreal QC",
+    "needs_human_reason": "Confirm the lunch was with a client for business purposes and not personal; the Quebec restaurant charged tax, so verify the GST shown and that any QST is not claimed as an ITC."
+  }
+}

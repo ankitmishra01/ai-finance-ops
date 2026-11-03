@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "3100",
+    "confidence": 0.93,
+    "reason": "Interac e-transfer sent to Allison Hill, the business owner, with no invoice or receipt, so it is treated as an owner's draw."
+  }
+}

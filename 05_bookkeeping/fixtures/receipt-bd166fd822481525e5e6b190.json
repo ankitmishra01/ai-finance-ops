@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Deskcraft Goods Canada Ltd.",
+    "date": "2026-10-24",
+    "currency": "CAD",
+    "subtotal": 119.0,
+    "gst_hst": 15.47,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 134.47,
+    "is_refund": false,
+    "gst_number": "550825333RT0001",
+    "invoice_number": "DC-10442",
+    "payment_date": null,
+    "summary": "Single monitor arm"
+  }
+}

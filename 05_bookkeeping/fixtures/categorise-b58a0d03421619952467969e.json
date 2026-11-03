@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5020",
+    "confidence": 0.93,
+    "reason": "The descriptor 'ANNUAL FEE' on the business Visa account (VISA-4421) is a card account fee, which belongs in Bank Charges & Fees."
+  }
+}

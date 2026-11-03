@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.8,
+    "reason": "The TST* prefix is a payment processor and the merchant 'Northbound Coffee' is a coffee shop, so a $6.50 charge is most likely a business coffee under Meals & Entertainment, though no receipt confirms the business purpose."
+  }
+}

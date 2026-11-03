@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5050",
+    "confidence": 0.88,
+    "reason": "Receipt shows a monthly Quillmail Starter mailbox subscription, which is a SaaS/subscription expense."
+  }
+}

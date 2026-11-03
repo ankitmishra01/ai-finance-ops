@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "UNKNOWN",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.7,
+    "evidence": "Deposit Miller Health Inc. INV 4153",
+    "needs_human_reason": "The description does not say what was sold or where the customer is located; GST/HST of 130.00 was shown on a 2730.00 deposit (consistent with 5% GST), so confirm the customer's address and place of supply from invoice 4153."
+  }
+}

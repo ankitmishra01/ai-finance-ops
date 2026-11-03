@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.85,
+    "reason": "Receipt from Northbound Coffee Roasters shows 2 cold brews for 12.43 CAD, which is a coffee purchase that fits Meals & Entertainment."
+  }
+}

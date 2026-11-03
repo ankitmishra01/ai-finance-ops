@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Reid Logistics Inc.",
+    "billing_email": "ap@reidlogistics.test",
+    "province": "NS",
+    "address": "262 Gilbert Plain Suite 769, Dartmouth, NS B5K 8C4",
+    "po_number": "4500097782",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Reid Logistics Inc. (\"Client\"), having its office at 262 Gilbert Plain Suite 769, Dartmouth, NS B5K 8C4",
+      "billing_email": "please send invoices to ap@reidlogistics.test",
+      "province": "262 Gilbert Plain Suite 769, Dartmouth, NS B5K 8C4",
+      "address": "262 Gilbert Plain Suite 769, Dartmouth, NS B5K 8C4",
+      "po_number": "Our PO number for this engagement is 4500097782."
+    }
+  }
+}

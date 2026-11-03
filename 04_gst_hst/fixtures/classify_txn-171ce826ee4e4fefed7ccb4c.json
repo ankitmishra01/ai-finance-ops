@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "personal",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "none",
+    "confidence": 0.85,
+    "evidence": "Lakeshore Fitness Club monthly membership",
+    "needs_human_reason": "Fitness club membership is a recreational club membership and is likely personal consumption by the owner; a person should confirm it is not a business expense, as no ITC is allowed either way."
+  }
+}

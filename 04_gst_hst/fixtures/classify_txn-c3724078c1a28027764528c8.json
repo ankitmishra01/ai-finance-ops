@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "AB",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.93,
+    "evidence": "Wire in INV-4145 Henderson Outfitters Inc. Red Deer AB - consulting retainer",
+    "needs_human_reason": ""
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.8,
+    "reason": "Receipt shows an oat latte and croissant at Blue Door Cafe, a coffee/food purchase that fits Meals & Entertainment, though the business purpose isn't stated."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5130",
+    "confidence": 0.97,
+    "reason": "Receipt from Parcelway shows a regular parcel shipment to Montreal, a courier expense for Shipping & Postage."
+  }
+}

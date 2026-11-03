@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.8,
+    "evidence": "Parking - Ray Squares lot - client visit",
+    "needs_human_reason": "No supplier business number is present, so a person should confirm the parking receipt supports the ITC and that the visit was business-related."
+  }
+}

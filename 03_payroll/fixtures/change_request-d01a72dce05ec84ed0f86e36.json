@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "unpaid_leave",
+        "employee_name": "Patricia Miller",
+        "effective_date": "2026-11-05",
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": 2,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Patricia Miller took 2 unpaid days on Nov 5 and Nov 6"
+      }
+    ]
+  }
+}

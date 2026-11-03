@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5080",
+    "confidence": 0.9,
+    "reason": "Receipt shows 41.2 L of regular unleaded fuel from Northline Fuel, which is vehicle fuel for the business vehicle."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Bailey Robotics Limited",
+    "billing_email": "invoices@baileyrobotics.test",
+    "province": "NL",
+    "address": "19655 Obrien Pass Apt. 693, St. John's, NL A9S 9A4",
+    "po_number": "698782",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Bailey Robotics Limited (\"Client\"), having its office at 03654 Tammy Harbors, Red Deer, AB T1Y 2N5.",
+      "billing_email": "Invoices go to invoices@baileyrobotics.test.",
+      "province": "St. John's, NL A9S 9A4",
+      "address": "19655 Obrien Pass Apt. 693\nSt. John's, NL A9S 9A4",
+      "po_number": "Please quote purchase order P.O. #698782"
+    }
+  }
+}

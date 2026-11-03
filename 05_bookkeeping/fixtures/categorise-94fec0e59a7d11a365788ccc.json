@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5130",
+    "confidence": 0.8,
+    "reason": "Descriptor 'PARCELWAY' in Toronto suggests a courier/parcel service, and the small $18.70 charge fits shipping and postage, though no receipt was matched."
+  }
+}

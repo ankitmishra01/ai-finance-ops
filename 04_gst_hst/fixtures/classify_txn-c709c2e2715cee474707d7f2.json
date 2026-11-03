@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "AB",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.85,
+    "evidence": "e-Transfer deposit from Miller Health Inc., Edmonton AB re INV-4149",
+    "needs_human_reason": "The description does not say what service was sold, and the GST/HST shown (1144.00) is 13% of 8800.00, which is the Ontario HST rate, while the customer is in Alberta where only 5% GST would apply; check the invoice for the correct tax rate and place of supply."
+  }
+}

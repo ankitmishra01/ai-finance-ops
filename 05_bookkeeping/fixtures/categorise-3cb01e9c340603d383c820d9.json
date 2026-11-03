@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5050",
+    "confidence": 0.6,
+    "reason": "The descriptor 'QUILLMAIL.TEST BILLING' looks like a recurring billing charge from an email/SaaS service, and the small amount fits a software subscription, but no receipt was matched to confirm."
+  }
+}

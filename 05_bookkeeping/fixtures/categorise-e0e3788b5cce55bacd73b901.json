@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.62,
+    "reason": "Descriptor 'SQ *MARIGOLD BAKERY' is a Square-processed bakery purchase of $9.80, most likely coffee or food, but no receipt confirms business purpose."
+  }
+}

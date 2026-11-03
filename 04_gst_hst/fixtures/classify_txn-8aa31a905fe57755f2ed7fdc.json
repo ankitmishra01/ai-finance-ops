@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.4,
+    "evidence": "Online marketplace order #ORD-82845",
+    "needs_human_reason": "The description names only a marketplace and an order number, not what was bought, so a person must confirm it was a business purchase rather than personal, and whether it was a capital item or supplies."
+  }
+}

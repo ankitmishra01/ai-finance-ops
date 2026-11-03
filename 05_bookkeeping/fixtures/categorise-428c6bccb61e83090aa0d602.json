@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.72,
+    "reason": "ZIPRIDE descriptor with 'TRIP HELP' looks like a rideshare charge, which maps to Travel, but no receipt confirms the business purpose."
+  }
+}

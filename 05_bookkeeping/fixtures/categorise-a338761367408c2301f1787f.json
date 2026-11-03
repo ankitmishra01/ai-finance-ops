@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.93,
+    "reason": "Receipt summary shows a one-night hotel stay (Wellesley Suites Hotel, Oct 20-21), which is travel lodging under Travel."
+  }
+}

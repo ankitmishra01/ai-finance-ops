@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "credit_note",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.97,
+    "evidence": "Refund to customer - credit note CN-0007 against INV-4107 - Fowler Analytics Inc. (Toronto ON) - scope reduction",
+    "needs_human_reason": "Credit note/refund to a customer: confirm it matches the original invoice INV-4107 and that the credited GST/HST is correct."
+  }
+}

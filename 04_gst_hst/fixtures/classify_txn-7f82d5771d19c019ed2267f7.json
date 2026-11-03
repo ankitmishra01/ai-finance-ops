@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "insurance",
+    "supply_type": "exempt",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "none",
+    "confidence": 0.95,
+    "evidence": "Insurance premium - commercial general liability - Davis Mutual Insurance",
+    "needs_human_reason": ""
+  }
+}

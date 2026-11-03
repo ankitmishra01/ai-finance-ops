@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Wells Builders Ltd.",
+    "billing_email": "payables@wellsbuilders.test",
+    "province": "ON",
+    "address": "374 Jackson Rest, Kitchener, ON L1M 5E7",
+    "po_number": "4500018981",
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Wells Builders Ltd. (\"Client\"), having its office at 374 Jackson Rest, Kitchener, ON L1M 5E7",
+      "billing_email": "The right address is now payables@wellsbuilders.test.",
+      "province": "374 Jackson Rest, Kitchener, ON L1M 5E7",
+      "address": "374 Jackson Rest, Kitchener, ON L1M 5E7",
+      "po_number": "Please send invoices to ap@wellsbuilders.test and reference PO 4500018981."
+    }
+  }
+}

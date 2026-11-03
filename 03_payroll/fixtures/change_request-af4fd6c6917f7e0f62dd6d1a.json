@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "raise",
+        "employee_name": "Debra Gardner",
+        "effective_date": "2026-11-09",
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": 33,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Starting the 9th, Debra moves to $33 an hour as lead hand."
+      }
+    ]
+  }
+}

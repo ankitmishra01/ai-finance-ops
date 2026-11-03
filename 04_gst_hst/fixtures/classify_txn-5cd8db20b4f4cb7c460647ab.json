@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "out_of_scope_transfer",
+    "supply_type": "out_of_scope",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.93,
+    "evidence": "Transfer to savings account",
+    "needs_human_reason": ""
+  }
+}

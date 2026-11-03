@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "bonus",
+        "employee_name": "Jeffery Wagner",
+        "effective_date": null,
+        "bonus_amount": 2500,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "retention bonus of $2.5k for Jeffery Wagner"
+      }
+    ]
+  }
+}

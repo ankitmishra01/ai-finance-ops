@@ -1,0 +1,34 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "bonus",
+        "employee_name": "Jill Rhodes",
+        "effective_date": null,
+        "bonus_amount": 750,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Jill Rhodes has a $750 bonus for the safety award."
+      },
+      {
+        "type": "hours_correction",
+        "employee_name": "Debra Gardner",
+        "effective_date": null,
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": null,
+        "extra_hours": 3.5,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Debra Gardner needs 3.5 extra hours added for the Saturday inventory count."
+      }
+    ]
+  }
+}

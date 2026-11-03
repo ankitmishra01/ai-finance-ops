@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "QC",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.93,
+    "evidence": "Payment received - INV-4404 - Henderson Analytics Inc. (Gatineau QC) - advisory services",
+    "needs_human_reason": ""
+  }
+}

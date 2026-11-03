@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Northbound Coffee Roasters",
+    "date": "2026-10-28",
+    "currency": "CAD",
+    "subtotal": 8.25,
+    "gst_hst": 1.07,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 9.32,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Espresso and ham sandwich"
+  }
+}

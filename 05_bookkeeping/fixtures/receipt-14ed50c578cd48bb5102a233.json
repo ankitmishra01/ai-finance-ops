@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Caf\u00e9 du Plateau",
+    "date": "2026-10-20",
+    "currency": "CAD",
+    "subtotal": 64.0,
+    "gst_hst": 3.2,
+    "other_tax": 6.38,
+    "tip": 0,
+    "total": 73.58,
+    "is_refund": false,
+    "gst_number": "10425 5315 RT0001",
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Business lunch for 2"
+  }
+}

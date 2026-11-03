@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.95,
+    "evidence": "Wire in INV-4113 Rhodes Analytics Ltd. Waterloo ON - consulting retainer",
+    "needs_human_reason": ""
+  }
+}

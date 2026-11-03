@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "4010",
+    "confidence": 0.9,
+    "reason": "Positive amount from a Stripe transfer is a payout from the online card processor, matching Sales - Online."
+  }
+}

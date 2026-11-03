@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_export",
+    "supply_type": "zero_rated",
+    "place_of_supply": "OUTSIDE_CANADA",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.88,
+    "evidence": "Wire in USD conv. CAD - INV-4190 - Gonzalez Software LLC, Seattle WA USA - strategy advisory",
+    "needs_human_reason": ""
+  }
+}

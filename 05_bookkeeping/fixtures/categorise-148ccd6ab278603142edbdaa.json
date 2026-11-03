@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5050",
+    "confidence": 0.96,
+    "reason": "Receipt summary shows a monthly Nimbus Drive 2 TB cloud storage subscription, which fits Software & Subscriptions (cloud storage)."
+  }
+}

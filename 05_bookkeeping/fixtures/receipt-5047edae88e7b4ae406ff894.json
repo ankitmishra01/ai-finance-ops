@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Wellesley Suites Hotel",
+    "date": "2026-10-21",
+    "currency": "CAD",
+    "subtotal": 189.0,
+    "gst_hst": 24.57,
+    "other_tax": 7.56,
+    "tip": 0,
+    "total": 221.13,
+    "is_refund": false,
+    "gst_number": "70142 3340 RT0001",
+    "invoice_number": "F-300912",
+    "payment_date": null,
+    "summary": "One night hotel stay, October 20-21"
+  }
+}

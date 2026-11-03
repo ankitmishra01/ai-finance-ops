@@ -1,0 +1,19 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Craig Media Limited",
+    "billing_email": "remittance@craigmedia.test",
+    "province": "MB",
+    "address": "490 Thomas Run, Winnipeg, MB R8H 2S8",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Craig Media Limited (\"Client\"), having its office at 490 Thomas Run, Winnipeg, MB R8H 2S8",
+      "billing_email": "Kindly route your bills to remittance@craigmedia.test so they land with the right people.",
+      "province": "having its office at 490 Thomas Run, Winnipeg, MB R8H 2S8",
+      "address": "490 Thomas Run, Winnipeg, MB R8H 2S8",
+      "po_number": "No PO on our side."
+    }
+  }
+}

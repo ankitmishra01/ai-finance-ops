@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5040",
+    "confidence": 0.9,
+    "reason": "Receipt shows a laptop stand and USB-C cables totalling $101.68, which are small items under $500 and so go to Office Supplies & Small Equipment."
+  }
+}

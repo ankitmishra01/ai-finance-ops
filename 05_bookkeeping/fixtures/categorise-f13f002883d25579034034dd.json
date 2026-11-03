@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5130",
+    "confidence": 0.96,
+    "reason": "Receipt summary shows expedited parcel shipping from Parcelway, a courier, which maps to Shipping & Postage."
+  }
+}

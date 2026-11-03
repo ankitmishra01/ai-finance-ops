@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Johnson Health Ltd., Ottawa ON re INV-4139",
+    "needs_human_reason": "The description does not say what service was sold, only an invoice number; confirm INV-4139 was a taxable consulting sale to the Ontario customer and not a rent or other receipt."
+  }
+}

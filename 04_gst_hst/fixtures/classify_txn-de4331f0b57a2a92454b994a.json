@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "foreign_digital_service",
+    "supply_type": "out_of_scope",
+    "place_of_supply": "OUTSIDE_CANADA",
+    "itc_treatment": "none",
+    "confidence": 0.93,
+    "evidence": "\"RodriguezHost cloud hosting annual plan (Dublin, Ireland) incl. HST\"",
+    "needs_human_reason": "Foreign vendor in Ireland with no supplier BN appears to have charged HST (70.20); verify whether it is a simplified-registration vendor (no ITC) and whether self-assessment on line 405 is needed."
+  }
+}

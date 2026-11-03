@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.8,
+    "evidence": "Parking - Michelle Light lot - client visit",
+    "needs_human_reason": "Parking receipt shows GST/HST but no supplier BN is present; confirm the receipt is valid support for the ITC and that the client visit was a business purpose."
+  }
+}

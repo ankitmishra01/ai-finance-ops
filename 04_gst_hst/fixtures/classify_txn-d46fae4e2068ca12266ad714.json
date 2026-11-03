@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "UNKNOWN",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "Deposit Hill Foods Inc. INV 4112",
+    "needs_human_reason": "The description gives no customer location, so the province cannot be determined from the text. The 1111.50 of tax shown on 8550.00 is 13%, which suggests Ontario, but a person should confirm the customer's address. It is also described as a 'Deposit', so confirm it relates to a taxable sale of services."
+  }
+}

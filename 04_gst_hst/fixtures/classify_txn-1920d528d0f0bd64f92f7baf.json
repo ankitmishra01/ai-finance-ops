@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.3,
+    "evidence": "POS purchase SQ *HALCYON 1998",
+    "needs_human_reason": "The description is only a Square merchant code and does not say what was bought; it could be a meal, a personal expense or a general business purchase, so a person must confirm the nature and business purpose before any ITC is claimed."
+  }
+}

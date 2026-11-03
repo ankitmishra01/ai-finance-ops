@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Parcelway",
+    "date": "2026-10-24",
+    "currency": "CAD",
+    "subtotal": 41.8,
+    "gst_hst": 5.43,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 47.23,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Priority parcel shipping to Vancouver BC"
+  }
+}

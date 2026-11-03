@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.8,
+    "reason": "Square (SQ *) payment at Byward Beans in Ottawa, a small amount consistent with a coffee shop purchase, so Meals & Entertainment; no receipt to confirm business purpose."
+  }
+}

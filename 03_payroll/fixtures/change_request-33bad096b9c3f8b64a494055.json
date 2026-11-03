@@ -1,0 +1,21 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "adjustments": [
+      {
+        "type": "unpaid_leave",
+        "employee_name": "Joshua Walker",
+        "effective_date": "2026-11-03",
+        "bonus_amount": null,
+        "new_annual_salary": null,
+        "new_hourly_rate": null,
+        "unpaid_days": 0.5,
+        "extra_hours": null,
+        "sin_provided": null,
+        "td1_provided": null,
+        "evidence": "Joshua Walker took a half day unpaid on Nov 3."
+      }
+    ]
+  }
+}

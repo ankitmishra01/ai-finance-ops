@@ -1,0 +1,15 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": null,
+    "billing_email": "finance.ops@lewismedia.test",
+    "province": null,
+    "address": null,
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "billing_email": "please send invoices to finance.ops@lewismedia.test instead of ap@lewismedia.test"
+    }
+  }
+}

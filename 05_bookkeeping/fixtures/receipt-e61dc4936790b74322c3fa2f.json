@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Northline Fuel",
+    "date": "2026-10-24",
+    "currency": "CAD",
+    "subtotal": 60.27,
+    "gst_hst": 7.84,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 68.11,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "41.2 L regular unleaded fuel"
+  }
+}

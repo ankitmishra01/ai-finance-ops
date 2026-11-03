@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "bank_fees",
+    "supply_type": "exempt",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "none",
+    "confidence": 0.96,
+    "evidence": "Wire transfer fee - outgoing",
+    "needs_human_reason": ""
+  }
+}

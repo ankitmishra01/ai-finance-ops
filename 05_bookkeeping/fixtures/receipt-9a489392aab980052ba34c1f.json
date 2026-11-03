@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Fennel & Ash Bistro",
+    "date": "2026-10-22",
+    "currency": "CAD",
+    "subtotal": 186.0,
+    "gst_hst": 24.18,
+    "other_tax": 0,
+    "tip": 37.82,
+    "total": 248.0,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Team dinner for 4 with a bottle of wine"
+  }
+}

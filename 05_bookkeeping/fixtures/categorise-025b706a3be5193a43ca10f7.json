@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.72,
+    "reason": "Receipt shows a ZipRide Canada trip with booking fee, which is rideshare and fits Travel (5070); the receipt doesn't say whether it was for travel or between client sites, so some uncertainty remains."
+  }
+}

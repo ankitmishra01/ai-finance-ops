@@ -1,0 +1,15 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": null,
+    "billing_email": null,
+    "province": null,
+    "address": null,
+    "po_number": "4500027719",
+    "split_invoices": false,
+    "evidence": {
+      "po_number": "The new purchase order number is 4500027719; please reference it on all invoices from October onward."
+    }
+  }
+}

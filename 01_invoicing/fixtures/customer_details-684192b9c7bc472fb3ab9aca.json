@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Brown Software Limited",
+    "billing_email": "lauren.hurst@brownsoftware.test",
+    "province": "MB",
+    "address": "8760 Marissa Loaf Apt. 967, Brandon, MB R7M 9R9",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Brown Software Limited (\"Client\")",
+      "billing_email": "You can invoice me directly at this address.",
+      "province": "8760 Marissa Loaf Apt. 967, Brandon, MB R7M 9R9",
+      "address": "8760 Marissa Loaf Apt. 967, Brandon, MB R7M 9R9"
+    }
+  }
+}

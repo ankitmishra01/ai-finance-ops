@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "BC",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Robinson Health Ltd., Victoria BC re INV-4182",
+    "needs_human_reason": "The description only references an invoice number and does not say what service was sold; confirm INV-4182 was a consulting service to a BC customer and that the 390.00 GST shown (5% of 7800.00) matches the invoice."
+  }
+}

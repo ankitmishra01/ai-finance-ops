@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.93,
+    "reason": "Receipt summary shows a team lunch from Saffron Leaf Kitchen, a restaurant meal delivered via the DASHLY processor, which fits Meals & Entertainment."
+  }
+}

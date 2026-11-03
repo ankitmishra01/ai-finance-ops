@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5040",
+    "confidence": 0.96,
+    "reason": "Receipt from Paperline Office Supply shows notebooks and gel pens totaling $46.21, which are stationery items under $500 and belong in Office Supplies."
+  }
+}

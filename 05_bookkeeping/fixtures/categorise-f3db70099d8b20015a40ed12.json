@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.8,
+    "reason": "Descriptor 'OTTAWA CITY TAXI' is a taxi fare, which fits Travel (taxi/rideshare), though no receipt confirms business purpose or whether it was a meal-related or client trip."
+  }
+}

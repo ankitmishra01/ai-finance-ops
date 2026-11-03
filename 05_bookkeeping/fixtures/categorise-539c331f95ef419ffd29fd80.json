@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.8,
+    "reason": "ZipRide is a rideshare service per the receipt summary (evening trip with booking fee), which maps to Travel for rideshare; business purpose is assumed but not stated."
+  }
+}

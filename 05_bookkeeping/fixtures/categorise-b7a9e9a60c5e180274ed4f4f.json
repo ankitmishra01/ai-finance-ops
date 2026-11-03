@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5040",
+    "confidence": 0.8,
+    "reason": "The descriptor 'PAPERLINE OFFICE' suggests an office supplies or stationery retailer, and the $12.40 amount is a small purchase well under the $500 equipment threshold, though no receipt was matched to confirm."
+  }
+}

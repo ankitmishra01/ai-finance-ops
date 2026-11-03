@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Rideau Grill",
+    "date": "2026-10-20",
+    "currency": "CAD",
+    "subtotal": 68.0,
+    "gst_hst": 8.84,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 76.84,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Dinner for 2"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Harbour Print Shop",
+    "date": "2026-10-30",
+    "currency": "CAD",
+    "subtotal": 64.0,
+    "gst_hst": 8.32,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 72.32,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "250 promotional flyers"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5080",
+    "confidence": 0.8,
+    "reason": "Descriptor 'NORTHLINE FUEL' indicates a fuel purchase on the business card, which fits Vehicle - Fuel & Parking, though no receipt confirms business-vehicle use."
+  }
+}

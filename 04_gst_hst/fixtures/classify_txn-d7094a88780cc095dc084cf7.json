@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.93,
+    "evidence": "Courier - Pacheco Couriers Inc. waybill 471507",
+    "needs_human_reason": ""
+  }
+}

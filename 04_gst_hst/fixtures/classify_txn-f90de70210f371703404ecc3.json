@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "BC",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.95,
+    "evidence": "Payment received - INV-4163 - Johnson Partners Inc. (Vancouver BC) - advisory services",
+    "needs_human_reason": ""
+  }
+}

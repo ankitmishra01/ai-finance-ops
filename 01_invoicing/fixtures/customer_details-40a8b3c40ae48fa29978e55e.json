@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Atkinson Clinics Inc.",
+    "billing_email": "accounts.payable@atkinsonclinics.test",
+    "province": "QC",
+    "address": "6936 Ross Drive, Quebec City, QC G3S 9K8",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "Atkinson Clinics Inc. (\"Client\"), having its office at 6936 Ross Drive, Quebec City, QC G3S 9K8",
+      "billing_email": "Our accounts payable team (accounts.payable@atkinsonclinics.test) processes all vendor invoices, so please copy them on anything billing related.",
+      "province": "6936 Ross Drive, Quebec City, QC G3S 9K8",
+      "address": "6936 Ross Drive, Quebec City, QC G3S 9K8"
+    }
+  }
+}

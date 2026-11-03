@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.8,
+    "evidence": "Parking - Galloway Walk lot - client visit",
+    "needs_human_reason": "No supplier BN is shown, so confirm the receipt supports the GST/HST claimed (ITC documentation requirements for a small purchase) and that the parking was for business."
+  }
+}

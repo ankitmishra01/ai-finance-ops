@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.85,
+    "reason": "Receipt shows 2 Americanos and a sesame bagel at Blue Door Cafe (Square processor prefix), which is coffee and food fitting Meals & Entertainment."
+  }
+}

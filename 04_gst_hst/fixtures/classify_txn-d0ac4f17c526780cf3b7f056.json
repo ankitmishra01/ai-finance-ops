@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "personal",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "none",
+    "confidence": 0.95,
+    "evidence": "Personal - groceries - Harvest Lane Market",
+    "needs_human_reason": "Description labels this as personal groceries, so it is owner personal consumption; confirm no business portion exists and that no ITC is claimed on the GST/HST shown."
+  }
+}

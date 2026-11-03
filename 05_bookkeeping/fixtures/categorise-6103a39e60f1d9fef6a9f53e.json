@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5070",
+    "confidence": 0.93,
+    "reason": "Receipt shows a return train ticket Toronto to Ottawa from Lakeshore Rail, which is rail travel for business, matching Travel."
+  }
+}

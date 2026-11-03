@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "2100",
+    "confidence": 0.93,
+    "reason": "Descriptor 'PAYMENT - THANK YOU' on the Visa account is a payment received on the credit card, which is a transfer to Visa Payable rather than income or an expense."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.35,
+    "evidence": "POS purchase SQ *JUNIPER 1958",
+    "needs_human_reason": "The description is only a Square merchant code (SQ *JUNIPER 1958) and does not say what was bought; it could be a restaurant or cafe (meals, 50% ITC), a business supply, or a personal expense. A person should check the receipt and business purpose."
+  }
+}

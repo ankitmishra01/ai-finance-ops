@@ -1,0 +1,18 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "legal_name": "Murphy Labs Inc.",
+    "billing_email": "billing@murphylabs.test",
+    "province": "SK",
+    "address": "5646 Conley Mountains Apt. 805, Saskatoon, SK S4B 4A1",
+    "po_number": null,
+    "split_invoices": false,
+    "evidence": {
+      "legal_name": "invoices must show our legal name, Murphy Labs Inc.",
+      "billing_email": "Please email invoices to billing@murphylabs.test.",
+      "province": "5646 Conley Mountains Apt. 805, Saskatoon, SK S4B 4A1",
+      "address": "5646 Conley Mountains Apt. 805, Saskatoon, SK S4B 4A1"
+    }
+  }
+}

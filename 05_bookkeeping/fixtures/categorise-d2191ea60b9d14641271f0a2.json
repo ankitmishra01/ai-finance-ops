@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5040",
+    "confidence": 0.88,
+    "reason": "Receipt shows a single monitor arm for $134.47, a small item under the $500 capitalisation threshold, so it is office supplies and small equipment rather than computer equipment."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "purchase_general",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "full",
+    "confidence": 0.8,
+    "evidence": "Parking - Brandon Forks lot - client visit",
+    "needs_human_reason": "Parking is a plain business expense, but the lot appears to be in Brandon, Manitoba (13% HST would be 5% GST + 7% PST there, so confirm the 1.61 shown is GST only) and there is no supplier BN or receipt; check the tax amount and that the visit was for business."
+  }
+}

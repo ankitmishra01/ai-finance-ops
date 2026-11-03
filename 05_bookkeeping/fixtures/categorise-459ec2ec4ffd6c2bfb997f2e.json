@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.72,
+    "reason": "Receipt shows a box of 12 pastries from Marigold Bakery (SQ * is just the Square processor), which is food purchased likely for business purposes, fitting Meals & Entertainment."
+  }
+}

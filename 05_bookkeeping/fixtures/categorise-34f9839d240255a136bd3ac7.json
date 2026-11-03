@@ -1,0 +1,9 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "account_code": "5030",
+    "confidence": 0.9,
+    "reason": "Receipt shows 2 lattes and 2 muffins at Blue Door Cafe (Square processor), a coffee/food purchase that fits Meals & Entertainment."
+  }
+}

@@ -1,15 +1,88 @@
 {
   "meta": {
-    "generated": "2026-11-03 16:46",
-    "run_id": "20261103T164610-f6d07e",
-    "extractor": "rules",
-    "mode": "replay",
-    "backend": null,
-    "model_requested": null,
-    "models_reported": [],
-    "claude_ran": false
+    "generated": "2026-11-03 17:16",
+    "run_id": "20261103T165947-04db47",
+    "extractor": "claude-cli",
+    "mode": "record",
+    "backend": "cli",
+    "model_requested": "claude-sonnet-5-5",
+    "models_reported": [
+      "claude-sonnet-5-5"
+    ],
+    "claude_ran": true
   },
-  "cost_by_module": {},
+  "cost_by_module": {
+    "bills": {
+      "calls": 40,
+      "documents": 40,
+      "input_tokens": 109254,
+      "output_tokens": 11224,
+      "cost_usd": 0.279012,
+      "unpriced_calls": 0,
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "billing": [
+        "subscription (no per-token billing)"
+      ]
+    },
+    "bookkeeping": {
+      "calls": 138,
+      "documents": 138,
+      "input_tokens": 269418,
+      "output_tokens": 17047,
+      "cost_usd": 0.54658,
+      "unpriced_calls": 0,
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "billing": [
+        "subscription (no per-token billing)"
+      ]
+    },
+    "gst_hst": {
+      "calls": 127,
+      "documents": 127,
+      "input_tokens": 540925,
+      "output_tokens": 15212,
+      "cost_usd": 0.560539,
+      "unpriced_calls": 0,
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "billing": [
+        "subscription (no per-token billing)"
+      ]
+    },
+    "invoicing": {
+      "calls": 37,
+      "documents": 37,
+      "input_tokens": 81211,
+      "output_tokens": 9205,
+      "cost_usd": 0.233697,
+      "unpriced_calls": 0,
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "billing": [
+        "subscription (no per-token billing)"
+      ]
+    },
+    "payroll": {
+      "calls": 21,
+      "documents": 21,
+      "input_tokens": 43272,
+      "output_tokens": 3125,
+      "cost_usd": 0.113251,
+      "unpriced_calls": 0,
+      "models": [
+        "claude-sonnet-5-5"
+      ],
+      "billing": [
+        "subscription (no per-token billing)"
+      ]
+    }
+  },
   "results": {
     "bills": {
       "rules": {
@@ -167,7 +240,128 @@
           "precision": 0.5
         }
       },
-      "claude": "not run (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
+      "claude": {
+        "extractor": "claude",
+        "all": {
+          "messages": 40,
+          "classification_accuracy": 1.0,
+          "classification_confusion": {
+            "bill": {
+              "bill": 27
+            },
+            "receipt": {
+              "receipt": 4
+            },
+            "other": {
+              "other": 5
+            },
+            "statement": {
+              "statement": 4
+            }
+          },
+          "bills_labelled": 27,
+          "field_accuracy": {
+            "vendor_name": 1.0,
+            "gst_number": 1.0,
+            "invoice_number": 1.0,
+            "invoice_date": 1.0,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "total": 1.0,
+            "currency": 1.0,
+            "terms": 1.0,
+            "category": 1.0
+          },
+          "field_accuracy_mean": 1.0
+        },
+        "templated": {
+          "messages": 34,
+          "classification_accuracy": 1.0,
+          "classification_confusion": {
+            "bill": {
+              "bill": 23
+            },
+            "receipt": {
+              "receipt": 3
+            },
+            "other": {
+              "other": 5
+            },
+            "statement": {
+              "statement": 3
+            }
+          },
+          "bills_labelled": 23,
+          "field_accuracy": {
+            "vendor_name": 1.0,
+            "gst_number": 1.0,
+            "invoice_number": 1.0,
+            "invoice_date": 1.0,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "total": 1.0,
+            "currency": 1.0,
+            "terms": 1.0,
+            "category": 1.0
+          },
+          "field_accuracy_mean": 1.0,
+          "field_misses": []
+        },
+        "holdout": {
+          "messages": 6,
+          "classification_accuracy": 1.0,
+          "classification_confusion": {
+            "bill": {
+              "bill": 4
+            },
+            "receipt": {
+              "receipt": 1
+            },
+            "statement": {
+              "statement": 1
+            }
+          },
+          "bills_labelled": 4,
+          "field_accuracy": {
+            "vendor_name": 1.0,
+            "gst_number": 1.0,
+            "invoice_number": 1.0,
+            "invoice_date": 1.0,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "total": 1.0,
+            "currency": 1.0,
+            "terms": 1.0,
+            "category": 1.0
+          },
+          "field_accuracy_mean": 1.0,
+          "field_misses": []
+        },
+        "provincial_tax": {
+          "bills": 6,
+          "field_accuracy": {
+            "other_tax": 1.0,
+            "other_tax_kind": 1.0,
+            "qst_number": 1.0
+          },
+          "field_misses": [],
+          "qst_itr_by_bill": {
+            "06.eml": "not_applicable 0.00",
+            "07.eml": "eligible 49.88",
+            "37.eml": "eligible 119.70",
+            "38.eml": "not_eligible 0.00",
+            "39.eml": "eligible 14.97",
+            "40.eml": "not_applicable 0.00"
+          }
+        },
+        "flags": {
+          "true_positive": 8,
+          "false_positive": 0,
+          "false_negative": 0,
+          "recall": 1.0,
+          "precision": 1.0
+        }
+      }
     },
     "bookkeeping": {
       "rules": {
@@ -208,6 +402,43 @@
         },
         "exceptions": {
           "orphan_precision": 0.8,
+          "orphan_recall": 1.0,
+          "duplicate_receipts_found": "1/1"
+        }
+      },
+      "claude": {
+        "extractor": "claude",
+        "receipt_fields": {
+          "merchant": 0.8571,
+          "date": 1.0,
+          "total": 1.0,
+          "gst_hst": 0.9286,
+          "currency": 1.0,
+          "gst_number": 1.0,
+          "all_fields_correct": 0.7857,
+          "n": 56
+        },
+        "matching": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "gold_links": 52,
+          "predicted_links": 52,
+          "true_positives": 52,
+          "false_positives": [],
+          "false_negatives": []
+        },
+        "categorisation": {
+          "accuracy": 0.9878,
+          "n": 82,
+          "accuracy_when_confident": 1.0,
+          "confident_share": 0.9878,
+          "fixes_wrong_ledger_lines": 1.0,
+          "n_wrong_ledger_lines": 23,
+          "current_ledger_accuracy": 0.7195
+        },
+        "exceptions": {
+          "orphan_precision": 1.0,
           "orphan_recall": 1.0,
           "duplicate_receipts_found": "1/1"
         }
@@ -362,7 +593,140 @@
           "mismatches_cents": {}
         }
       },
-      "claude_extractor": "not run (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
+      "claude_extractor": {
+        "eval_set": {
+          "category": {
+            "correct": 28,
+            "n": 30,
+            "accuracy": 0.9333
+          },
+          "supply_type_raw": {
+            "correct": 30,
+            "n": 30,
+            "accuracy": 1.0
+          },
+          "itc_treatment_raw": {
+            "correct": 28,
+            "n": 30,
+            "accuracy": 0.9333
+          },
+          "supply_type_effective": {
+            "correct": 30,
+            "n": 30,
+            "accuracy": 1.0
+          },
+          "itc_treatment_effective": {
+            "correct": 28,
+            "n": 30,
+            "accuracy": 0.9333
+          },
+          "place_of_supply_sales": {
+            "correct": 8,
+            "n": 9,
+            "accuracy": 0.8889
+          },
+          "errors_flagged_for_human": {
+            "errors": 3,
+            "flagged": 3,
+            "unflagged_ids": []
+          }
+        },
+        "full_quarter": {
+          "category": {
+            "correct": 125,
+            "n": 127,
+            "accuracy": 0.9843
+          },
+          "supply_type_raw": {
+            "correct": 127,
+            "n": 127,
+            "accuracy": 1.0
+          },
+          "itc_treatment_raw": {
+            "correct": 125,
+            "n": 127,
+            "accuracy": 0.9843
+          },
+          "supply_type_effective": {
+            "correct": 127,
+            "n": 127,
+            "accuracy": 1.0
+          },
+          "itc_treatment_effective": {
+            "correct": 125,
+            "n": 127,
+            "accuracy": 0.9843
+          },
+          "place_of_supply_sales": {
+            "correct": 45,
+            "n": 47,
+            "accuracy": 0.9574
+          },
+          "errors_flagged_for_human": {
+            "errors": 4,
+            "flagged": 4,
+            "unflagged_ids": []
+          }
+        },
+        "gst34_vs_expected": {
+          "exact_match": false,
+          "lines_matching": 10,
+          "lines_total": 18,
+          "mismatches_cents": {
+            "103": {
+              "computed": 1864900,
+              "expected": 1844100
+            },
+            "105": {
+              "computed": 1864900,
+              "expected": 1844100
+            },
+            "106": {
+              "computed": 419212,
+              "expected": 417772
+            },
+            "108": {
+              "computed": 454412,
+              "expected": 452972
+            },
+            "109": {
+              "computed": 1410488,
+              "expected": 1391128
+            },
+            "113A": {
+              "computed": 1410488,
+              "expected": 1391128
+            },
+            "113C": {
+              "computed": 1410488,
+              "expected": 1391128
+            },
+            "115": {
+              "computed": 1410488,
+              "expected": 1391128
+            }
+          }
+        },
+        "quebec_rows": {
+          "n": 9,
+          "category": {
+            "correct": 9,
+            "n": 9,
+            "accuracy": 1.0
+          },
+          "place_of_supply_sales": {
+            "correct": 5,
+            "n": 5,
+            "accuracy": 1.0
+          }
+        },
+        "qst_vs_expected": {
+          "exact_match": true,
+          "lines_matching": 7,
+          "lines_total": 7,
+          "mismatches_cents": {}
+        }
+      }
     },
     "invoicing": {
       "task": "customer-detail extraction",
@@ -459,7 +823,20 @@
           }
         ]
       },
-      "claude": "not run (AFO_LLM_MODE=replay; no recorded responses)"
+      "claude": {
+        "n_cases": 37,
+        "per_field_accuracy": {
+          "legal_name": 1.0,
+          "billing_email": 1.0,
+          "province": 1.0,
+          "address": 1.0,
+          "po_number": 1.0,
+          "split_invoices": 1.0
+        },
+        "mean_field_accuracy": 1.0,
+        "all_fields_correct": 1.0,
+        "errors": []
+      }
     },
     "payroll": {
       "task": "change-request email -> structured pay adjustments",
@@ -520,7 +897,16 @@
           "failed": []
         }
       },
-      "claude": "not scored (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
+      "claude": {
+        "emails": 21,
+        "labelled_adjustments": 20,
+        "email_exact_match": 1.0,
+        "adjustment_precision": 1.0,
+        "adjustment_recall": 1.0,
+        "adjustment_f1": 1.0,
+        "field_accuracy": 1.0,
+        "missed_emails": []
+      }
     }
   }
 }

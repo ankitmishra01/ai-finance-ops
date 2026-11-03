@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "sale_domestic",
+    "supply_type": "taxable",
+    "place_of_supply": "ON",
+    "itc_treatment": "not_applicable",
+    "confidence": 0.8,
+    "evidence": "e-Transfer deposit from Hill Foods Inc., Mississauga ON re INV-4118",
+    "needs_human_reason": "The description does not say what service was sold; confirm INV-4118 is an advisory/consulting invoice and not something else (the 1209.00 tax shown on 10509.00 is consistent with 13% HST on 9300.00)."
+  }
+}

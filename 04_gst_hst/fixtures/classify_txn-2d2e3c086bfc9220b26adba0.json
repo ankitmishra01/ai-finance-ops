@@ -1,0 +1,13 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "category": "personal",
+    "supply_type": "taxable",
+    "place_of_supply": "NOT_APPLICABLE",
+    "itc_treatment": "none",
+    "confidence": 0.95,
+    "evidence": "Personal: family dinner - Hicks's Trattoria",
+    "needs_human_reason": "Description labels this a personal family dinner, so no ITC should be claimed; a person should confirm it was not a business meal."
+  }
+}
