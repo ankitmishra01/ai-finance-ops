@@ -1,0 +1,9 @@
+From: ops.manager@lakeview-sample.test
+To: payroll@lakeview-sample.test
+Subject: Overpayment
+Date: Mon, 02 Nov 2026 09:10:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Jeffrey was overpaid 2 hours last period; please deduct 2 hours this time.

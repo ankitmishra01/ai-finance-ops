@@ -1,0 +1,13 @@
+# Synthetic employer and pay period. Not a real business.
+company:
+  name: Lakeview Sample Works Inc.
+  short_name: LAKEVIEW SAMPLE
+  payroll_account: 000000000RP0001
+  originator_id: SAMPLE0001
+  address: 100 Example Street, Hamilton ON L0L 0L0
+period:
+  start: '2026-11-01'
+  end: '2026-11-15'
+  pay_date: '2026-11-13'
+  periods_per_year: 24
+  number: 21

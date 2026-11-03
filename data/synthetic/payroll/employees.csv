@@ -1,0 +1,10 @@
+id,name,email,pay_type,annual_salary,hourly_rate,start_date,sin,td1_received,td1_federal_claim,td1_ontario_claim,institution,transit,account,ytd_gross,ytd_pensionable,ytd_insurable,ytd_cpp,ytd_cpp2,ytd_ei,ytd_tax
+E01,Danielle Johnson,danielle.johnson@lakeview-sample.test,salary,72000,,2023-04-03,010-433-217,yes,,,999,98696,2458591,60000.00,60000.00,60000.00,3396.40,0.00,978.00,9751.40
+E02,Joshua Walker,joshua.walker@lakeview-sample.test,salary,145000,,2021-09-07,096-001-334,yes,,,999,76237,1445199,120833.40,120833.40,120833.40,4230.45,416.00,1123.07,31705.32
+E03,Jill Rhodes,jill.rhodes@lakeview-sample.test,salary,85000,,2022-01-10,083-863-795,yes,,,999,46463,1109031,70833.40,70833.40,70833.40,4041.00,0.00,1123.07,13039.73
+E04,Patricia Miller,patricia.miller@lakeview-sample.test,salary,80000,,2024-02-05,026-542-357,yes,,,999,23396,2556017,66666.60,66666.60,66666.60,3793.20,0.00,1086.60,11812.80
+E05,Jeffery Wagner,jeffery.wagner@lakeview-sample.test,salary,68000,,2020-06-15,061-559-407,yes,31000,23000,999,70217,9996414,56666.60,56666.60,56666.60,3198.20,0.00,923.60,6688.00
+E06,Anthony Gonzalez,anthony.gonzalez@lakeview-sample.test,salary,95000,,2019-11-18,016-184-954,yes,,,999,85674,4226067,79166.60,79166.60,79166.60,4230.45,182.66,1123.07,15497.37
+E07,Debra Gardner,debra.gardner@lakeview-sample.test,hourly,,31.00,2022-08-22,010-341-311,yes,,,999,59823,5663623,49600.00,49600.00,49600.00,2777.60,0.00,808.40,6820.80
+E08,Jeffrey Lawrence,jeffrey.lawrence@lakeview-sample.test,hourly,,24.50,2025-03-03,075-255-349,yes,,,999,99593,2197935,39200.00,39200.00,39200.00,2158.80,0.00,639.00,4668.40
+E09,Lisa Smith,lisa.smith@lakeview-sample.test,salary,62000,,2026-11-09,,no,,,999,89840,3871230,0,0,0,0,0,0,0

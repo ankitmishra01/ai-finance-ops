@@ -1,0 +1,89 @@
+# Payroll rates and thresholds for 2026, Ontario employees (outside Quebec).
+#
+# Values were read from the CRA's T4127 Payroll Deductions Formulas, 123rd edition,
+# effective July 1, 2026 (the edition in force for a November 2026 pay run), and the
+# CSV tables published with it. The July edition changed BC, NL and PE only; the CRA
+# states there is no change for Ontario or for the federal rates versus January 2026.
+# Every number below has a source line. Quoted as strings so they load as exact Decimals.
+#
+# Check before production use: rates change every January and sometimes on July 1.
+
+year: 2026
+edition: "T4127-JUL, 123rd edition, effective July 1, 2026"
+sources:
+  t4127_index: https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4127-payroll-deductions-formulas.html
+  t4127_jul_2026: https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4127-payroll-deductions-formulas/t4127-jul.html
+  t4127_jan_2026_formulas: https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4127-payroll-deductions-formulas/t4127-jan/t4127-jan-payroll-deductions-formulas-computer-programs.html
+  table_8_1_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jul/rates-income-thresholds-constants-26e.csv
+  table_8_2_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jul/other-rates-amounts-26e.csv
+  cpp_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jan/cpp-qpp-ttl-01-26e.csv
+  cpp2_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jan/cpp-qpp-scnd-addntl-01-26e.csv
+  ei_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jan/ei-01-26e.csv
+  cpp_maximums: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/canada-pension-plan-cpp/cpp-contribution-rates-maximums-exemptions.html
+  ei_maximums: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/payroll-deductions-contributions/employment-insurance-ei/ei-premium-rates-maximums.html
+  remittance_due_dates: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/payroll/remitting-source-deductions/how-when-remit-due-dates.html
+  pdoc: https://www.canada.ca/en/revenue-agency/services/e-services/e-services-businesses/payroll-deductions-online-calculator.html
+
+cpp:                              # source: cpp_csv, cpp_maximums, T4127 chapter 6
+  ympe: "74600"                   # Year's Maximum Pensionable Earnings
+  basic_exemption: "3500"         # annual; per period = 3500 / P, truncated to the cent (T4127 table 6.1)
+  rate: "0.0595"                  # employee rate = employer rate (base 4.95% + first additional 1.00%)
+  base_rate: "0.0495"             # used in the K2/K2P credit ratio (0.0495/0.0595)
+  first_additional_rate: "0.0100" # used in F5 = C x (0.0100/0.0595) + C2
+  max_contribution: "4230.45"     # employee max, same for employer
+  max_base_contribution: "3519.45" # base-only max used in K2 / K2P
+
+cpp2:                             # source: cpp2_csv (second additional CPP)
+  yampe: "85000"                  # Year's Additional Maximum Pensionable Earnings
+  rate: "0.04"
+  max_contribution: "416.00"      # employee max, same for employer
+
+ei:                               # source: ei_csv, ei_maximums
+  max_insurable_earnings: "68900"
+  rate: "0.0163"                  # employee, outside Quebec
+  employer_multiplier: "1.4"
+  max_premium: "1123.07"          # employee max
+  max_employer_premium: "1572.30"
+
+federal:                          # source: table_8_1_csv (Table 8.1), formulas from T4127 chapter 4
+  brackets:                       # A threshold, R rate, K constant
+    - {a: "0", r: "0.14", k: "0"}
+    - {a: "58523", r: "0.205", k: "3804"}
+    - {a: "117045", r: "0.26", k: "10241"}
+    - {a: "181440", r: "0.29", k: "15685"}
+    - {a: "258482", r: "0.33", k: "26024"}
+  lowest_rate: "0.14"
+  bpaf:                           # source: T4127 Jan 2026, "Federal basic personal amount (BPAF)"
+    max: "16452"                  # where NI <= 181,440
+    min: "14829"                  # where NI >= 258,482
+    phase_out_start: "181440"
+    phase_out_end: "258482"
+  canada_employment_amount: "1501" # source: table_8_2_csv (CEA)
+
+ontario:                          # source: table_8_1_csv and table_8_2_csv
+  brackets:                       # A threshold, V rate, KP constant
+    - {a: "0", v: "0.0505", kp: "0"}
+    - {a: "53891", v: "0.0915", kp: "2210"}
+    - {a: "107785", v: "0.1116", kp: "4376"}
+    - {a: "150000", v: "0.1216", kp: "5876"}
+    - {a: "220000", v: "0.1316", kp: "8076"}
+  lowest_rate: "0.0505"
+  basic_personal_amount: "12989"
+  surtax:                         # V1, T4127 chapter 4 Ontario
+    - {threshold: "5818", rate: "0.20"}
+    - {threshold: "7446", rate: "0.36"}
+  tax_reduction:                  # factor S
+    basic: "300"                  # S2
+    per_dependant: "554"          # Y: per dependant under 19 and per disabled dependant
+  health_premium:                 # V2, by annual taxable income A
+    # each row: applies where lower < A <= upper; V2 = min(cap, base + rate x (A - lower))
+    - {lower: "0", upper: "20000", base: "0", rate: "0", cap: "0"}
+    - {lower: "20000", upper: "36000", base: "0", rate: "0.06", cap: "300"}
+    - {lower: "36000", upper: "48000", base: "300", rate: "0.06", cap: "450"}
+    - {lower: "48000", upper: "72000", base: "450", rate: "0.25", cap: "600"}
+    - {lower: "72000", upper: "200000", base: "600", rate: "0.25", cap: "750"}
+    - {lower: "200000", upper: null, base: "750", rate: "0.25", cap: "900"}
+
+remittance:                       # source: remittance_due_dates
+  remitter_type: regular          # regular remitter: AMWA under $25,000
+  due_day_of_following_month: 15  # weekend or CRA holiday: on time if received the next business day
