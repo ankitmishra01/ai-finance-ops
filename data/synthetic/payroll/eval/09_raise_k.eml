@@ -1,0 +1,9 @@
+From: ops.manager@lakeview-sample.test
+To: payroll@lakeview-sample.test
+Subject: Salary update
+Date: Thu, 05 Nov 2026 09:08:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Anthony's salary is going to $91k as of November 1st.

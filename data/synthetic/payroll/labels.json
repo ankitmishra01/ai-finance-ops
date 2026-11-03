@@ -1,0 +1,281 @@
+{
+  "inbox/01_raise.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Danielle Johnson",
+      "effective_date": "2026-11-01",
+      "bonus_amount": null,
+      "new_annual_salary": 78000,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "inbox/02_unpaid_leave.eml": [
+    {
+      "type": "unpaid_leave",
+      "employee_name": "Patricia Miller",
+      "effective_date": "2026-11-05",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": 2,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "inbox/03_new_hire.eml": [
+    {
+      "type": "new_hire",
+      "employee_name": "Lisa Smith",
+      "effective_date": "2026-11-09",
+      "bonus_amount": null,
+      "new_annual_salary": 62000,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": false,
+      "td1_provided": false
+    }
+  ],
+  "inbox/04_bonus.eml": [
+    {
+      "type": "bonus",
+      "employee_name": "Anthony Gonzalez",
+      "effective_date": null,
+      "bonus_amount": 1500,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "inbox/05_bonus_fwd.eml": [
+    {
+      "type": "bonus",
+      "employee_name": "Anthony Gonzalez",
+      "effective_date": null,
+      "bonus_amount": 1500,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "inbox/06_hours.eml": [
+    {
+      "type": "hours_correction",
+      "employee_name": "Debra Gardner",
+      "effective_date": null,
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": 6,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/01_pct_raise.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Jill Rhodes",
+      "effective_date": "2026-11-01",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/02_hourly_raise.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Jeffrey Lawrence",
+      "effective_date": "2026-11-02",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": 26.25,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/03_cancelled.eml": [],
+  "eval/04_question.eml": [],
+  "eval/05_multi.eml": [
+    {
+      "type": "bonus",
+      "employee_name": "Jill Rhodes",
+      "effective_date": null,
+      "bonus_amount": 750,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    },
+    {
+      "type": "hours_correction",
+      "employee_name": "Debra Gardner",
+      "effective_date": null,
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": 3.5,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/06_leave_words.eml": [
+    {
+      "type": "unpaid_leave",
+      "employee_name": "Danielle Johnson",
+      "effective_date": "2026-11-11",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": 3,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/07_new_hourly.eml": [
+    {
+      "type": "new_hire",
+      "employee_name": "Linda Wolfe",
+      "effective_date": "2026-11-16",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": 23.0,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": true,
+      "td1_provided": true
+    }
+  ],
+  "eval/08_bonus_k.eml": [
+    {
+      "type": "bonus",
+      "employee_name": "Jeffery Wagner",
+      "effective_date": null,
+      "bonus_amount": 2500,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/09_raise_k.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Anthony Gonzalez",
+      "effective_date": "2026-11-01",
+      "bonus_amount": null,
+      "new_annual_salary": 91000,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/10_half_day.eml": [
+    {
+      "type": "unpaid_leave",
+      "employee_name": "Joshua Walker",
+      "effective_date": "2026-11-03",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": 0.5,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/11_remove_hours.eml": [
+    {
+      "type": "hours_correction",
+      "employee_name": "Jeffrey Lawrence",
+      "effective_date": null,
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": -2,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/12_fyi.eml": [],
+  "eval/13_new_salaried.eml": [
+    {
+      "type": "new_hire",
+      "employee_name": "Matthew Moore",
+      "effective_date": "2026-11-23",
+      "bonus_amount": null,
+      "new_annual_salary": 70000,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": true,
+      "td1_provided": false
+    }
+  ],
+  "eval/14_raise_and_bonus.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Patricia Miller",
+      "effective_date": "2026-11-01",
+      "bonus_amount": null,
+      "new_annual_salary": 88500,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    },
+    {
+      "type": "bonus",
+      "employee_name": "Patricia Miller",
+      "effective_date": null,
+      "bonus_amount": 1000,
+      "new_annual_salary": null,
+      "new_hourly_rate": null,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ],
+  "eval/15_moves_rate.eml": [
+    {
+      "type": "raise",
+      "employee_name": "Debra Gardner",
+      "effective_date": "2026-11-09",
+      "bonus_amount": null,
+      "new_annual_salary": null,
+      "new_hourly_rate": 33.0,
+      "unpaid_days": null,
+      "extra_hours": null,
+      "sin_provided": null,
+      "td1_provided": null
+    }
+  ]
+}
