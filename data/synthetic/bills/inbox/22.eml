@@ -1,0 +1,31 @@
+From: Smith Courier Services <billing@smith-courier.test>
+To: ap@tamarack-studio.test
+Subject: Invoice CR-3302
+Date: Fri, 30 Oct 2026 09:54:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Hi Tamarack team,
+
+Please see our invoice below.
+
+Vendor: Smith Courier Services
+91171 David Mountains
+Ottawa, ON N6A5E4
+
+Invoice No: CR-3302
+Date: Oct 30, 2026
+Terms: Net 7
+HST Registration: 693103418RT0001
+Bill to: Tamarack Test Studio Inc.
+
+  Same-day delivery x3 .......... $55.00
+
+Subtotal: $55.00
+HST (13%): $7.15
+Total (CAD): $62.15
+
+Thanks,
+Carmen Rose
+Smith Courier Services

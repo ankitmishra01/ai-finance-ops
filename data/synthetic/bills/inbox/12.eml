@@ -1,0 +1,12 @@
+From: Billing <billing@notely-app.test>
+To: ap@tamarack-studio.test
+Subject: Your subscription renewal
+Date: Sat, 24 Oct 2026 09:42:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Your card ending 4242 was charged $45.20 for your Pro subscription renewal.
+Invoice INV-2231
+Total charged: $45.20
+No action is needed.

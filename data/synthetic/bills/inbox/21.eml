@@ -1,0 +1,30 @@
+From: Garcia Coffee Bar <billing@garcia-coffee.test>
+To: ap@tamarack-studio.test
+Subject: Invoice CB-77
+Date: Fri, 30 Oct 2026 09:49:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Hi Tamarack team,
+
+Please see our invoice below.
+
+Vendor: Garcia Coffee Bar
+353 Wagner Glen Apt. 164
+Ottawa, ON M9E 3E5
+
+Invoice No: CB-77
+Date: Oct 30, 2026
+Terms: Due on receipt
+Bill to: Tamarack Test Studio Inc.
+
+  Coffee and pastries for team meeting .......... $48.00
+
+Subtotal: $48.00
+HST (13%): $6.24
+Total (CAD): $54.24
+
+Thanks,
+Gavin Anderson
+Garcia Coffee Bar
