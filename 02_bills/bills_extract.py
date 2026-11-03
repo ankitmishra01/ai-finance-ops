@@ -63,6 +63,8 @@ class Extraction:
     subtotal_cents: int | None = None
     tax_cents: int | None = None          # GST/HST only, the part that can be an ITC
     other_tax_cents: int = 0              # PST/RST/QST, not recoverable as an ITC
+    other_tax_kind: str | None = None     # "QST", "PST" or "RST" when the document names it
+    qst_number: str | None = None         # supplier's QST registration number, as printed
     total_cents: int | None = None
     currency: str = "CAD"
     terms: str | None = None
@@ -225,6 +227,9 @@ class RulesExtractor:
                                           r"(?:#|no\.?|number)?\s*:?\s*(\d[\d ]{5,}\s*RT\s*\d+)")
         if e.gst_number:
             e.gst_number = re.sub(r"\s+", "", e.gst_number)
+        e.qst_number = self._first(lines, r"\bqst\b[^\n]{0,25}?([0-9][0-9 ]{6,}\s*TQ\s*\d+)")
+        if e.qst_number:
+            e.qst_number = re.sub(r"\s+", "", e.qst_number)
         e.invoice_number = self._first(lines, r"(?:invoice|bill)\s*(?:#|no\.?|number)\s*:?\s*([A-Z0-9][A-Z0-9\-/]*)")
         e.invoice_date = parse_date(self._first(lines, rf"(?:invoice date|issued|date)\s*:?\s*{DATE_RX}"))
         e.terms = self._terms(lines)
@@ -309,8 +314,11 @@ class RulesExtractor:
                 continue
             if re.match(r"(sub-?total|amount before tax|pre-tax)", low):
                 e.subtotal_cents = amt
-            elif re.match(r"(pst|rst|qst)\b", low):
+            elif m := re.match(r"(pst|rst|qst)\b", low):
+                if "reg" in low:
+                    continue  # "QST Reg. No.: ..." is a number, not an amount
                 e.other_tax_cents += amt
+                e.other_tax_kind = m.group(1).upper()
             elif re.match(r"(hst|gst|gst/hst|sales tax|tax)\b", low) and not re.search(r"reg|#|no\.", low):
                 e.tax_cents = (e.tax_cents or 0) + amt
             elif re.match(r"(total|amount due|balance due|amount payable)", low):
@@ -347,6 +355,9 @@ not decide whether to pay, and you do not do arithmetic checks; other code does 
      return null instead), terms (as printed, e.g. "Net 30", "Due on receipt", "2/10 Net 30").
    - subtotal: amount before tax. gst_hst: the GST or HST amount only. other_tax: PST, RST or QST
      (0 if none). total: the amount due as printed, even if it does not add up.
+   - other_tax_kind: "QST" (also printed as TVQ), "PST" or "RST" when other_tax is not 0, else null.
+   - qst_number: the supplier's QST (TVQ) registration number exactly as printed, spaces removed,
+     usually 10 digits + "TQ" + 4 digits. null if none is printed. Never invent or repair one.
      Amounts are plain decimal strings like "1234.50" with no currency symbol or commas.
    - currency: ISO code. Use "USD" only if the invoice says USD or US$; otherwise "CAD".
    - recipient_name: the "Bill to" customer name, or null.
@@ -375,6 +386,8 @@ EXTRACTION_SCHEMA = {
         "subtotal": {"type": ["string", "null"], "pattern": r"^-?\d+(\.\d{1,2})?$"},
         "gst_hst": {"type": ["string", "null"], "pattern": r"^-?\d+(\.\d{1,2})?$"},
         "other_tax": {"type": ["string", "null"], "pattern": r"^-?\d+(\.\d{1,2})?$"},
+        "other_tax_kind": {"type": ["string", "null"], "enum": ["QST", "PST", "RST", None]},
+        "qst_number": _nullable_str,
         "total": {"type": ["string", "null"], "pattern": r"^-?\d+(\.\d{1,2})?$"},
         "recipient_name": _nullable_str,
         "description": _nullable_str,
@@ -422,6 +435,8 @@ def from_model_output(out: dict) -> Extraction:
         subtotal_cents=to_cents(out.get("subtotal")),
         tax_cents=to_cents(out.get("gst_hst")),
         other_tax_cents=to_cents(out.get("other_tax")) or 0,
+        other_tax_kind=out.get("other_tax_kind") if out.get("other_tax_kind") in ("QST", "PST", "RST") else None,
+        qst_number=re.sub(r"\s+", "", out["qst_number"]) if out.get("qst_number") else None,
         total_cents=to_cents(out.get("total")),
         currency=(out.get("currency") or "CAD").upper(),
         terms=out.get("terms"),

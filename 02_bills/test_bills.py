@@ -11,7 +11,8 @@ sys.path.insert(0, str(HERE))
 import bills  # noqa: E402
 from bills import (  # noqa: E402
     BillReview, bn_check_digit_ok, bn_format_ok, bucket, due_date, find_duplicate, itc_assessment,
-    parse_terms, process, tax_rate_check, totals_match,
+    other_tax_kind, parse_terms, process, provincial_rate_check, qst_itr_assessment, review_bill, tax_rate_check,
+    totals_match,
 )
 from bills_extract import (  # noqa: E402
     ClaudeExtractor, Extraction, RulesExtractor, categorize, from_model_output, get_extractor, parse_date,
@@ -224,6 +225,84 @@ def test_claude_extractor_has_no_invented_fixtures(monkeypatch):
         ClaudeExtractor().extract(read_mailbox(DATA / "inbox")[0])
 
 
+# --- provincial sales tax and QST input tax refunds -------------------------------------------
+
+def qc_bill(**kw) -> Extraction:
+    base = dict(vendor_province="QC", subtotal_cents=120000, tax_cents=6000, other_tax_cents=11970,
+                other_tax_kind="QST", qst_number="1234567890TQ0001", total_cents=137970,
+                category="professional_fees")
+    base.update(kw)
+    return bill(**base)
+
+
+def test_other_tax_kind_printed_or_inferred():
+    assert other_tax_kind(qc_bill()) == "QST"
+    assert other_tax_kind(qc_bill(other_tax_kind=None)) == "QST"               # inferred from QC
+    assert other_tax_kind(bill(vendor_province="SK", other_tax_cents=600)) == "PST"
+    assert other_tax_kind(bill(vendor_province="MB", other_tax_cents=700)) == "RST"
+    assert other_tax_kind(bill()) is None
+
+
+@pytest.mark.parametrize("kw,ok", [
+    ({}, True),
+    ({"other_tax_cents": 11969}, True),                                       # rounding tolerance
+    ({"other_tax_cents": 8400}, False),                                       # 7%, not 9.975%
+    ({"other_tax_kind": "PST"}, False),                                       # a QC vendor charges QST
+    ({"vendor_province": "ON", "other_tax_kind": None}, False),               # ON has no separate tax
+    ({"vendor_province": "BC", "other_tax_kind": "PST", "other_tax_cents": 8400}, True),
+])
+def test_provincial_rate_check(kw, ok):
+    assert provincial_rate_check(qc_bill(**kw))[0] is ok
+
+
+def test_qst_itr_full_half_and_refused():
+    assert qst_itr_assessment(qc_bill(), "professional_fees", qst_registered=True).claimable_cents == 11970
+    meals = qst_itr_assessment(qc_bill(other_tax_cents=2993), "meals", qst_registered=True)
+    assert (meals.status, meals.claimable_cents) == ("eligible", 1497)        # half of 29.93, rounded up
+    assert qst_itr_assessment(qc_bill(), "professional_fees", qst_registered=False).status == "not_eligible"
+    bad = qst_itr_assessment(qc_bill(qst_number="123456789TQ001"), "professional_fees", qst_registered=True)
+    assert bad.status == "not_eligible" and "not 10 digits" in bad.reason
+    nr = qst_itr_assessment(qc_bill(qst_number="NR12345678"), "professional_fees", qst_registered=True)
+    assert nr.status == "not_eligible"
+    # Under $100 the QST number is not required, as for the GST/HST number.
+    small = qst_itr_assessment(qc_bill(subtotal_cents=6000, tax_cents=300, other_tax_cents=599, total_cents=6899,
+                                       qst_number=None), "office", qst_registered=True)
+    assert (small.status, small.claimable_cents) == ("eligible", 599)
+    pst = qst_itr_assessment(bill(vendor_province="BC", other_tax_cents=700), "office", qst_registered=True)
+    assert pst.status == "not_applicable"
+
+
+def test_review_holds_qst_refund_on_wrong_rate_and_flags_numbers():
+    r = review_bill("x", qc_bill(other_tax_cents=8400, total_cents=134400), as_of=AS_OF,
+                    recipient_province="ON", earlier=[], qst_registered=True)
+    assert r.qst_itr.status == "needs_review" and r.qst_itr.claimable_cents == 0
+    assert any("provincial tax inconsistent" in f for f in r.flags)
+    r = review_bill("x", qc_bill(qst_number=None), as_of=AS_OF, recipient_province="ON", earlier=[],
+                    qst_registered=True)
+    assert any("missing QST registration number" in f for f in r.flags)
+    r = review_bill("x", qc_bill(), as_of=AS_OF, recipient_province="ON", earlier=[], qst_registered=True)
+    assert not r.flags and r.payload()["qst_itr_cents"] == 11970 and r.payload()["other_tax_kind"] == "QST"
+
+
+def test_rules_extractor_reads_qst_lines():
+    meta = json.loads((DATA / "labels.json").read_text())
+    labels = {x["file"]: x for x in meta["items"]}
+    ex = RulesExtractor()
+    for m in read_mailbox(DATA / "inbox"):
+        lab = labels[m.path.name]
+        if lab.get("other_tax_kind") and lab["split"] == "templated":
+            e = ex.extract(m)
+            assert (e.other_tax_cents, e.other_tax_kind) == (to_cents(lab["other_tax"]), lab["other_tax_kind"])
+            assert e.qst_number == lab["qst_number"]
+
+
+def test_from_model_output_provincial_fields():
+    e = from_model_output({"doc_type": "bill", "subtotal": "500.00", "gst_hst": "25.00", "other_tax": "49.88",
+                           "other_tax_kind": "QST", "qst_number": "1006543210 TQ 0001", "total": "574.88"})
+    assert (e.other_tax_cents, e.other_tax_kind, e.qst_number) == (4988, "QST", "1006543210TQ0001")
+    assert from_model_output({"doc_type": "bill", "other_tax_kind": "VAT"}).other_tax_kind is None
+
+
 # --- end to end on the synthetic mailbox -------------------------------------------------------
 
 @pytest.fixture(scope="module")
@@ -246,7 +325,7 @@ def test_templated_mail_flags(mailbox):
             needle = {"duplicate": "duplicate: same vendor", "possible_duplicate": "possible duplicate",
                       "total_mismatch": "total mismatch", "tax_rate": "tax rate inconsistent",
                       "foreign_currency": "foreign currency", "missing_bn": "missing GST/HST registration",
-                      "invalid_bn": "not 9 digits"}[f]
+                      "invalid_bn": "not 9 digits", "invalid_qst": "is not 10 digits + TQ + 4 digits"}[f]
             assert needle in got, (src, f, got)
         if not lab["expected_flags"]:
             assert not reviews[src].flags, (src, reviews[src].flags)
@@ -263,6 +342,10 @@ def test_approval_posts_clean_bills_and_rerun_catches_them(mailbox, tmp_path):
     assert all(p.decision == "held" for p in q.items if p.flags)
     ids = bills.post_approved(con, [p.payload for p in approved])
     assert con.execute("select count(*) from bills").fetchone()[0] == len(ids)
+    # Provincial tax is posted in its own columns; the QST refund only when the recipient is registered.
+    kinds = {r["other_tax_kind"] for r in con.execute("select other_tax_kind from bills where other_tax_cents > 0")}
+    assert kinds == {"PST", "QST"}
+    assert con.execute("select sum(qst_itr_cents) from bills").fetchone()[0] == 0
     again = process(extracted, as_of=AS_OF, existing=bills.ledger_bills(con))
     posted = {p.payload["source"] for p in approved}
     assert all(any("duplicate" in f for f in r.flags) for r in again if r.source in posted)
@@ -296,3 +379,24 @@ def test_eval_reports_numbers():
     res = mod.run()["rules"]
     assert res["all"]["messages"] >= 15
     assert 0 <= res["all"]["classification_accuracy"] <= 1
+
+
+def test_qst_refunds_on_the_mailbox_when_registered(mailbox, tmp_path):
+    meta, extracted = mailbox
+    assert meta["recipient_qst_registered"] is True
+    reviews = {r.source: r for r in process(extracted, as_of=AS_OF, qst_registered=True)}
+    by_number = {r.e.invoice_number: r for r in reviews.values()}
+    assert (by_number["SJ-2207"].qst_itr.status, by_number["SJ-2207"].qst_itr.claimable_cents) == ("eligible", 11970)
+    assert by_number["TR-512"].qst_itr.claimable_cents == 1497               # meals: half of $29.93
+    assert by_number["IM-0931"].qst_itr.status == "not_eligible"            # malformed QST number
+    assert by_number["OF-4410"].e.other_tax_kind == "PST" and by_number["OF-4410"].qst_itr.status == "not_applicable"
+    q = ApprovalQueue()
+    bills.propose_all(q, list(reviews.values()))
+    approved = q.review(auto=True)
+    con = ledger.connect(tmp_path / "q.db")
+    bills.post_approved(con, [p.payload for p in approved])
+    row = con.execute("select b.other_tax_cents, b.other_tax_kind, b.qst_itr_cents, v.qst_number from bills b "
+                      "join vendors v on v.id = b.vendor_id where b.number = 'SJ-2207'").fetchone()
+    assert (row[0], row[1], row[2]) == (11970, "QST", 11970) and row[3].endswith("TQ0001")
+    _, md = bills.write_aging(list(reviews.values()), {}, tmp_path, AS_OF)
+    assert "QST input tax refunds claimable on eligible bills: $134.67" in md.read_text()

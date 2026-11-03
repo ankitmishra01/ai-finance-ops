@@ -57,7 +57,8 @@ def main(argv: list[str] | None = None) -> int:
           + ", ".join(f"{v} {k}" for k, v in sorted(counts.items())))
 
     con = ledger.connect(args.ledger) if (args.approve or args.auto_approve) else ledger.connect()
-    reviews = process(extracted, as_of=args.as_of, recipient_province=args.province, existing=ledger_bills(con))
+    reviews = process(extracted, as_of=args.as_of, recipient_province=args.province, existing=ledger_bills(con),
+                      qst_registered=meta.get("recipient_qst_registered", False))
 
     queue = ApprovalQueue()
     propose_all(queue, reviews)
@@ -89,6 +90,16 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\nAP aging as of {args.as_of} (exact duplicates excluded):")
     for cur, b in sorted(bucket_totals(reviews).items()):
         print(f"  {cur}: " + ", ".join(f"{k} {fmt(b[k])}" for k in BUCKETS))
+    not_dup = [r for r in reviews if not any(f.startswith("duplicate:") for f in r.flags)]
+    other = {}
+    for r in not_dup:
+        kind = r.payload()["other_tax_kind"]
+        if kind:
+            other[kind] = other.get(kind, 0) + r.e.other_tax_cents
+    if other:
+        print("Provincial tax on bills: " + ", ".join(f"{k} {fmt(v)}" for k, v in sorted(other.items()))
+              + f"; QST input tax refunds claimable {fmt(sum(r.qst_itr.claimable_cents for r in not_dup))}"
+              + " (PST and RST are a cost)")
     flagged = sum(bool(r.flags) for r in reviews)
     print(f"\n{len(reviews)} bills proposed, {flagged} flagged for a person.")
     print(f"Wrote {csv_path.relative_to(ROOT) if csv_path.is_relative_to(ROOT) else csv_path}, "

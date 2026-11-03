@@ -10,6 +10,15 @@ References
   and GST/HST Memorandum 8.4 (its dollar thresholds predate the 2021 amendment)
   https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/8-4/documentary-requirements-claiming-input-tax-credits.html
 - Rates: shared/tax.py
+- QST input tax refunds (ITRs): Revenu Quebec, Input Tax Credits and Input Tax Refunds (no ITR when
+  no QST is payable; invoices of $100 or more must show the supplier's QST number; no ITR on QST
+  charged by a supplier registered only under the specified system, NR numbers)
+  https://www.revenuquebec.ca/en/businesses/consumption-taxes/gsthst-and-qst/itcs-and-itrs/
+  Meals and entertainment, 50% of the QST:
+  https://www.revenuquebec.ca/en/businesses/consumption-taxes/gsthst-and-qst/special-cases-gsthst-and-qst/meal-and-entertainment-expenses-itcs-and-itrs/
+  revenuquebec.ca refused automated fetches, so these rules were taken from search summaries of
+  those pages; read them before relying on the code. Not modelled: the sales-based ceiling on meal
+  ITRs that the same page describes, and the large-business ITR restrictions.
 """
 
 from __future__ import annotations
@@ -24,7 +33,8 @@ from pathlib import Path
 
 from bills_extract import CHART_OF_ACCOUNTS, Extraction, categorize
 from shared import ledger
-from shared.tax import RATES, fmt
+from shared.tax import PROVINCIAL_TAX, RATES, fmt, normalize_qst_number, provincial_tax_cents, provincial_tax_code
+from shared.tax import validate_qst_number
 from shared.tax import gst_hst_number_check_digit_ok as bn_check_digit_ok  # noqa: F401 (re-exported for tests)
 from shared.tax import gst_hst_number_format_ok as bn_format_ok
 from shared.tax import normalize_gst_hst_number as normalize_bn
@@ -128,6 +138,67 @@ def itc_assessment(e: Extraction, category: str) -> ITC:
     return ITC("eligible", tier, [], claim)
 
 
+# --- provincial sales tax (QST, PST, RST) -------------------------------------------------------
+
+def other_tax_kind(e: Extraction) -> str | None:
+    """The provincial tax on the bill: as printed, else inferred from the vendor's province."""
+    if not e.other_tax_cents:
+        return None
+    return e.other_tax_kind or provincial_tax_code(e.vendor_province)
+
+
+def provincial_rate_check(e: Extraction) -> tuple[bool, str]:
+    """Is the QST/PST/RST charged the vendor province's rate on the subtotal?
+
+    Provincial tax is charged where the supply is made, which for these bills is normally the
+    vendor's province, so only that rate is tested. 2 cents of tolerance for line-level rounding.
+    """
+    other, sub = e.other_tax_cents or 0, e.subtotal_cents
+    if not other or not sub:
+        return True, "no provincial tax"
+    kind = other_tax_kind(e)
+    if e.vendor_province not in PROVINCIAL_TAX:
+        return False, f"{kind or 'provincial tax'} {fmt(other)} charged by a vendor outside QC, BC, SK and MB"
+    want = provincial_tax_cents(sub, e.vendor_province)
+    code, _, label = PROVINCIAL_TAX[e.vendor_province]
+    if kind and kind != code:
+        return False, f"{kind} charged but a {e.vendor_province} vendor charges {code}"
+    if abs(want - other) > 2:
+        return False, f"{fmt(other)} {code} charged; {label} on {fmt(sub)} is {fmt(want)}"
+    return True, f"{label} matches {e.vendor_province}"
+
+
+@dataclass
+class QSTRefund:
+    status: str              # eligible | not_eligible | not_applicable | needs_review
+    claimable_cents: int
+    reason: str
+
+
+def qst_itr_assessment(e: Extraction, category: str, *, qst_registered: bool) -> QSTRefund:
+    """Can the QST on this bill be claimed as an input tax refund (ITR)?
+
+    Only QST is refundable; PST and RST are a cost. Assumes 100% commercial use, like the ITC,
+    and a recipient that is not a large business (whose ITRs on some inputs are restricted).
+    """
+    if other_tax_kind(e) != "QST":
+        return QSTRefund("not_applicable", 0, "no QST charged")
+    if not qst_registered:
+        return QSTRefund("not_eligible", 0, "recipient not registered for QST; the QST is a cost")
+    if e.currency != "CAD":
+        return QSTRefund("not_eligible", 0, "foreign-currency invoice")
+    # Mirrors SOR/91-45 s. 3: from $100 the supplier's registration number must be on the document.
+    if (e.total_cents or 0) >= ITC_TIER_2:
+        ok, why = validate_qst_number(e.qst_number)
+        if not ok:
+            return QSTRefund("not_eligible", 0, f"supplier QST number {why}")
+    claim = e.other_tax_cents
+    if category == "meals":
+        n, d = MEALS_ITC_SHARE
+        claim = (claim * n + d - 1) // d
+    return QSTRefund("eligible", claim, "50% of QST on meals" if category == "meals" else "full QST")
+
+
 # --- terms and buckets -------------------------------------------------------------------------
 
 def parse_terms(terms: str | None, default_days: int = 30) -> tuple[int | str, int | None, bool]:
@@ -229,6 +300,7 @@ class BillReview:
     flags: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
     duplicate_of: str | None = None
+    qst_itr: QSTRefund = field(default_factory=lambda: QSTRefund("not_applicable", 0, "no QST charged"))
 
     @property
     def e(self) -> Extraction:
@@ -246,15 +318,17 @@ class BillReview:
             "number": e.invoice_number, "bill_date": e.invoice_date,
             "due_date": self.due.isoformat() if self.due else None,
             "currency": e.currency, "subtotal_cents": e.subtotal_cents, "tax_cents": e.tax_cents,
-            "other_tax_cents": e.other_tax_cents, "total_cents": e.total_cents,
+            "other_tax_cents": e.other_tax_cents, "other_tax_kind": other_tax_kind(e),
+            "qst_number": normalize_qst_number(e.qst_number), "total_cents": e.total_cents,
             "itc_status": self.itc.status, "itc_claimable_cents": self.itc.claimable_cents,
+            "qst_itr_status": self.qst_itr.status, "qst_itr_cents": self.qst_itr.claimable_cents,
             "category": self.category, "account": CHART_OF_ACCOUNTS[self.category][0],
             "terms": e.terms, "bucket": self.bucket,
         }
 
 
 def review_bill(source: str, e: Extraction, *, as_of: date, recipient_province: str,
-                earlier: list[tuple[str, Extraction]]) -> BillReview:
+                earlier: list[tuple[str, Extraction]], qst_registered: bool = False) -> BillReview:
     flags: list[str] = []
     notes: list[str] = list(e.notes)
     category = e.category if e.category in CHART_OF_ACCOUNTS else categorize(
@@ -286,6 +360,23 @@ def review_bill(source: str, e: Extraction, *, as_of: date, recipient_province: 
     elif not e.gst_number and tax > 0 and (e.total_cents or 0) >= ITC_TIER_2:
         flags.append(f"missing GST/HST registration number on a {fmt(e.total_cents or 0)} claim (over $100)")
 
+    # Provincial sales tax: recorded apart from GST/HST; only QST can come back, as an ITR.
+    kind = other_tax_kind(e)
+    p_ok, p_why = provincial_rate_check(e)
+    if not p_ok:
+        flags.append(f"provincial tax inconsistent with vendor address: {p_why}")
+    elif kind:
+        notes.append(f"provincial tax: {p_why}")
+    if kind == "QST" and e.qst_number and not validate_qst_number(e.qst_number)[0]:
+        flags.append(f"QST number '{e.qst_number}' is {validate_qst_number(e.qst_number)[1]}")
+    elif kind == "QST" and qst_registered and not e.qst_number and (e.total_cents or 0) >= ITC_TIER_2:
+        flags.append(f"missing QST registration number on a {fmt(e.total_cents or 0)} bill (over $100)")
+    qst_itr = qst_itr_assessment(e, category, qst_registered=qst_registered)
+    if qst_itr.status == "eligible" and (not p_ok or not totals_match(e)):
+        qst_itr = QSTRefund("needs_review", 0, "confirm the QST amount with the vendor")
+    if kind in ("PST", "RST"):
+        notes.append(f"{kind} {fmt(e.other_tax_cents)} is not recoverable; post it with the expense")
+
     itc = itc_assessment(e, category)
     if itc.status == "eligible" and (not ok or not totals_match(e)):
         # Tax charged in error is not tax payable; hold the claim until the vendor corrects it.
@@ -308,18 +399,22 @@ def review_bill(source: str, e: Extraction, *, as_of: date, recipient_province: 
         if assumed:
             notes.append("terms not found; assumed Net 30")
         bkt = bucket(due, as_of)
-    return BillReview(source, e, category, itc, due, disc, bkt, flags, notes, dup_of)
+    return BillReview(source, e, category, itc, due, disc, bkt, flags, notes, dup_of, qst_itr)
 
 
 def process(items: list[tuple[str, Extraction]], *, as_of: date, recipient_province: str = "ON",
-            existing: list[tuple[str, Extraction]] = ()) -> list[BillReview]:
-    """Review every bill in mailbox order. Non-bills are ignored here."""
+            existing: list[tuple[str, Extraction]] = (), qst_registered: bool = False) -> list[BillReview]:
+    """Review every bill in mailbox order. Non-bills are ignored here.
+
+    qst_registered: whether the recipient is registered for QST, so QST paid can be refunded.
+    """
     earlier = list(existing)
     out = []
     for src, e in items:
         if e.doc_type != "bill":
             continue
-        r = review_bill(src, e, as_of=as_of, recipient_province=recipient_province, earlier=earlier)
+        r = review_bill(src, e, as_of=as_of, recipient_province=recipient_province, earlier=earlier,
+                        qst_registered=qst_registered)
         out.append(r)
         earlier.append((src, e))
     return out
@@ -338,11 +433,13 @@ def post_approved(con, approved_payloads: list[dict]) -> list[int]:
     for p in approved_payloads:
         days, _, _ = parse_terms(p.get("terms"))
         vid = ledger.upsert_vendor(con, p["vendor"], gst_number=p["gst_number"] or "",
-                                   terms_days=days if isinstance(days, int) else 30)
+                                   terms_days=days if isinstance(days, int) else 30,
+                                   qst_number=p.get("qst_number") or "")
         ids.append(ledger.create_bill(
             con, vendor_id=vid, number=p["number"], bill_date=p["bill_date"], due_date=p["due_date"],
             subtotal_cents=p["subtotal_cents"], tax_cents=p["tax_cents"],
-            other_tax_cents=p.get("other_tax_cents") or 0, total_cents=p.get("total_cents"),
+            other_tax_cents=p.get("other_tax_cents") or 0, other_tax_kind=p.get("other_tax_kind"),
+            qst_itr_cents=p.get("qst_itr_cents") or 0, total_cents=p.get("total_cents"),
             currency=p.get("currency") or "CAD", itc_eligible=1 if p["itc_status"] == "eligible" else 0, category=p["category"],
             status="approved", source=p["source"]))
     con.commit()
@@ -352,7 +449,8 @@ def post_approved(con, approved_payloads: list[dict]) -> list[int]:
 # --- AP aging outputs --------------------------------------------------------------------------
 
 AGING_FIELDS = ["source", "vendor", "invoice_number", "invoice_date", "due_date", "bucket", "currency",
-                "subtotal", "gst_hst", "other_tax", "total", "itc_status", "itc_claimable", "category",
+                "subtotal", "gst_hst", "other_tax", "other_tax_kind", "total", "itc_status", "itc_claimable",
+                "qst_itr_status", "qst_itr_claimable", "category",
                 "decision", "flags"]
 
 
@@ -365,8 +463,10 @@ def aging_rows(reviews: list[BillReview], decisions: dict[str, str]) -> list[dic
             "invoice_date": e.invoice_date, "due_date": r.due.isoformat() if r.due else "",
             "bucket": r.bucket or "", "currency": e.currency,
             "subtotal": f"{(e.subtotal_cents or 0) / 100:.2f}", "gst_hst": f"{(e.tax_cents or 0) / 100:.2f}",
-            "other_tax": f"{(e.other_tax_cents or 0) / 100:.2f}", "total": f"{(e.total_cents or 0) / 100:.2f}",
+            "other_tax": f"{(e.other_tax_cents or 0) / 100:.2f}", "other_tax_kind": other_tax_kind(e) or "",
+            "total": f"{(e.total_cents or 0) / 100:.2f}",
             "itc_status": r.itc.status, "itc_claimable": f"{r.itc.claimable_cents / 100:.2f}",
+            "qst_itr_status": r.qst_itr.status, "qst_itr_claimable": f"{r.qst_itr.claimable_cents / 100:.2f}",
             "category": r.category, "decision": decisions.get(r.source, "pending"),
             "flags": "; ".join(r.flags),
         })
@@ -401,7 +501,10 @@ def write_aging(reviews: list[BillReview], decisions: dict[str, str], out_dir: P
         md.append(f"| {cur} | " + " | ".join(fmt(b[k]) for k in BUCKETS) + f" | {fmt(sum(b.values()))} |")
     itc_total = sum(r.itc.claimable_cents for r in reviews
                     if not any(f.startswith("duplicate:") for f in r.flags))
-    md += ["", f"ITC claimable on eligible bills: {fmt(itc_total)}", "",
+    itr_total = sum(r.qst_itr.claimable_cents for r in reviews
+                    if not any(f.startswith("duplicate:") for f in r.flags))
+    md += ["", f"ITC claimable on eligible bills: {fmt(itc_total)}",
+           f"QST input tax refunds claimable on eligible bills: {fmt(itr_total)}", "",
            "Exact duplicates are listed below but left out of the totals.", "",
            "| Bucket | Due | Vendor | Invoice | Total | ITC | Category | Decision | Flags |",
            "|---|---|---|---|---|---|---|---|---|"]

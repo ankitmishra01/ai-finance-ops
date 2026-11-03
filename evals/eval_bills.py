@@ -30,7 +30,11 @@ FLAG_TYPES = {  # first match wins, so "possible duplicate" is tested before "du
     "tax rate inconsistent": "tax_rate", "foreign currency": "foreign_currency",
     "missing GST/HST registration": "missing_bn", "is not 9 digits": "invalid_bn",
     "fails the check digit": "invalid_bn", "missing fields": "missing_fields",
+    "provincial tax inconsistent": "provincial_tax_rate", "QST number '": "invalid_qst",
+    "missing QST registration": "missing_qst",
 }
+# Provincial sales tax fields, scored on the bills whose label carries QST, PST or RST.
+PROVINCIAL_FIELDS = ["other_tax", "other_tax_kind", "qst_number"]
 
 
 def flag_types(flags: list[str]) -> set[str]:
@@ -92,6 +96,32 @@ def _score_split(extracted, labels, keep) -> dict:
     }
 
 
+def _score_provincial(extracted, labels, reviews) -> dict:
+    """QST/PST/RST amount, kind and QST number on bills that carry provincial tax, plus the QST
+    input tax refund the engine claims on each (reported, not scored: there is no separate label)."""
+    by_src = {r.source: r for r in reviews}
+    items = [(src, e) for src, e in extracted
+             if labels[src]["doc_type"] == "bill" and to_cents(labels[src].get("other_tax") or "0")]
+    hits = {f: 0 for f in PROVINCIAL_FIELDS}
+    misses, refunds = [], {}
+    for src, e in items:
+        lab = labels[src]
+        got = {"other_tax": e.other_tax_cents if e.doc_type == "bill" else None,
+               "other_tax_kind": e.other_tax_kind, "qst_number": e.qst_number}
+        want = {"other_tax": to_cents(lab["other_tax"]), "other_tax_kind": lab.get("other_tax_kind"),
+                "qst_number": lab.get("qst_number")}
+        for f in PROVINCIAL_FIELDS:
+            ok = _norm("gst_number", got[f]) == _norm("gst_number", want[f]) if f == "qst_number" else got[f] == want[f]
+            hits[f] += ok
+            if not ok:
+                misses.append(f"{src}.{f}: got {got[f]!r}, want {want[f]!r}")
+        r = by_src.get(src)
+        refunds[src] = f"{r.qst_itr.status} {r.qst_itr.claimable_cents / 100:.2f}" if r else "not read as a bill"
+    n = len(items)
+    return {"bills": n, "field_accuracy": {f: round(h / n, 4) for f, h in hits.items()} if n else {},
+            "field_misses": misses, "qst_itr_by_bill": refunds}
+
+
 def score(extractor) -> dict:
     meta = json.loads((DATA / "labels.json").read_text())
     labels = {x["file"]: x for x in meta["items"]}
@@ -99,7 +129,8 @@ def score(extractor) -> dict:
     extracted = [(m.path.name, extractor.extract(m)) for m in mails]
 
     reviews = process(extracted, as_of=date.fromisoformat(meta["as_of"]),
-                      recipient_province=meta["recipient_province"])
+                      recipient_province=meta["recipient_province"],
+                      qst_registered=meta.get("recipient_qst_registered", False))
     got_flags = {r.source: flag_types(r.flags) for r in reviews}
     tp = fp = fn = 0
     for src, lab in labels.items():
@@ -115,6 +146,7 @@ def score(extractor) -> dict:
                 if k != "field_misses"},
         "templated": _score_split(extracted, labels, lambda lab: lab["split"] == "templated"),
         "holdout": _score_split(extracted, labels, lambda lab: lab["split"] == "holdout"),
+        "provincial_tax": _score_provincial(extracted, labels, reviews),
         "flags": {"true_positive": tp, "false_positive": fp, "false_negative": fn,
                   "recall": round(tp / (tp + fn), 4) if tp + fn else None,
                   "precision": round(tp / (tp + fp), 4) if tp + fp else None},

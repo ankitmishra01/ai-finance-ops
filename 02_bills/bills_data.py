@@ -38,7 +38,7 @@ EST = timezone(timedelta(hours=-5))
 
 CITIES = {
     "ON": ("Ottawa", "K"), "NS": ("Halifax", "B"), "AB": ("Calgary", "T"), "BC": ("Victoria", "V"),
-    "QC": ("Gatineau", "J"), "MB": ("Winnipeg", "R"),
+    "QC": ("Gatineau", "J"), "MB": ("Winnipeg", "R"), "SK": ("Regina", "S"),
 }
 
 fake = Faker("en_CA")
@@ -104,7 +104,8 @@ def pdf_layout_a(b: dict) -> bytes:
         y = 670
         for lab, val in [("Invoice #:", b["number"]), ("Invoice Date:", b["date"].isoformat()),
                          ("Terms:", b["terms"] or "")] + (
-                [("GST/HST Reg. No.:", b["bn_shown"])] if b["bn_shown"] else []):
+                [("GST/HST Reg. No.:", b["bn_shown"])] if b["bn_shown"] else []) + (
+                [("QST Reg. No.:", b["qst_shown"])] if b.get("qst_shown") else []):
             if val:
                 c.drawString(60, y, f"{lab} {val}")
                 y -= 14
@@ -232,7 +233,9 @@ def pdf_receipt(v: dict, ref: str, amt: Decimal, when: date) -> bytes:
 # --- scenarios ------------------------------------------------------------------------------
 
 def make_bill(v, number, d, items, *, rate, terms, layout="a", currency="CAD", bn_shown="__vendor__",
-              tax_label=None, pst_rate=Decimal("0"), total_override=None, category, flags=()) -> dict:
+              tax_label=None, pst_rate=Decimal("0"), other_kind="PST", qst_shown=None, total_override=None,
+              category, flags=()) -> dict:
+    """pst_rate is the provincial tax (PST, RST or QST, named by other_kind) on the pre-GST subtotal."""
     sub = money(sum(a for _, a in items))
     tax = money(sub * Decimal(str(rate)))
     pst = money(sub * pst_rate)
@@ -245,14 +248,16 @@ def make_bill(v, number, d, items, *, rate, terms, layout="a", currency="CAD", b
     if rate > 0:
         totals.append((label, tax))
     if pst > 0:
-        totals.append((f"PST ({pst_rate * 100:.0f}%)", pst))
+        pct = f"{pst_rate * 100:.3f}".rstrip("0").rstrip(".")
+        totals.append((f"{other_kind} ({pct}%)", pst))
     totals.append((total_label, total))
     return {
         "vendor": v, "number": number, "date": d, "items": items, "terms": terms, "bn_shown": bn,
-        "layout": layout, "currency": currency, "totals": totals,
+        "qst_shown": qst_shown, "layout": layout, "currency": currency, "totals": totals,
         "label": {
             "vendor_name": v["name"], "gst_number": bn, "invoice_number": number,
             "invoice_date": d.isoformat(), "subtotal": str(sub), "tax": str(tax), "other_tax": str(pst),
+            "other_tax_kind": other_kind if pst > 0 else None, "qst_number": qst_shown,
             "total": str(total), "currency": currency, "terms": terms, "category": category,
             "vendor_province": v["province"], "vendor_country": v["country"],
         },
@@ -340,10 +345,11 @@ def add_holdout(msgs: list[dict], add_other) -> None:
     """Six messages in formats the rules baseline was not written for."""
     D = lambda m, d: date(2026, m, d)  # noqa: E731
 
-    def bill_label(v, number, d, sub, tax, total, terms, category, other="0.00", flags=()):
+    def bill_label(v, number, d, sub, tax, total, terms, category, other="0.00", flags=(), kind=None, qst=None):
         return {"doc_type": "bill", "split": "holdout", "vendor_name": v["name"], "gst_number": v["bn"],
                 "invoice_number": number, "invoice_date": d.isoformat(), "subtotal": sub, "tax": tax,
-                "other_tax": other, "total": total, "currency": "CAD", "terms": terms, "category": category,
+                "other_tax": other, "other_tax_kind": kind, "qst_number": qst,
+                "total": total, "currency": "CAD", "terms": terms, "category": category,
                 "vendor_province": v["province"], "vendor_country": "CA", "expected_flags": list(flags)}
 
     # H1: invoice written as prose, vendor only in the signature
@@ -373,7 +379,7 @@ def add_holdout(msgs: list[dict], add_other) -> None:
                  "attachments": [("facture-QC-4410.pdf", "application/pdf", pdf_french(
                      qc, "QC-4410", D(10, 19), "Traduction de documents, 4 000 mots", sub, gst, qst, sub + gst + qst))],
                  "label": bill_label(qc, "QC-4410", D(10, 19), "500.00", "25.00", "574.88", "Net 30",
-                                     "professional_fees", other="49.88")})
+                                     "professional_fees", other="49.88", kind="QST", qst="1006543210TQ0001")})
     # H4: a card-charge confirmation (receipt) that mentions an invoice and a total
     add_other("receipt", "Billing <billing@notely-app.test>", "Your subscription renewal",
               "Your card ending 4242 was charged $45.20 for your Pro subscription renewal.\n"
@@ -567,6 +573,34 @@ def build() -> tuple[list[dict], list[dict]]:
     state["split"] = "holdout"
     add_holdout(msgs, add_other)
 
+    # Provincial sales tax bills, added with QST support. They arrive on 3 November, after every
+    # message above, so the earlier files keep their numbers and bytes. Templated layout A.
+    state["split"] = "templated"
+    qst_rate = Decimal("0.09975")
+    # P1 Quebec law firm: GST 5% + QST 9.975%, valid QST number -> full QST input tax refund
+    qlaw = vendor("Services Juridiques Inc.", "QC")
+    add_bill(make_bill(qlaw, "SJ-2207", D(10, 28), [("Legal review of supplier agreement", Decimal("1200.00"))],
+                       rate=0.05, pst_rate=qst_rate, other_kind="QST", qst_shown=f"{rng.randint(10**9, 10**10 - 1)}TQ0001",
+                       terms="Net 30", category="professional_fees"),
+             subject="Invoice SJ-2207", sent=D(11, 3))
+    # P2 Quebec caterer: meals, so 50% of the QST is refundable (as for the GST ITC)
+    qcat = vendor("Traiteur Ltee", "QC")
+    add_bill(make_bill(qcat, "TR-512", D(10, 30), [("Client workshop lunch, 15 guests", Decimal("300.00"))],
+                       rate=0.05, pst_rate=qst_rate, other_kind="QST", qst_shown=f"{rng.randint(10**9, 10**10 - 1)}TQ0001",
+                       terms="Net 15", category="meals"),
+             subject="Invoice TR-512", sent=D(11, 3))
+    # P3 Quebec vendor with a malformed QST number (9 digits, 3-digit suffix) -> flagged, no refund
+    qprint = vendor("Imprimerie Inc.", "QC")
+    add_bill(make_bill(qprint, "IM-0931", D(10, 29), [("Trade show banners, printed vinyl", Decimal("450.00"))],
+                       rate=0.05, pst_rate=qst_rate, other_kind="QST", qst_shown="123456789TQ001",
+                       terms="Net 30", category="advertising", flags=["invalid_qst"]),
+             subject="Invoice IM-0931", sent=D(11, 3))
+    # P4 Saskatchewan supplier: GST 5% + PST 6%, recorded separately, not recoverable
+    sk = vendor("Office Furnishings Ltd.", "SK")
+    add_bill(make_bill(sk, "OF-4410", D(10, 27), [("Office furniture: filing cabinets x2", Decimal("250.00"))],
+                       rate=0.05, pst_rate=Decimal("0.06"), terms="Net 30", category="office"),
+             subject="Invoice OF-4410", sent=D(11, 3))
+
     # Interleave chronologically by message date (stable), then number the files.
     for i, m in enumerate(msgs):
         m["_order"] = i
@@ -590,7 +624,10 @@ def main() -> None:
                         body=m["body"], attachments=m["attachments"],
                         boundary=f"==============={m['filename'][:2]}{'0' * 17}==")
         (inbox / m["filename"]).write_bytes(raw)
+    # The recipient is assumed registered for QST (so QST paid to Quebec suppliers can be refunded
+    # as an input tax refund) and not a "large business" under the QST refund restrictions.
     meta = {"as_of": AS_OF.isoformat(), "recipient": RECIPIENT, "recipient_province": "ON",
+            "recipient_qst_registered": True,
             "generator": "02_bills/bills_data.py (Faker en_CA, seed 42)", "items": labels}
     (OUT / "labels.json").write_text(json.dumps(meta, indent=2) + "\n")
     print(f"wrote {len(msgs)} messages to {inbox}")
