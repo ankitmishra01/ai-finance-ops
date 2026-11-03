@@ -1,0 +1,22 @@
+[project]
+name = "ai-finance-ops"
+version = "0.1.0"
+description = "Reference MVPs: five human-in-the-loop AI agents for Canadian small-business finance admin"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.40",
+    "faker>=30",
+    "reportlab>=4",
+    "pyyaml>=6",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "01_invoicing", "02_bills", "03_payroll", "04_gst_hst", "05_bookkeeping"]
+pythonpath = ["."]

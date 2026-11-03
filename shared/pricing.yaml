@@ -1,0 +1,6 @@
+# USD per million tokens, used only for the token-analytics cost estimate.
+# Check https://www.anthropic.com/pricing and update before quoting any cost figure.
+models:
+  default: {input: 3.0, output: 15.0, cache_read: 0.30, cache_write: 3.75}
+  claude-sonnet-5-5: {input: 3.0, output: 15.0, cache_read: 0.30, cache_write: 3.75}
+  claude-haiku-5-5: {input: 1.0, output: 5.0, cache_read: 0.10, cache_write: 1.25}
