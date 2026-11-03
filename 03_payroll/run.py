@@ -28,7 +28,7 @@ from payroll_outputs import (pd7a_summary, post_journal, write_cpa005, write_pay
                              write_pd7a)
 from shared import ledger  # noqa: E402
 from shared.approvals import ApprovalQueue  # noqa: E402
-from shared.mail import read_mailbox  # noqa: E402
+from shared.adapters import get_mailbox  # noqa: E402
 
 OUT = ROOT / "out" / "payroll"
 
@@ -47,8 +47,9 @@ def main(argv: list[str] | None = None) -> int:
     roster = [e.name for e in inputs.employees]
     extractor = default_extractor(args.extractor)
 
+    mails = get_mailbox(args.data / "inbox").fetch()   # .eml folder by default; AFO_MAILBOX=imap for a live mailbox
     adjustments = []
-    for mail in read_mailbox(args.data / "inbox"):
+    for mail in mails:
         for a in extractor.extract(mail, roster=roster, period_start=inputs.period.start):
             a["source"] = mail.path.name
             adjustments.append(a)
@@ -64,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
 
     per = inputs.period
     print(f"Pay run {per.start}..{per.end}, pay date {per.pay_date}  (extractor: {extractor.name})")
-    print(f"{len(adjustments)} adjustments read from {len(read_mailbox(args.data / 'inbox'))} emails\n")
+    print(f"{len(adjustments)} adjustments read from {len(mails)} emails\n")
     _print_table(run)
 
     if not (args.approve or args.auto_approve):

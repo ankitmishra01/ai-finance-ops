@@ -1,7 +1,8 @@
 """A small SQLite stand-in for an accounting platform (QuickBooks, Xero, Wave).
 
-Modules talk to this through plain functions so a real adapter can replace it
-later without touching agent logic. Amounts are integer cents throughout.
+Modules talk to this through plain functions, or through `SQLiteLedger`, which implements
+shared.protocols.LedgerAdapter so the QuickBooks Online and Xero adapters in shared/adapters/
+can replace it without touching agent logic. Amounts are integer cents throughout.
 """
 
 from __future__ import annotations
@@ -34,6 +35,10 @@ create table if not exists transactions (
 create table if not exists pay_runs (
   id integer primary key, period_start text, period_end text, pay_date text,
   status text default 'draft', summary_json text
+);
+create table if not exists journal_entries (
+  id integer primary key, date text, memo text, source text, lines_json text,
+  debit_cents integer, credit_cents integer
 );
 """
 
@@ -146,3 +151,58 @@ def add_transaction(con, **f) -> int:
 def set_status(con, table: str, row_id: int, status: str) -> None:
     assert table in {"invoices", "bills", "pay_runs"}
     con.execute(f"update {table} set status = ? where id = ?", (status, row_id))
+
+
+def create_journal_entry(con, *, date: str, memo: str, lines: list[dict], source: str = "") -> int:
+    """Store a balanced journal entry (shared.protocols.check_balanced). Returns its row id."""
+    from shared.protocols import check_balanced
+
+    debits, credits = check_balanced(lines)
+    return con.execute(
+        "insert into journal_entries (date, memo, source, lines_json, debit_cents, credit_cents)"
+        " values (?, ?, ?, ?, ?, ?)", (date, memo, source, json.dumps(lines), debits, credits)).lastrowid
+
+
+class SQLiteLedger:
+    """shared.protocols.LedgerAdapter over a SQLite connection: the default, and what tests use."""
+
+    name = "sqlite"
+
+    def __init__(self, con: sqlite3.Connection | None = None, path: str | Path = ":memory:") -> None:
+        self.con = con if con is not None else connect(path)
+
+    def upsert_customer(self, name, email, province, address=""):
+        return upsert_customer(self.con, name, email, province, address)
+
+    def update_customer(self, customer_id, **fields):
+        return update_customer(self.con, customer_id, **fields)
+
+    def create_invoice(self, **kw):
+        return create_invoice(self.con, **kw)
+
+    def upsert_vendor(self, name, email="", gst_number="", terms_days=30):
+        return upsert_vendor(self.con, name, email, gst_number, terms_days)
+
+    def create_bill(self, **fields):
+        return create_bill(self.con, **fields)
+
+    def post_journal_entry(self, *, date, memo, lines, source=""):
+        return create_journal_entry(self.con, date=date, memo=memo, lines=lines, source=source)
+
+    def set_status(self, table, row_id, status):
+        set_status(self.con, table, row_id, status)
+
+    def commit(self):
+        self.con.commit()
+
+    # Not part of the Protocol: bookkeeping-only helpers the SQLite stand-in also offers.
+    def add_transaction(self, **fields):
+        return add_transaction(self.con, **fields)
+
+    def update_transaction(self, txn_id, **fields):
+        return update_transaction(self.con, txn_id, **fields)
+
+
+def as_adapter(target) -> "SQLiteLedger":
+    """Accept either a sqlite3 connection (older call sites, tests) or any LedgerAdapter."""
+    return SQLiteLedger(target) if isinstance(target, sqlite3.Connection) else target
