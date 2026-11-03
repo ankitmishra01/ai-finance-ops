@@ -8,23 +8,30 @@
 <link rel="stylesheet" href="{{ css }}">
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap">
-    <a class="brand" href="{{ root }}{{ home|default('') }}"><span class="mark">$</span> ai-finance-ops</a>
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="{{ root }}{{ home|default('') }}">
+      <span class="mark">$</span>
+      <span class="brand__txt">ai-finance-ops<em>human-in-the-loop</em></span>
+    </a>
+    <div class="rail__label">Navigate</div>
     <nav class="nav" aria-label="Main">
       {% block nav %}{% endblock %}
     </nav>
+    <div class="rail__foot">Synthetic data only. Agents propose; a person approves. Nothing posts, pays or files itself.</div>
+  </aside>
+  <div class="maincol">
+    <main>
+      <div class="wrap">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+    <footer>
+      <div class="wrap">
+        {% block footer %}All data is synthetic. Agents propose; a person approves. Nothing here posts, pays or files.{% endblock %}
+      </div>
+    </footer>
   </div>
-</header>
-<main>
-  <div class="wrap">
-    {% block content %}{% endblock %}
-  </div>
-</main>
-<footer>
-  <div class="wrap">
-    {% block footer %}All data is synthetic. Agents propose; a person approves. Nothing here posts, pays or files.{% endblock %}
-  </div>
-</footer>
+</div>
 </body>
 </html>

@@ -18,10 +18,10 @@
 </div>
 
 <div class="kpis">
-  <div class="kpi"><div class="v">{{ page.counts.total }}</div><div class="l">proposals</div></div>
-  <div class="kpi"><div class="v">{{ page.counts.flagged }}</div><div class="l">flagged for a person</div></div>
+  <div class="kpi k-accent"><div class="v">{{ page.counts.total }}</div><div class="l">proposals</div></div>
+  <div class="kpi k-warn"><div class="v">{{ page.counts.flagged }}</div><div class="l">flagged for a person</div></div>
   {% for h in page.headline[:2] %}
-  <div class="kpi"><div class="v">{{ h.value }}</div><div class="l">{{ h.label }} (rules baseline)</div></div>
+  <div class="kpi k-good"><div class="v">{{ h.value }}</div><div class="l">{{ h.label }} (rules baseline)</div></div>
   {% endfor %}
 </div>
 <p class="small muted">A person approves: {{ m.approves }}. Dry run of <code>{{ m.id }}/run.py</code> on the synthetic data, built {{ built }}.</p>
@@ -109,7 +109,7 @@
   <div class="sidehead">This dry run</div>
   <div class="sstat"><span>proposals</span><b>{{ page.counts.total }}</b></div>
   <div class="sstat"><span>flagged</span><b>{{ page.counts.flagged }}</b></div>
-  {% for h in page.headline[:2] %}<div class="sstat"><span>{{ h.label|truncate(22) }}</span><b>{{ h.value }}</b></div>{% endfor %}
+  {% for h in page.headline[:2] %}<div class="sstat"><span>{{ h.label|replace('all · ', '')|truncate(26) }}</span><b>{{ h.value }}</b></div>{% endfor %}
   <div class="sidehead">Agents</div>
   {% for p in MODULES %}<a href="../{{ p.slug }}/" class="{{ 'on' if p.id == m.id else '' }}">{{ p.title }}</a>{% endfor %}
   <div class="sidehead">Source</div>
