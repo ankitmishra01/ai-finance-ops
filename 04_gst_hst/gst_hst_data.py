@@ -6,6 +6,8 @@ Writes to data/synthetic/gst_hst/:
   labels.csv           gold labels for every row, plus the 30-row eval subset
   expected_gst34.json  GST34 line totals worked out here from the gold labels,
                        independently of the agent's engine
+  expected_qst.json    the QST return lines (Revenu Quebec FPZ-500, lines 203-209),
+                       worked out the same way
 
 Run: uv run python 04_gst_hst/gst_hst_data.py
 All names are synthetic (Faker en_CA, seed 42). No real people or companies.
@@ -28,7 +30,11 @@ OUT = ROOT / "data" / "synthetic" / "gst_hst"
 PERIOD_START = date(2026, 8, 1)
 PERIOD_END = date(2026, 10, 31)
 MONTHS = [(2026, 8), (2026, 9), (2026, 10)]
-RATE = {"ON": Decimal("0.13"), "AB": Decimal("0.05"), "BC": Decimal("0.05")}
+RATE = {"ON": Decimal("0.13"), "AB": Decimal("0.05"), "BC": Decimal("0.05"), "QC": Decimal("0.05")}
+QST_RATE = Decimal("0.09975")   # shared/tax.py cites the Revenu Quebec source
+# Quebec rows use their own random stream, drawn after everything else, so adding them did not
+# change any earlier row, the 30-row eval set or the business number.
+QST_SEED = 4242
 CITIES = {
     "ON": ["Toronto", "Ottawa", "Mississauga", "Hamilton", "Kingston", "Waterloo"],
     "AB": ["Calgary", "Edmonton", "Red Deer"],
@@ -68,11 +74,12 @@ class Gen:
         return r2(Decimal(str(n)) * Decimal(str(step)))
 
     def add(self, *, d, desc, direction, net, tax=Decimal("0"), bn="", group, category, supply_type,
-            place="NOT_APPLICABLE", itc="not_applicable", gross=None, duplicate=False, note=""):
-        gross = r2(net + tax) if gross is None else gross
+            place="NOT_APPLICABLE", itc="not_applicable", gross=None, duplicate=False, note="",
+            qst=Decimal("0"), qst_no=""):
+        gross = r2(net + tax + qst) if gross is None else gross
         self.rows.append(dict(
             date=d, description=desc, amount=gross if direction == "in" else -gross, net=net, gst_hst=tax,
-            supplier_bn=bn, group=group, category=category, supply_type=supply_type,
+            supplier_bn=bn, qst=qst, supplier_qst=qst_no, group=group, category=category, supply_type=supply_type,
             place_of_supply=place, itc_treatment=itc, is_duplicate=duplicate, note=note))
 
     # -- the quarter ------------------------------------------------------
@@ -244,6 +251,49 @@ class Gen:
             self.add(d=d, desc=desc, direction=direction, net=amt, group="out_of_scope",
                      category="out_of_scope_transfer", supply_type="out_of_scope")
 
+        self._quebec()
+
+    def _quebec(self) -> None:
+        """Quebec activity for the QST worksheet: sales to Quebec clients (GST 5% + QST 9.975%), a
+        credit note, and purchases from Quebec suppliers whose QST is refundable (ITR)."""
+        q = random.Random(QST_SEED)
+        day = lambda: PERIOD_START + timedelta(days=q.randrange((PERIOD_END - PERIOD_START).days + 1))  # noqa: E731
+        qst_no = lambda: f"{q.randint(10**9, 10**10 - 1)}TQ0001"  # noqa: E731
+        bn = lambda: f"{q.randint(100000000, 999999999)}RT0001"  # noqa: E731
+        inv = 4400
+        cities = ["Montreal", "Quebec City", "Laval", "Gatineau"]
+        clients = [(f"{self.fk.last_name()} {q.choice(['Analytics', 'Logistics', 'Health', 'Media'])} Inc.",
+                    q.choice(cities)) for _ in range(3)]
+        for k in range(4):
+            cust, city = clients[k % 3]
+            inv += q.randint(1, 3)
+            net = r2(Decimal(q.randint(24, 160) * 50))
+            # The last sale is billed with GST only: QST collectible is still owed (flagged).
+            qst = Decimal("0") if k == 3 else r2(net * QST_RATE)
+            self.add(d=day(), desc=f"Payment received - INV-{inv} - {cust} ({city} QC) - advisory services",
+                     direction="in", net=net, tax=r2(net * RATE["QC"]), qst=qst, group="qc_sale",
+                     category="sale_domestic", supply_type="taxable", place="QC",
+                     note="QST not charged on a Quebec sale" if k == 3 else "")
+        cust, city = clients[0]
+        net = Decimal("800.00")
+        self.add(d=date(2026, 10, 6), desc=f"Refund to customer - credit note CN-0012 against INV-4401 - {cust} ({city} QC)",
+                 direction="out", net=net, tax=r2(net * RATE["QC"]), qst=r2(net * QST_RATE), group="qc_credit_note",
+                 category="credit_note", supply_type="taxable", place="QC")
+        purchases = [
+            (f"Contractor invoice - {self.fk.name()} (Montreal QC) - French translation of client deliverables",
+             Decimal("1450.00"), "purchase_general", "full", True, ""),
+            (f"Printing - {self.fk.last_name()} Imprimerie (Laval QC) - workshop binders",
+             Decimal("385.20"), "purchase_general", "full", True, ""),
+            (f"Client lunch - {self.fk.last_name()}'s Brasserie, Montreal QC",
+             Decimal("164.80"), "meals_entertainment", "restricted_50", True, ""),
+            (f"Courier - {self.fk.last_name()} Express (Gatineau QC) waybill {q.randint(100000, 999999)}",
+             Decimal("142.00"), "purchase_general", "full", False, "no QST number on courier invoice"),
+        ]
+        for desc, net, cat, itc, has_qst_no, note in purchases:
+            self.add(d=day(), desc=desc, direction="out", net=net, tax=r2(net * RATE["QC"]), bn=bn(),
+                     qst=r2(net * QST_RATE), qst_no=qst_no() if has_qst_no else "", group="qc_purchase",
+                     category=cat, supply_type="taxable", itc=itc, note=note)
+
     def _p(self, d, desc, net, group, *, bn="", category="purchase_general", itc=None, prov="ON", gross=None,
            duplicate=False, note=""):
         """A purchase with GST/HST at the vendor's rate."""
@@ -297,6 +347,25 @@ class Gen:
         return {"unit": "cents", "period_start": PERIOD_START.isoformat(), "period_end": PERIOD_END.isoformat(),
                 "lines": lines}
 
+    def expected_qst(self) -> dict:
+        """QST return lines from the gold labels, worked out directly in this file."""
+        cents = lambda d: int((d * 100).to_integral_value())  # noqa: E731
+        l203 = l206 = l207 = 0
+        for r in self.rows:
+            qst, cat = cents(r["qst"]), r["category"]
+            if cat == "sale_domestic" and r["place_of_supply"] == "QC":
+                l203 += max(cents(r2(r["net"] * QST_RATE)), qst)
+            elif cat == "credit_note":
+                l207 += qst
+            elif not r["is_duplicate"] and r["itc_treatment"] == "full":
+                l206 += qst
+            elif not r["is_duplicate"] and r["itc_treatment"] == "restricted_50":
+                l206 += cents(r2(r["qst"] / 2))
+        lines = {"203": l203, "204": 0, "205": l203, "206": l206, "207": l207, "208": l206 + l207,
+                 "209": l203 - (l206 + l207)}
+        return {"unit": "cents", "period_start": PERIOD_START.isoformat(), "period_end": PERIOD_END.isoformat(),
+                "lines": lines}
+
     def write(self, out: Path = OUT) -> None:
         out.mkdir(parents=True, exist_ok=True)
         business = {
@@ -305,14 +374,20 @@ class Gen:
             "email": "books@northlake-advisory.test", "method": "regular", "reporting_frequency": "quarterly",
             "fiscal_year_end": "01-31", "period_start": PERIOD_START.isoformat(), "period_end": PERIOD_END.isoformat(),
             "instalments_paid": "0.00",
+            # QST registration with Revenu Quebec (synthetic number), so the agent also prepares
+            # the QST worksheet and claims input tax refunds on QST paid to Quebec suppliers.
+            "qst_registered": True,
+            "qst_number": f"{random.Random(QST_SEED + 1).randint(10**9, 10**10 - 1)}TQ0001",
         }
         (out / "business.json").write_text(json.dumps(business, indent=2) + "\n")
         with (out / "transactions.csv").open("w", newline="") as f:
             w = csv.writer(f)
-            w.writerow(["txn_id", "date", "description", "amount", "net", "gst_hst", "supplier_bn"])
+            w.writerow(["txn_id", "date", "description", "amount", "net", "gst_hst", "supplier_bn", "qst",
+                        "supplier_qst"])
             for r in self.rows:
                 w.writerow([r["txn_id"], r["date"].isoformat(), r["description"], f"{r['amount']:.2f}",
-                            f"{r['net']:.2f}", f"{r['gst_hst']:.2f}", r["supplier_bn"]])
+                            f"{r['net']:.2f}", f"{r['gst_hst']:.2f}", r["supplier_bn"], f"{r['qst']:.2f}",
+                            r["supplier_qst"]])
         with (out / "labels.csv").open("w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["txn_id", "category", "supply_type", "place_of_supply", "itc_treatment", "is_duplicate",
@@ -321,6 +396,7 @@ class Gen:
                 w.writerow([r["txn_id"], r["category"], r["supply_type"], r["place_of_supply"], r["itc_treatment"],
                             int(r["is_duplicate"]), int(r["in_eval_set"]), r["group"], r["note"]])
         (out / "expected_gst34.json").write_text(json.dumps(self.expected_gst34(), indent=2) + "\n")
+        (out / "expected_qst.json").write_text(json.dumps(self.expected_qst(), indent=2) + "\n")
 
 
 def main() -> None:

@@ -24,7 +24,7 @@ run() {  # run <module> <summary-filter...>
 run 01_invoicing  grep -E '^(Invoicing|[0-9]+ invoices)|DRY RUN'
 run 02_bills      grep -E '^(Read [0-9]+|  CAD:|  USD:|[0-9]+ bills proposed)|Dry run'
 run 03_payroll    grep -E '^(Pay run|[0-9]+ adjustments|ID |     TOTAL|Remittance)|Dry run'
-run 04_gst_hst    grep -E 'classifier|line 10[159]|line 115|due 20|flagged for review|Dry run'
+run 04_gst_hst    grep -E 'classifier|line 10[159]|line 115|QST line 209|due 20|flagged for review|Dry run'
 run 05_bookkeeping grep -E '^(Bookkeeping|[0-9]+ transactions|Proposals:)|^  [A-Z][a-z].*: [0-9]+$|Dry run'
 
 printf '\nToken log (live/record runs only): runs/token_log.jsonl\nFull logs: %s/\n' "$LOGS"

@@ -7,9 +7,9 @@ from pathlib import Path
 import pytest
 
 import gst_hst_data
-from gst_hst import (DATA_DIR, Classification, Rules, Txn, add_one_month, compute_gst34, cra_holidays,
-                     filing_deadline, gold_classifications, load_labels, load_transactions, mul_round, to_cents,
-                     treat)
+from gst_hst import (DATA_DIR, Classification, Rules, Txn, add_one_month, compute_gst34, compute_qst,
+                     cra_holidays, filing_deadline, gold_classifications, load_business, load_labels,
+                     load_transactions, mul_round, to_cents, treat)
 from gst_hst_extract import SCHEMA, ClaudeExtractor, RulesExtractor, rules_for_prompt
 from shared import llm
 
@@ -289,7 +289,7 @@ def test_generator_is_reproducible(tmp_path):
     g.build()
     g.finalize()
     g.write(tmp_path)
-    for name in ("transactions.csv", "labels.csv", "expected_gst34.json", "business.json"):
+    for name in ("transactions.csv", "labels.csv", "expected_gst34.json", "expected_qst.json", "business.json"):
         assert (tmp_path / name).read_text() == (DATA_DIR / name).read_text(), name
 
 
@@ -336,9 +336,108 @@ def test_run_dry_and_auto(tmp_path, monkeypatch):
         rows = list(csv.DictReader(f))
     for k in ("101", "103", "106", "107", "405"):
         assert sum(to_cents(r[f"line_{k}"]) for r in rows) == gst34[k]
+    # Same for the QST worksheet, and the QST return goes to the queue as its own proposal.
+    qst = json.loads((tmp_path / "dry" / "qst.json").read_text())["lines"]
+    for k in ("203", "206", "207"):
+        assert sum(to_cents(r[f"qst_line_{k}"]) for r in rows) == qst[k]
+    assert "Line 206" in (tmp_path / "dry" / "qst_worksheet.md").read_text()
+    assert [p["kind"] for p in approvals].count("qst_return") == 1
 
     assert run.main(["--out", str(tmp_path / "auto"), "--auto-approve"]) == 0
     approvals = json.loads((tmp_path / "auto" / "approvals.json").read_text())
     assert all(p["decision"] == "held" for p in approvals if p["flags"])
     status = json.loads((tmp_path / "auto" / "status.json").read_text())
     assert status["filed"] is False and status["ready_to_file"] is False  # flagged return is held
+
+
+# --------------------------------------------------------------------------- QST worksheet
+
+def qtxn(desc, amount, net, tax, qst, qst_no="", bn="123456789RT0001", tid="Q1"):
+    return Txn(tid, date(2026, 9, 1), desc, to_cents(amount), to_cents(net), to_cents(tax), bn, to_cents(qst), qst_no)
+
+
+def run_q(t, c, registered=True):
+    return treat([t], {t.txn_id: c}, RULES, qst_registered=registered)[0]
+
+
+def test_rules_qst_section_and_treatments():
+    q = RULES.raw["qst"]
+    assert q["rate"] == "0.09975" and q["province"] == "QC"
+    for k, src in q["sources"].items():
+        assert src["url"].startswith("https://www.revenuquebec.ca/"), k
+    for name, c in RULES.categories.items():
+        assert "qst_itr_treatment" in c, name
+    assert RULES.category("meals_entertainment")["qst_itr_treatment"] == "restricted_50"
+    assert RULES.category("personal")["qst_itr_treatment"] == "none"
+    assert RULES.place_from_text("Henderson Analytics Inc. (Gatineau QC)") == "QC"
+    assert RULES.place_from_text("bureau de Montréal") == "QC"
+
+
+def test_qst_on_quebec_sale():
+    t = run_q(qtxn("INV-1 Acme (Laval QC)", "1149.75", "1000", "50", "99.75"), cls("sale_domestic", "QC"))
+    assert t.lines == {"101": 100000, "103": 5000} and t.qst_lines == {"203": 9975} and not t.flags
+
+
+def test_quebec_sale_without_qst_still_reports_collectible():
+    t = run_q(qtxn("INV-2 Acme (Laval QC)", "1050", "1000", "50", "0"), cls("sale_domestic", "QC"))
+    assert t.qst_lines == {"203": 9975}
+    assert any("QST rate mismatch" in f and "not collected" in f for f in t.flags)
+
+
+def test_qst_on_non_quebec_sale_is_flagged():
+    t = run_q(qtxn("INV-3 Acme (Toronto ON)", "1229.75", "1000", "130", "99.75"), cls("sale_domestic", "ON"))
+    assert not t.qst_lines and any("not Quebec" in f for f in t.flags)
+
+
+def test_qst_credit_note_goes_to_207():
+    t = run_q(qtxn("credit note CN-9 (Laval QC)", "-1149.75", "1000", "50", "99.75"), cls("credit_note", "QC"))
+    assert t.qst_lines == {"207": 9975} and t.lines["107"] == 5000
+
+
+@pytest.mark.parametrize("category,itr", [("purchase_general", 1442), ("meals_entertainment", 721),
+                                          ("personal", 0), ("capital_asset", 1442)])
+def test_qst_itr_by_category(category, itr):
+    t = run_q(qtxn("x (Montreal QC)", "-164.57", "144.57", "5.58", "14.42", "1234567890TQ0001"), cls(category))
+    assert t.qst_lines.get("206", 0) == itr
+
+
+def test_itr_needs_qst_number_from_100():
+    big = run_q(qtxn("Contractor (Montreal QC)", "-1149.75", "1000", "50", "99.75"), cls("purchase_general"))
+    assert big.qst_lines == {"206": 9975}
+    assert any("supplier QST number is missing" in f for f in big.flags)
+    bad = run_q(qtxn("Contractor (Montreal QC)", "-1149.75", "1000", "50", "99.75", "12345TQ1"), cls("purchase_general"))
+    assert any("not 10 digits + TQ + 4 digits" in f for f in bad.flags)
+    small = run_q(qtxn("Coffee (Montreal QC)", "-23.00", "20", "1", "2.00"), cls("purchase_general"))
+    assert small.qst_lines == {"206": 200} and not small.flags
+
+
+def test_qst_rate_mismatch_on_purchase_and_totals_include_qst():
+    t = run_q(qtxn("Supplies (Laval QC)", "-1120", "1000", "50", "70", "1234567890TQ0001"), cls("purchase_general"))
+    assert any("QST rate mismatch" in f for f in t.flags)
+    assert not any("totals mismatch" in f for f in t.flags)
+    off = run_q(qtxn("Supplies (Laval QC)", "-1160", "1000", "50", "99.75", "1234567890TQ0001"), cls("purchase_general"))
+    assert any("totals mismatch" in f and "QST" in f for f in off.flags)
+
+
+def test_not_registered_means_no_qst_lines():
+    t = run_q(qtxn("INV-1 Acme (Laval QC)", "1149.75", "1000", "50", "99.75"), cls("sale_domestic", "QC"),
+              registered=False)
+    assert t.qst_lines == {}
+
+
+def test_compute_qst_totals():
+    a = run_q(qtxn("INV-1 (Laval QC)", "1149.75", "1000", "50", "99.75", tid="A"), cls("sale_domestic", "QC"))
+    b = run_q(qtxn("Contractor (Laval QC)", "-574.88", "500", "25", "49.88", "1234567890TQ0001", tid="B"),
+              cls("purchase_general"))
+    c = run_q(qtxn("credit note (Laval QC)", "-114.98", "100", "5", "9.98", tid="C"), cls("credit_note", "QC"))
+    q = compute_qst([a, b, c])
+    assert q == {"203": 9975, "204": 0, "205": 9975, "206": 4988, "207": 998, "208": 5986, "209": 3989}
+
+
+def test_quarter_qst_from_gold_labels_matches_generator():
+    business = load_business()
+    assert business["qst_registered"] and business["qst_number"].endswith("TQ0001")
+    treated = treat(load_transactions(), gold_classifications(load_labels()), RULES, qst_registered=True)
+    expected = json.loads((DATA_DIR / "expected_qst.json").read_text())["lines"]
+    assert compute_qst(treated) == expected
+    assert expected["203"] > 0 and expected["206"] > 0 and expected["207"] > 0

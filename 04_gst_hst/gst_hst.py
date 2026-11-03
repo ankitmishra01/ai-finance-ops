@@ -2,7 +2,8 @@
 
 Everything here is plain code: loading the ledger export and the rules file,
 applying the rules to each classified transaction, raising flags, computing the
-GST34 lines and the filing deadline. The model never touches these numbers.
+GST34 lines, the QST return lines (for a QST registrant) and the filing deadline.
+The model never touches these numbers.
 Amounts are integer cents throughout.
 """
 
@@ -18,7 +19,7 @@ from pathlib import Path
 
 import yaml
 
-from shared.tax import RATES
+from shared.tax import RATES, validate_qst_number
 
 MODULE_DIR = Path(__file__).resolve().parent
 ROOT = MODULE_DIR.parent
@@ -32,6 +33,9 @@ PLACES = ["ON", "AB", "BC", "QC", "MB", "SK", "NS", "NB", "NL", "PE", "YT", "NT"
 LINE_ORDER = ["101", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112",
               "113A", "205", "405", "113B", "113C", "114", "115"]
 BN_RE = re.compile(r"^\d{9}RT\d{4}$")
+# Revenu Quebec FPZ-500, QST part. See the qst section of rules.yaml for which numbers are confirmed.
+QST_LINE_ORDER = ["203", "204", "205", "206", "207", "208", "209"]
+SALE_CATEGORIES = ("sale_domestic", "sale_export", "sale_exempt_residential_rent", "credit_note")
 
 
 # --------------------------------------------------------------------------- money
@@ -64,6 +68,8 @@ class Txn:
     net_cents: int         # unsigned, before GST/HST
     tax_cents: int         # unsigned GST/HST shown on the source document
     supplier_bn: str = ""
+    qst_cents: int = 0     # unsigned QST shown on the source document
+    supplier_qst: str = ""
 
     @property
     def direction(self) -> str:
@@ -96,6 +102,7 @@ class Treated:
     lines: dict[str, int] = field(default_factory=dict)
     flags: list[str] = field(default_factory=list)
     held_out: bool = False    # e.g. duplicate: excluded from the return until a human decides
+    qst_lines: dict[str, int] = field(default_factory=dict)   # FPZ-500 lines 203, 206, 207
 
 
 def load_transactions(path: Path = DATA_DIR / "transactions.csv") -> list[Txn]:
@@ -104,7 +111,8 @@ def load_transactions(path: Path = DATA_DIR / "transactions.csv") -> list[Txn]:
         for r in csv.DictReader(f):
             out.append(Txn(r["txn_id"], date.fromisoformat(r["date"]), r["description"],
                            to_cents(r["amount"]), to_cents(r["net"]), to_cents(r["gst_hst"]),
-                           r.get("supplier_bn", "").strip()))
+                           r.get("supplier_bn", "").strip(), to_cents(r.get("qst") or "0"),
+                           (r.get("supplier_qst") or "").strip()))
     return out
 
 
@@ -147,6 +155,7 @@ class Rules:
         for name, c in self.categories.items():
             assert c["supply_type"] in SUPPLY_TYPES, name
             assert c["itc_treatment"] in ITC_TREATMENTS, name
+            assert c.get("qst_itr_treatment", "none") in ITC_TREATMENTS, name
             assert c["direction"] in ("in", "out", "any"), name
         for k in ("out", "in"):
             assert self.raw["fallback"][k] in self.categories
@@ -172,8 +181,12 @@ class Rules:
 
 # --------------------------------------------------------------------------- engine
 
-def treat(txns: list[Txn], classes: dict[str, Classification], rules: Rules) -> list[Treated]:
-    """Apply the rules to each classified transaction: lines, ITCs and flags."""
+def treat(txns: list[Txn], classes: dict[str, Classification], rules: Rules, *,
+          qst_registered: bool = False) -> list[Treated]:
+    """Apply the rules to each classified transaction: lines, ITCs and flags.
+
+    qst_registered: also work out the QST lines (collectible, ITRs) for Revenu Quebec.
+    """
     t = rules.t
     out: list[Treated] = []
     seen: dict[tuple, str] = {}
@@ -195,8 +208,9 @@ def treat(txns: list[Txn], classes: dict[str, Classification], rules: Rules) -> 
             flags.append(cat["always_flag"])
 
         # Arithmetic on the source document.
-        if x.net_cents + x.tax_cents != x.gross_cents:
-            flags.append(f"totals mismatch: net {fmt(x.net_cents)} + tax {fmt(x.tax_cents)} != bank {fmt(x.gross_cents)}")
+        if x.net_cents + x.tax_cents + x.qst_cents != x.gross_cents:
+            qst = f" + QST {fmt(x.qst_cents)}" if x.qst_cents else ""
+            flags.append(f"totals mismatch: net {fmt(x.net_cents)} + tax {fmt(x.tax_cents)}{qst} != bank {fmt(x.gross_cents)}")
 
         key = (x.date, x.amount_cents, x.description.strip().lower())
         if key in seen:
@@ -208,6 +222,8 @@ def treat(txns: list[Txn], classes: dict[str, Classification], rules: Rules) -> 
         lines = tr.lines
         if not tr.held_out:
             _lines_for(tr, cat, rules)
+            if qst_registered:
+                _qst_lines_for(tr, cat, rules)
         out.append(tr)
         # Flags that depend on the computed ITC.
         itc = lines.get("106", 0)
@@ -275,6 +291,56 @@ def _lines_for(tr: Treated, cat: dict, rules: Rules) -> None:
         itc = mul_round(x.tax_cents, rules.itc_fraction(tr.itc_treatment))
         if itc:
             lines["106"] = itc
+
+
+def _qst_lines_for(tr: Treated, cat: dict, rules: Rules) -> None:
+    """QST collectible on Quebec sales, QST credited on credit notes, ITRs on QST paid."""
+    x, q, lines = tr.txn, rules.raw["qst"], tr.qst_lines
+    tol, rate = rules.t["rate_tolerance_cents"], Decimal(q["rate"])
+    name = tr.cls.category
+    if name in SALE_CATEGORIES:
+        if tr.supply_type == "taxable" and tr.place == q["province"]:
+            collectible = mul_round(x.net_cents, rate)
+            if abs(collectible - x.qst_cents) > tol:
+                msg = (f"QST rate mismatch: {fmt(x.qst_cents)} charged, {fmt(collectible)} expected at "
+                       f"{rate * 100:.3f}% for {tr.place}")
+                if x.qst_cents < collectible and name != "credit_note":
+                    msg += "; the QST collectible is reported even though it was not collected"
+                tr.flags.append(msg)
+            if name == "credit_note":
+                lines["207"] = x.qst_cents
+            else:
+                # As ETA s. 225(1) for the GST: collectible, plus anything collected as tax beyond it.
+                lines["203"] = max(collectible, x.qst_cents)
+        elif x.qst_cents:
+            tr.flags.append(f"QST {fmt(x.qst_cents)} shown on a supply whose place of supply is "
+                            f"{tr.place}, not Quebec")
+        return
+    if x.direction != "out" or not x.qst_cents:
+        return
+    if x.net_cents and abs(mul_round(x.net_cents, rate) - x.qst_cents) > tol:
+        tr.flags.append(f"QST rate mismatch: QST {fmt(x.qst_cents)} on {fmt(x.net_cents)} is not 9.975%")
+    itr = mul_round(x.qst_cents, rules.itc_fraction(cat.get("qst_itr_treatment", "none")))
+    if not itr:
+        return
+    lines["206"] = itr
+    ok, why = validate_qst_number(x.supplier_qst)
+    if not ok and x.gross_cents >= q["thresholds"]["qst_number_required_cents"]:
+        tr.flags.append(f"ITR {fmt(itr)} claimed but the supplier QST number is {why} "
+                        "(required on invoices of $100 or more)")
+
+
+def compute_qst(treated: list[Treated]) -> dict[str, int]:
+    """QST return lines (FPZ-500, lines 203-209) from the per-transaction QST contributions."""
+    L = {k: 0 for k in QST_LINE_ORDER}
+    for tr in treated:
+        for k, v in tr.qst_lines.items():
+            L[k] += v
+    L["204"] = 0
+    L["205"] = L["203"] + L["204"]
+    L["208"] = L["206"] + L["207"]
+    L["209"] = L["205"] - L["208"]
+    return L
 
 
 def compute_gst34(treated: list[Treated], *, instalments_cents: int = 0, rebates_cents: int = 0,

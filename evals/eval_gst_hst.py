@@ -12,6 +12,9 @@ synthetic quarter. All numbers are computed here on each run.
   carry a low-confidence or rule-conflict flag, so a person would see them.
 - GST34: the engine fed the gold labels must reproduce the generator's line
   totals exactly; the same comparison is reported for each extractor.
+- QST: the same two checks for the QST worksheet (FPZ-500 lines 203-209), plus
+  category and place-of-supply accuracy on the Quebec rows (groups qc_*), which
+  were added with QST support and are not part of the 30-row eval set.
 """
 
 from __future__ import annotations
@@ -26,8 +29,8 @@ for p in (ROOT, ROOT / "04_gst_hst"):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from gst_hst import (DATA_DIR, Rules, compute_gst34, gold_classifications, load_labels,  # noqa: E402
-                     load_transactions, treat)
+from gst_hst import (DATA_DIR, Rules, compute_gst34, compute_qst, gold_classifications,  # noqa: E402
+                     load_business, load_labels, load_transactions, treat)
 from gst_hst_extract import ClaudeExtractor, RulesExtractor, classify_all  # noqa: E402
 
 SALES = {"sale_domestic", "sale_export", "sale_exempt_residential_rent", "credit_note"}
@@ -46,9 +49,9 @@ def _lines_report(computed: dict, expected: dict) -> dict:
             "mismatches_cents": diffs}
 
 
-def score(extractor, txns, labels, rules, expected) -> dict:
+def score(extractor, txns, labels, rules, expected, expected_qst, qst_registered) -> dict:
     preds = classify_all(extractor, txns)
-    treated = {t.txn.txn_id: t for t in treat(txns, preds, rules)}
+    treated = {t.txn.txn_id: t for t in treat(txns, preds, rules, qst_registered=qst_registered)}
     out = {}
     for name, ids in (("eval_set", [k for k, r in labels.items() if r["in_eval_set"] == "1"]),
                       ("full_quarter", list(labels))):
@@ -72,6 +75,14 @@ def score(extractor, txns, labels, rules, expected) -> dict:
         out[name]["errors_flagged_for_human"] = {"errors": len(wrong), "flagged": len(caught),
                                                  "unflagged_ids": sorted(set(wrong) - set(caught))}
     out["gst34_vs_expected"] = _lines_report(compute_gst34(list(treated.values())), expected)
+    qc = [k for k, r in labels.items() if r["group"].startswith("qc_")]
+    out["quebec_rows"] = {
+        "n": len(qc),
+        "category": _acc((labels[i]["category"], preds[i].category) for i in qc),
+        "place_of_supply_sales": _acc((labels[i]["place_of_supply"], preds[i].place_of_supply) for i in qc
+                                      if labels[i]["category"] in SALES),
+    }
+    out["qst_vs_expected"] = _lines_report(compute_qst(list(treated.values())), expected_qst)
     return out
 
 
@@ -80,16 +91,20 @@ def run() -> dict:
     txns = load_transactions()
     labels = load_labels()
     expected = json.loads((DATA_DIR / "expected_gst34.json").read_text())["lines"]
+    expected_qst = json.loads((DATA_DIR / "expected_qst.json").read_text())["lines"]
+    qst_registered = bool(load_business().get("qst_registered"))
+    gold = treat(txns, gold_classifications(labels), rules, qst_registered=qst_registered)
 
     result = {
         "n_transactions": len(txns),
         "n_eval_set": sum(1 for r in labels.values() if r["in_eval_set"] == "1"),
-        "gst34_from_gold_labels": _lines_report(compute_gst34(treat(txns, gold_classifications(labels), rules)),
-                                                expected),
-        "rules_extractor": score(RulesExtractor(rules), txns, labels, rules, expected),
+        "gst34_from_gold_labels": _lines_report(compute_gst34(gold), expected),
+        "qst_from_gold_labels": _lines_report(compute_qst(gold), expected_qst),
+        "rules_extractor": score(RulesExtractor(rules), txns, labels, rules, expected, expected_qst, qst_registered),
     }
     if os.environ.get("AFO_LLM_MODE", "replay") in ("live", "record"):
-        result["claude_extractor"] = score(ClaudeExtractor(rules), txns, labels, rules, expected)
+        result["claude_extractor"] = score(ClaudeExtractor(rules), txns, labels, rules, expected, expected_qst,
+                                           qst_registered)
     else:
         result["claude_extractor"] = "not run (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
     return result

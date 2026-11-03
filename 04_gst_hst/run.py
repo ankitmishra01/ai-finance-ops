@@ -1,4 +1,4 @@
-"""Quarterly GST/HST return agent (Ontario registrant, regular method).
+"""Quarterly GST/HST return agent (Ontario registrant, regular method), plus the QST worksheet.
 
 Dry run by default: classifies the quarter's ledger export, applies rules.yaml,
 computes the GST34 lines, writes the working paper and the ready-to-file package
@@ -25,8 +25,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from shared.approvals import ApprovalQueue  # noqa: E402
 from shared.llm import FixtureMissing  # noqa: E402
 
-from gst_hst import (DATA_DIR, Rules, compute_gst34, filing_deadline, fmt, load_business,  # noqa: E402
-                     load_transactions, to_cents, treat)
+from gst_hst import (DATA_DIR, Rules, compute_gst34, compute_qst, filing_deadline, fmt,  # noqa: E402
+                     load_business, load_transactions, to_cents, treat)
 from gst_hst_extract import classify_all, make_extractor  # noqa: E402
 from gst_hst_report import write_all  # noqa: E402
 
@@ -41,13 +41,15 @@ def build(data_dir: Path, extractor_name: str | None):
     txns = load_transactions(data_dir / "transactions.csv")
     extractor = make_extractor(extractor_name, rules)
     classes = classify_all(extractor, txns)
-    treated = treat(txns, classes, rules)
+    qst_registered = bool(business.get("qst_registered"))
+    treated = treat(txns, classes, rules, qst_registered=qst_registered)
     lines = compute_gst34(treated, instalments_cents=to_cents(business.get("instalments_paid", "0")))
+    qst = compute_qst(treated) if qst_registered else None
     due, eff = filing_deadline(date.fromisoformat(business["period_end"]), business["province"])
-    return rules, business, extractor, treated, lines, due, eff
+    return rules, business, extractor, treated, lines, due, eff, qst
 
 
-def propose(queue: ApprovalQueue, treated, lines, business, due, eff, paths) -> None:
+def propose(queue: ApprovalQueue, treated, lines, business, due, eff, paths, qst=None) -> None:
     for t in treated:
         if not t.flags:
             continue
@@ -57,7 +59,7 @@ def propose(queue: ApprovalQueue, treated, lines, business, due, eff, paths) -> 
             f"{x.txn_id} {x.date} {x.description[:60]} ({fmt(x.amount_cents)}) -> {t.cls.category}",
             {"txn_id": x.txn_id, "category": t.cls.category, "supply_type": t.supply_type,
              "itc_treatment": t.itc_treatment, "place_of_supply": t.place, "lines": t.lines,
-             "held_out": t.held_out, "confidence": t.cls.confidence},
+             "held_out": t.held_out, "confidence": t.cls.confidence, "qst_lines": t.qst_lines},
             flags=list(t.flags),
         )
     n_flagged = sum(1 for t in treated if t.flags)
@@ -70,13 +72,27 @@ def propose(queue: ApprovalQueue, treated, lines, business, due, eff, paths) -> 
          "package": {k: _rel(v) for k, v in paths.items()}},
         flags=[f"{n_flagged} transactions flagged; resolve them before filing"] if n_flagged else [],
     )
+    if qst is not None:
+        qres = f"owing {fmt(qst['209'])}" if qst["209"] >= 0 else f"refund {fmt(-qst['209'])}"
+        queue.propose(
+            "qst_return",
+            f"QST (FPZ-500) {business['period_start']}..{business['period_end']}: collectible {fmt(qst['205'])}, "
+            f"ITRs {fmt(qst['208'])}, {qres} - mark READY TO FILE (no filing is done)",
+            {"lines_cents": qst, "qst_number": business.get("qst_number"),
+             "package": _rel(paths["qst_worksheet_md"]) if "qst_worksheet_md" in paths else None},
+            flags=[f"{n_flagged} transactions flagged; resolve them before filing"] if n_flagged else [],
+        )
 
 
-def print_table(treated, lines, due, eff, extractor_name, as_of: date) -> None:
+def print_table(treated, lines, due, eff, extractor_name, as_of: date, qst=None) -> None:
     print(f"\nGST/HST return (GST34), classifier: {extractor_name}")
     print("-" * 44)
     for k in ["101", "103", "104", "105", "106", "107", "108", "109", "110", "111", "205", "405", "113C", "114", "115"]:
         print(f"  line {k:<5} {fmt(lines[k]):>20}")
+    if qst is not None:
+        print("  QST (Revenu Quebec, FPZ-500)")
+        for k in ["203", "205", "206", "207", "208", "209"]:
+            print(f"  QST line {k:<5} {fmt(qst[k]):>16}")
     days = (eff - as_of).days
     print("-" * 44)
     print(f"  due {due}" + (f" (on time to {eff})" if eff != due else "") +
@@ -100,15 +116,15 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
 
     try:
-        rules, business, extractor, treated, lines, due, eff = build(a.data_dir, a.extractor)
+        rules, business, extractor, treated, lines, due, eff, qst = build(a.data_dir, a.extractor)
     except FixtureMissing as e:
         print(f"Claude extractor has no recorded responses for this data.\n{e}", file=sys.stderr)
         return 2
 
-    paths = write_all(a.out, treated, lines, rules, business, extractor.name, due, eff)
+    paths = write_all(a.out, treated, lines, rules, business, extractor.name, due, eff, qst)
     queue = ApprovalQueue()
-    propose(queue, treated, lines, business, due, eff, paths)
-    print_table(treated, lines, due, eff, extractor.name, a.as_of)
+    propose(queue, treated, lines, business, due, eff, paths, qst)
+    print_table(treated, lines, due, eff, extractor.name, a.as_of, qst)
 
     if a.approve or a.auto_approve:
         queue.review(auto=a.auto_approve)
@@ -116,8 +132,10 @@ def main(argv: list[str] | None = None) -> int:
         print("\nDry run: proposals left pending. Re-run with --approve to review.")
     queue.write(a.out / "approvals.json")
     ret = next(p for p in queue.items if p.kind == "gst_hst_return")
+    qret = next((p for p in queue.items if p.kind == "qst_return"), None)
     status = {"return_decision": ret.decision,
               "ready_to_file": ret.decision == "approved",
+              "qst_return_decision": qret.decision if qret else None,
               "filed": False,
               "note": "This agent never files. A person files the approved figures with the CRA."}
     (a.out / "status.json").write_text(json.dumps(status, indent=2) + "\n")

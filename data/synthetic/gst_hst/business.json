@@ -9,5 +9,7 @@
   "fiscal_year_end": "01-31",
   "period_start": "2026-08-01",
   "period_end": "2026-10-31",
-  "instalments_paid": "0.00"
+  "instalments_paid": "0.00",
+  "qst_registered": true,
+  "qst_number": "7541180901TQ0001"
 }

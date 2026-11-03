@@ -11,6 +11,10 @@
 #
 # Citations: ETA = Excise Tax Act, R.S.C. 1985, c. E-15. Verify every reference
 # against the current text before relying on it; this is not tax advice.
+#
+# The business is also registered for the Quebec sales tax (QST). The `qst` section at the end and
+# each category's `qst_itr_treatment` drive a second worksheet, the QST lines of Revenu Quebec's
+# return (FPZ-500): QST collectible on Quebec sales, input tax refunds (ITRs) on QST paid.
 
 version: 1
 jurisdiction: Canada (federal GST/HST), registrant resident in Ontario
@@ -117,6 +121,7 @@ categories:
     direction: any
     supply_type: out_of_scope
     itc_treatment: not_applicable
+    qst_itr_treatment: not_applicable
     lines: []
     meaning: Bank transfers between own accounts, owner draws or contributions, loan principal, and GST/HST or income-tax payments to the CRA. Not supplies.
     cite: [ETA s. 123(1) "supply"]
@@ -131,6 +136,7 @@ categories:
     direction: out
     supply_type: taxable
     itc_treatment: not_applicable
+    qst_itr_treatment: not_applicable
     lines: ["101", "107"]
     meaning: Refund or credit note issued to a customer that reverses part of an earlier taxable sale, including the GST/HST on it. The tax credited is deducted on line 107; the net reduces line 101.
     cite: [ETA s. 232(3), rc4022 "Credit notes" (line 107), gst34_lines]
@@ -144,6 +150,7 @@ categories:
     direction: in
     supply_type: zero_rated
     itc_treatment: not_applicable
+    qst_itr_treatment: not_applicable
     lines: ["101"]
     meaning: Advisory, professional or consulting service supplied to a non-resident customer who is not in Canada when the service is performed. Zero-rated.
     cite: [ETA Schedule VI Part V s. 23, ETA Schedule VI Part V s. 7, memo_3_3, rc4027]
@@ -155,6 +162,7 @@ categories:
     direction: in
     supply_type: exempt
     itc_treatment: not_applicable
+    qst_itr_treatment: not_applicable
     lines: ["101"]
     meaning: Rent received for long-term (one month or more) residential accommodation. Exempt; no tax charged, and ITCs on inputs used for the rental are not available.
     cite: [ETA Schedule V Part I s. 6, type_of_supply]
@@ -167,8 +175,9 @@ categories:
     direction: in
     supply_type: taxable
     itc_treatment: not_applicable
+    qst_itr_treatment: not_applicable
     lines: ["101", "103"]
-    meaning: Service supplied to a Canadian customer. Taxable at the rate of the province of the recipient's business address (general place-of-supply rule for services) - 13% HST in ON, 5% GST in AB and BC (BC PST is not GST/HST and is not reported here).
+    meaning: Service supplied to a Canadian customer. Taxable at the rate of the province of the recipient's business address (general place-of-supply rule for services) - 13% HST in ON, 5% GST in AB, BC and QC (BC PST is not GST/HST and is not reported here; QST on Quebec sales goes on the QST worksheet).
     cite: [ETA s. 165, ETA s. 144.1, hst_regs, place_of_supply]
     keywords:
       - '\binv-?\d+'
@@ -178,6 +187,7 @@ categories:
     direction: out
     supply_type: taxable
     itc_treatment: none
+    qst_itr_treatment: none
     lines: []
     always_flag: personal expense paid from the business account; no ITC, post as owner draw or shareholder loan
     meaning: Personal consumption by the owner or family, including recreational or sporting club memberships. No ITC.
@@ -192,6 +202,7 @@ categories:
     direction: out
     supply_type: taxable
     itc_treatment: restricted_50
+    qst_itr_treatment: restricted_50
     lines: ["106"]
     meaning: Food, beverages and entertainment for business purposes (client meals, team dinners, event tickets). ITC limited to 50% of the GST/HST.
     cite: [ETA s. 236(1), Income Tax Act s. 67.1 (the 50% limit ETA s. 236 refers to), rc4022 "Meal and entertainment expenses"]
@@ -203,6 +214,7 @@ categories:
     direction: out
     supply_type: exempt
     itc_treatment: none
+    qst_itr_treatment: none  # Quebec's 9% tax on insurance premiums is not QST and is never refunded
     lines: []
     meaning: Insurance premiums. The issuance of an insurance policy is an exempt financial service, so there is no GST/HST and no ITC. (Ontario 8% retail sales tax on some premiums is provincial and is not recoverable here.)
     cite: [ETA s. 123(1) "financial service" (d), ETA Schedule V Part VII s. 1, type_of_supply]
@@ -214,6 +226,7 @@ categories:
     direction: out
     supply_type: exempt
     itc_treatment: none
+    qst_itr_treatment: none
     lines: []
     meaning: Bank account, wire, overdraft and interest charges. Exempt financial services; no ITC. (Card-processor merchant fees can include taxable components; treat those as purchase_general if tax is shown.)
     cite: [ETA s. 123(1) "financial service", ETA Schedule V Part VII s. 1, type_of_supply]
@@ -226,6 +239,7 @@ categories:
     direction: out
     supply_type: out_of_scope
     itc_treatment: none
+    qst_itr_treatment: none  # QST from a specified-system (NR) supplier is not refundable either
     lines: ["405"]
     # Share of use in commercial activities. Below the exclusive-use threshold
     # (90%) the business self-assesses HST on line 405.
@@ -242,6 +256,7 @@ categories:
     direction: out
     supply_type: taxable
     itc_treatment: full
+    qst_itr_treatment: full
     lines: ["106"]
     always_flag: capital personal property; confirm it is used more than 50% in commercial activities and record it for CCA
     meaning: Equipment, computers, furniture or vehicles bought as capital property. Full ITC if used primarily (more than 50%) in commercial activities; no ITC otherwise. Passenger vehicles have extra limits.
@@ -255,6 +270,7 @@ categories:
     direction: out
     supply_type: taxable
     itc_treatment: full
+    qst_itr_treatment: full
     lines: ["106"]
     meaning: Ordinary business purchases from Canadian suppliers - commercial office rent, telecom, office supplies, courier, contractors, professional fees, Canadian software. Full ITC for the GST/HST shown.
     cite: [ETA s. 169(1), itc]
@@ -281,6 +297,7 @@ place_of_supply:
     "ON": ['\bON\b', '(?i)\bontario\b', '(?i)\btoronto\b', '(?i)\bottawa\b', '(?i)\bmississauga\b', '(?i)\bhamilton\b', '(?i)\bkingston\b', '(?i)\bwaterloo\b', '(?i)\bguelph\b']
     AB: ['\bAB\b', '(?i)\balberta\b', '(?i)\bcalgary\b', '(?i)\bedmonton\b', '(?i)\bred deer\b', '(?i)\blethbridge\b']
     BC: ['\bBC\b', '(?i)\bbritish columbia\b', '(?i)\bvancouver\b', '(?i)\bvictoria\b', '(?i)\bkelowna\b', '(?i)\bburnaby\b']
+    QC: ['\bQC\b', '(?i)\bqu[eé]bec\b', '(?i)\bmontr[eé]al\b', '(?i)\blaval\b', '(?i)\bgatineau\b', '(?i)\bsherbrooke\b']
   outside_canada_tokens: ['\bUSA?\b', '(?i)\bunited states\b', '(?i)\bireland\b', '(?i)\bunited kingdom\b', '\bUK\b', '(?i)\bsan francisco\b', '(?i)\bdublin\b', '(?i)\baustin\b', '(?i)\bseattle\b']
 
 # ---------------------------------------------------------------------------
@@ -341,3 +358,51 @@ filing:
   cite: [ETA s. 238(1)(a), ETA s. 245(2), deadlines, rc4022]
   weekend_holiday: If the due date falls on a Saturday, Sunday or a CRA-recognised public holiday, a return or payment is on time if received by the next business day.
   weekend_holiday_cite: [holidays, Interpretation Act s. 26]
+
+# ---------------------------------------------------------------------------
+# QST (Quebec sales tax). Applies only when business.json says qst_registered.
+# Rate 9.975% on the price before GST, from shared/tax.py (which cites the
+# Revenu Quebec rate page). Each category's qst_itr_treatment uses the same
+# fractions as itc_treatments: QST is refunded as an input tax refund (ITR) on
+# the same commercial-use footing as the GST ITC, and meals are limited to 50%.
+#
+# Line numbers follow Revenu Quebec's GST/HST and QST return (FPZ-500). Lines
+# 203 (QST collectible), 206 (ITRs) and 207 (amounts added to the ITRs) are
+# confirmed in the FPZ-2034-G-V guide. Lines 204, 205, 208 and 209 are taken as
+# the QST mirror of GST34 lines 104, 105, 108 and 109; Unsure: revenuquebec.ca
+# could not be fetched to confirm them, so check the current form.
+# ---------------------------------------------------------------------------
+qst:
+  province: QC
+  rate: "0.09975"
+  sources:
+    rates:
+      title: Revenu Quebec - Calculating the Taxes (QST 9.975% of the price excluding GST)
+      url: https://www.revenuquebec.ca/en/businesses/consumption-taxes/gsthst-and-qst/collecting-gst-and-qst/calculating-the-taxes/
+    itrs:
+      title: Revenu Quebec - Input Tax Credits and Input Tax Refunds
+      url: https://www.revenuquebec.ca/en/businesses/consumption-taxes/gsthst-and-qst/itcs-and-itrs/
+    meals:
+      title: Revenu Quebec - Meal and Entertainment Expenses (ITCs and ITRs, 50%)
+      url: https://www.revenuquebec.ca/en/businesses/consumption-taxes/gsthst-and-qst/special-cases-gsthst-and-qst/meal-and-entertainment-expenses-itcs-and-itrs/
+    invoices:
+      title: Revenu Quebec - Preparing Invoices (supplier QST number from $100)
+      url: https://www.revenuquebec.ca/en/businesses/consumption-taxes/gsthst-and-qst/collecting-gst-and-qst/preparing-invoices/
+    return_guide:
+      title: Revenu Quebec - FPZ-2034-G-V, Guide to Detailed GST/HST and QST Calculations (line 203, 206, 207)
+      url: https://www.revenuquebec.ca/en/online-services/forms-and-publications/fpz-2034-g-v/guide-to-detailed-gst/hst-and-qst-calculations-and-the-return-respecting-taxable-real-property-immovables-taxable-carbon-emission-allowances-and-imported-taxable-supplies/
+  treatment:
+    sales: QST collectible on taxable sales whose place of supply is Quebec (line 203). Where more was collected than 9.975% requires, the amount collected is reported, mirroring ETA s. 225(1). Zero-rated exports and exempt rent carry no QST.
+    credit_notes: QST credited to a Quebec customer on a credit note is added to the ITR side (line 207), mirroring GST34 line 107.
+    purchases: QST paid to a Quebec supplier is refunded as an ITR (line 206) at the category's qst_itr_treatment fraction. From $100 the supplier's QST number must be on the invoice.
+    not_modelled: Large-business ITR restrictions, the sales-based ceiling on meal ITRs, QST self-assessment on imports, instalments (line 210 onward) and the Quick Method.
+  thresholds:
+    qst_number_required_cents: 10000
+  return_lines:
+    "203": QST collectible (confirmed, FPZ-2034-G-V)
+    "204": Amounts added to the QST collectible (e.g. bad debt recovered). Zero here
+    "205": Total QST and adjustments = 203 + 204 (line number by analogy with GST34 105)
+    "206": Input tax refunds claimed for the period (confirmed, FPZ-2034-G-V)
+    "207": Amounts added to the ITRs, here QST credited on credit notes (confirmed as the line for amounts added to ITRs)
+    "208": Total ITRs and adjustments = 206 + 207 (line number by analogy with GST34 108)
+    "209": QST net tax = 205 - 208; positive is owing to Revenu Quebec (line number by analogy with GST34 109)
