@@ -60,7 +60,7 @@ ADJUSTMENT_SCHEMA = {
     "required": ["adjustments"],
 }
 
-SYSTEM = """You read emails sent to the payroll administrator of a small Ontario employer and extract the pay changes they request for the current pay run.
+SYSTEM = """You read emails sent to the payroll administrator of a small Canadian employer (Ontario or Quebec) and extract the pay changes they request for the current pay run.
 
 Rules:
 - Return one adjustment per distinct change. An email can contain zero, one or several.

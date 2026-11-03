@@ -1,0 +1,84 @@
+# Payroll rates and thresholds for 2026, Quebec employees.
+#
+# Quebec employees pay QPP and QPP2 instead of CPP and CPP2, QPIP premiums, EI at the
+# reduced Quebec rate, federal income tax less the 16.5% Quebec abatement, and Quebec
+# income tax withheld under Revenu Québec's formulas. Every number below was read from
+# one of the two primary documents listed under `sources` and has a source key beside it:
+#
+#   tp1015fv  Revenu Québec, TP-1015.F-V (2026-01), "Formulas to Calculate Source
+#             Deductions and Contributions", 2026. The PDF was downloaded and read in
+#             full on 3 Nov 2026. The worked examples in its appendices 1 and 3 are
+#             reproduced as tests in test_payroll_quebec.py.
+#   t4127     CRA, T4127 Payroll Deductions Formulas, 122nd edition (January 2026),
+#             chapter 4 (K2Q, F5Q, Quebec abatement) and tables 8.2, 8.3 to 8.8.
+#             The 123rd edition (July 2026) CSV of table 8.2 still shows the 0.165
+#             abatement, and the CRA lists no Quebec or federal change for July.
+#
+# Not verified (and therefore not used to compute anything): a mid-year (July) revision
+# of TP-1015.F-V. Revenu Québec's publication page returned HTTP 403 to automated
+# requests, so the 2026-01 edition is the only one that was read. Revenu Québec's
+# remittance due dates were also not verified; see the module README.
+#
+# Quoted as strings so they load as exact Decimals. Check before production use.
+
+year: 2026
+edition: "TP-1015.F-V (2026-01) and T4127-JAN 2026 (122nd edition), Quebec sections"
+sources:
+  tp1015fv_2026_01_pdf: https://www.revenuquebec.ca/documents/en/formulaires/tp/TP-1015.F-V%282026-01%29.pdf
+  tp1015fv_page: https://www.revenuquebec.ca/en/online-services/forms-and-publications/current-details/tp-1015-f-v/
+  t4127_jan_2026_formulas: https://www.canada.ca/en/revenue-agency/services/forms-publications/payroll/t4127-payroll-deductions-formulas/t4127-jan/t4127-jan-payroll-deductions-formulas-computer-programs.html
+  t4127_cpp_qpp_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jan/cpp-qpp-ttl-01-26e.csv
+  t4127_cpp_qpp_second_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jan/cpp-qpp-scnd-addntl-01-26e.csv
+  t4127_ei_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jan/ei-01-26e.csv
+  t4127_jul_other_rates_csv: https://www.canada.ca/content/dam/cra-arc/formspubs/pub/t4127-jul/other-rates-amounts-26e.csv
+  webras: https://www.revenuquebec.ca/en/online-services/tools/webras/
+
+qpp:                              # source: tp1015fv "Québec Pension Plan contributions" + section 3.1; t4127 table 8.3
+  ympe: "74600"                   # maximum pensionable earnings
+  basic_exemption: "3500"         # per period = 3500 / P, truncated to the cent (tp1015fv 3.1 note)
+  rate: "0.0630"                  # base 5.30% + first additional 1.00%
+  base_rate: "0.0530"             # used in K2Q (federal credit) as 0.0530/0.0630
+  first_additional_rate: "0.0100" # used in CS / F5Q = C x 0.0100/0.0630 + C2
+  max_contribution: "4479.30"     # employee max, same for employer
+  max_base_contribution: "3768.30" # t4127 K2Q: base-only max (74,600 - 3,500) x 5.30%
+
+qpp2:                             # source: tp1015fv; t4127 table 8.6
+  yampe: "85000"
+  rate: "0.04"
+  max_contribution: "416.00"      # employee max, same for employer
+
+qpip:                             # source: tp1015fv section 4; t4127 table 8.8
+  max_insurable_earnings: "103000"
+  rate: "0.00430"                 # employee
+  employer_rate: "0.00602"
+  max_premium: "442.90"
+  max_employer_premium: "620.06"
+
+ei:                               # source: t4127 table 8.7, "QC" row
+  max_insurable_earnings: "68900"
+  rate: "0.0130"
+  employer_multiplier: "1.4"      # employer rate 0.01820 / 0.0130
+  max_premium: "895.70"
+  max_employer_premium: "1253.98"
+
+federal:                          # source: t4127 chapter 4 step 3 and table 8.2
+  abatement: "0.165"              # T1 = T3 - 0.165 x T3 for employees in Quebec
+
+quebec:                           # source: tp1015fv section 2.1.1 and "Principal changes"
+  brackets:                       # I threshold (more than), T rate, K constant
+    - {a: "0", t: "0.14", k: "0"}
+    - {a: "54345", t: "0.19", k: "2717"}
+    - {a: "108680", t: "0.24", k: "8151"}
+    - {a: "132245", t: "0.2575", k: "10465"}
+  credit_rate: "0.14"             # Y = T x I - K - K1 - 0.14 x E
+  basic_personal_amount: "18952"  # E1 for an employee who did not file TP-1015.3-V
+  deduction_for_workers_rate: "0.06"   # H = 0.06 x D, max 1,450 / P
+  deduction_for_workers_max: "1450"
+  lump_sum_low_income_threshold: "18952"  # annual pay + lump sum at or below this: flat 7%
+  lump_sum_low_income_rate: "0.07"
+
+health_services_fund:             # source: tp1015fv "Contribution to the health services fund" and section 5
+  # W = 1.2662 + 0.3838 x S, S = 1 when total payroll <= $1,000,000 -> 1.65%.
+  # Applies to employers other than primary/manufacturing and public sector. The
+  # synthetic Montreal employer is a professional-services firm with payroll < $1M.
+  rate_total_payroll_1m_or_less: "0.0165"
