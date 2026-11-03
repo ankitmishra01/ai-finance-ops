@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status, flaglist, evidence_panel %}
+{% set css = "/static/style.css" %}
+{% block title %}{{ m.title }} #{{ n }} · ai-finance-ops{% endblock %}
+{% block nav %}
+<a href="/">Queue</a>
+<a href="/?module={{ m.id }}" class="on">{{ m.title }}</a>
+{% endblock %}
+{% block content %}
+<div class="crumbs"><a href="/">Queue</a> / <a href="/?module={{ m.id }}">{{ m.title }}</a> / {{ ev.label }} #{{ n }} of {{ total }}</div>
+<h1>{{ p.summary }}</h1>
+<p>{{ status(p.decision) }} <span class="muted small">&middot; {{ m.id }} &middot; {{ p.kind }}</span></p>
+
+<div class="grid split">
+  <section>
+    {% if p.flags %}
+    <h2 style="margin-top:0">Flagged by the agent</h2>
+    {{ flaglist(p.flags) }}
+    {% endif %}
+    <h2 {% if not p.flags %}style="margin-top:0"{% endif %}>Evidence</h2>
+    {{ evidence_panel(ev, pdf_url=pdf_url, part='data') }}
+  </section>
+
+  <aside>
+    <div class="card decide">
+      {% if is_open %}
+      <h2 style="margin-top:0">Your decision</h2>
+      {% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+      <form method="post" action="/item/{{ m.id }}/{{ n }}/decide">
+        <label for="reason">Reason{% if p.flags %} <span class="muted small">(required: why the flag does not stop it, or why you reject)</span>{% else %} <span class="muted small">(required to reject)</span>{% endif %}</label>
+        <textarea id="reason" name="reason" placeholder="{{ 'Say what you checked, e.g. confirmed the rate with the vendor' if p.flags else 'Optional when approving' }}"></textarea>
+        {% if next_open %}<input type="hidden" name="next" value="{{ next_open }}">{% endif %}
+        <div class="actions">
+          <button class="btn approve" name="action" value="approve" type="submit">Approve</button>
+          <button class="btn reject" name="action" value="reject" type="submit">Reject</button>
+        </div>
+      </form>
+      <p class="small muted" style="margin:12px 0 0">Recorded in <code>out/{{ m.id.split('_',1)[1] }}/</code> with the same store as the CLI. {{ open_count }} open in {{ m.title }}.</p>
+      {% else %}
+      <h2 style="margin-top:0">Decision</h2>
+      <dl class="kv">
+        <dt>Decision</dt><dd>{{ status(p.decision) }}</dd>
+        <dt>Reason</dt><dd>{{ p.reason or '-' }}</dd>
+        <dt>By</dt><dd>{{ p.decided_by or ('auto-approve' if p.decision in ('approved','held') else '-') }}</dd>
+        <dt>When</dt><dd>{{ p.decided_at or '-' }}</dd>
+      </dl>
+      {% endif %}
+      <div class="actions">
+        {% if next_open %}<a class="btn ghost" href="/item/{{ m.id }}/{{ next_open }}">Next open item &rarr;</a>{% endif %}
+        <a class="btn ghost" href="/?module={{ m.id }}">Back to {{ m.title }}</a>
+      </div>
+    </div>
+    {% if ev.email or pdf_url %}
+    <section class="source">{{ evidence_panel(ev, pdf_url=pdf_url, part='source') }}</section>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

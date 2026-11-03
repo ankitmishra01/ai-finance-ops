@@ -1,0 +1,71 @@
+{% macro status(decision) -%}
+<span class="badge {{ decision }}">{{ decision }}</span>
+{%- endmacro %}
+
+{% macro flaglist(flags) -%}
+{% if flags %}
+<ul class="flaglist">
+  {% for f in flags %}<li>{{ f }}</li>{% endfor %}
+</ul>
+{% endif %}
+{%- endmacro %}
+
+{% macro table(t) -%}
+{% if t.rows %}
+<h3>{{ t.title }}</h3>
+<div class="tablewrap"><table>
+  <thead><tr>{% for h in t.head %}<th{% if loop.index0 in (t.num or []) %} class="num"{% endif %}>{{ h }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for r in t.rows %}
+    <tr{% if t.foot and loop.last %} class="foot"{% endif %}>
+      {% for c in r %}<td{% if loop.index0 in (t.num or []) %} class="num"{% endif %}>{{ c if c is not none else '-' }}</td>{% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% endif %}
+{%- endmacro %}
+
+{# The evidence panel: same markup in the local UI and the static site. #}
+{% macro evidence_panel(ev, pdf_url=None, embed=True, part='all') -%}
+{% if part in ('all', 'data') %}
+{% if ev.rows %}
+<h3>{{ 'Extracted fields' if ev.kind == 'bill' else 'Details' }}</h3>
+<dl class="kv">
+  {% for k, v in ev.rows %}<dt>{{ k }}</dt><dd>{{ v if v is not none else '-' }}</dd>{% endfor %}
+</dl>
+{% endif %}
+{% for t in ev.tables %}{{ table(t) }}{% endfor %}
+{% if ev.notes %}
+<h3>Notes</h3>
+<ul>{% for n in ev.notes %}<li>{{ n }}</li>{% endfor %}</ul>
+{% endif %}
+{% if ev.quotes %}
+<h3>What the source says</h3>
+{% for k, v in ev.quotes.items() %}<blockquote><cite>{{ k|humanise }}</cite>{{ v }}</blockquote>{% endfor %}
+{% endif %}
+{% if ev.run_summary %}
+{{ table({"title": "Pay run summary (" ~ ev.run_summary.employees ~ " employees, " ~ ev.run_summary.flagged ~ " flagged)",
+          "head": ["", "Total"], "rows": ev.run_summary.rows, "num": [1], "foot": 1}) }}
+{% endif %}
+{% if ev.package %}
+<h3>Filing package (written by the dry run)</h3>
+<ul>{% for k, v in ev.package.items() %}<li><code>{{ v }}</code></li>{% endfor %}</ul>
+{% endif %}
+{% endif %}
+{% if part in ('all', 'source') %}
+{% if ev.email %}
+<h3>Source email{% if ev.source_name %} <span class="muted small">{{ ev.source_name }}</span>{% endif %}</h3>
+<div class="mail">
+  <div class="head"><b>{{ ev.email.subject }}</b><br><span class="muted">{{ ev.email.from }} &middot; {{ ev.email.date }}</span>
+  {% if ev.email.attachments %}<br><span class="muted">Attachments: {{ ev.email.attachments|join(', ') }}</span>{% endif %}</div>
+  <pre>{{ ev.email.body }}</pre>
+</div>
+{% endif %}
+{% if pdf_url %}
+<h3>Source PDF</h3>
+{% if embed %}<iframe class="pdf" src="{{ pdf_url }}" title="Source PDF"></iframe>{% endif %}
+<p class="small"><a href="{{ pdf_url }}" target="_blank" rel="noopener">Open the PDF in a new tab</a></p>
+{% endif %}
+{% endif %}
+{%- endmacro %}

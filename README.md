@@ -4,7 +4,7 @@ Five human-in-the-loop agents that do recurring finance admin for a Canadian sma
 
 Claude extractors read the messy documents through schema-forced tool calls; tax, payroll and file-format maths is plain tested code (payroll matches the CRA's PDOC calculator to the cent on both cases checked), and nothing is posted, paid or filed without a person's approval.
 
-296 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
+310 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
 
 Each agent takes a recurring back-office job, does the reading, matching and drafting, and stops at an approval queue so a person decides what is posted, paid or filed.
 
@@ -73,6 +73,30 @@ AP aging as of 2026-11-03 (exact duplicates excluded):
 
 Architecture, with diagrams of `shared/`, the approval gate and the token log: [docs/architecture.md](docs/architecture.md).
 
+## See it
+
+**Local approval screen.** Dry-run the agents, then review every proposal from all five in one queue, with the evidence next to it: the invoice or bill PDF, the extracted bill fields, the agent's flags, the pay-run summary, the GST34 lines. Approve or reject with a reason. Decisions are written to the same queue files under `out/` that the CLI reads, so the two stay in sync. It binds to 127.0.0.1 and has no login, so keep it local.
+
+```bash
+./scripts/demo.sh                          # dry-run all five agents (writes out/)
+uv run python -m webui                     # http://127.0.0.1:8700
+uv run python -m webui --refresh           # or: dry-run first, then serve
+uv run python -m shared.approvals          # the same queue from the terminal: counts per module
+uv run python -m shared.approvals review 02_bills   # decide open bills at the prompt
+```
+
+Recording a decision does not post anything. The ledger, payment-file and filing steps still run only from each module's `run.py --approve`.
+
+**Static demo site.** `uv run python scripts/build_site.py` dry-runs all five agents on the synthetic data, runs `evals/run_all.py`, and writes `site/`: an overview with the architecture, and one page per module showing its inputs, the run's output, the flags raised with their evidence, and the eval figures taken from the eval output. `.github/workflows/pages.yml` builds it and deploys it to GitHub Pages on every push to `main`; once Pages is enabled for the repository (Settings > Pages > Source: GitHub Actions) it is published at https://ankitmishra01.github.io/ai-finance-ops/.
+
+| Approval queue | Evidence for a flagged pay line |
+|---|---|
+| ![Approval queue across all five agents](docs/screenshots/webui-queue.png) | ![Pay line with flags, deductions and the run summary](docs/screenshots/webui-payroll.png) |
+
+| Demo site overview | Module page (bills) | Phone width |
+|---|---|---|
+| ![Static site overview with architecture](docs/screenshots/site-overview.png) | ![Bills module page](docs/screenshots/site-bills.png) | ![Overview at phone width](docs/screenshots/site-mobile.png) |
+
 ## Where things stand
 
 Every model step has two implementations: a deterministic rules baseline, which runs in tests and CI, and a Claude extractor behind a forced JSON-schema tool call. The numbers below are for the **rules baseline only**, computed by `evals/run_all.py` on synthetic labelled sets. Because the rules and the synthetic documents were written together, the scores on familiar formats are flattering; the held-out or unfamiliar-phrasing figures are the honest baseline that the Claude extractor is meant to beat. Claude has not been scored yet and no model responses have been recorded or invented; run `AFO_LLM_MODE=record` with an API key to produce both.
@@ -85,7 +109,8 @@ Every model step has two implementations: a deterministic rules baseline, which 
 | 04_gst_hst | 93.3% category and ITC treatment (30 labelled) | Gold labels reproduce all 18 GST34 lines exactly; rules labels match 10 of 18, every error flagged for review | 61 |
 | 05_bookkeeping | Matching precision 1.00, recall 0.98; categorisation 93.9% (82 lines) | French receipt with comma decimals is missed and shows as an orphan | 50 |
 | shared/ | Unit tests: ledger migrations and update whitelists, GST/HST number validator, MIME boundary, record/replay | | 16 |
-| **Total** | | | **296** |
+| webui/, scripts/build_site.py | Approval gate rules, web and CLI decisions on the same queue files, evidence pages, static site build | | 14 |
+| **Total** | | | **310** |
 
 
 ## How to score Claude

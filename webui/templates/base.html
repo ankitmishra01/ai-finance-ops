@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}ai-finance-ops{% endblock %}</title>
+<meta name="description" content="Five human-in-the-loop agents for Canadian small-business finance admin. Synthetic data only.">
+<link rel="stylesheet" href="{{ css }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="{{ root }}{{ home|default('') }}"><span class="mark">$</span> ai-finance-ops</a>
+    <nav class="nav" aria-label="Main">
+      {% block nav %}{% endblock %}
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    {% block footer %}All data is synthetic. Agents propose; a person approves. Nothing here posts, pays or files.{% endblock %}
+  </div>
+</footer>
+</body>
+</html>

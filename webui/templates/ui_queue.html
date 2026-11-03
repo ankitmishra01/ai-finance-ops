@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status %}
+{% set css = "/static/style.css" %}
+{% block title %}Approval queue · ai-finance-ops{% endblock %}
+{% block nav %}
+<a href="/" class="{{ 'on' if not module else '' }}">Queue</a>
+<a href="/api/queue">JSON</a>
+{% endblock %}
+{% block content %}
+<p class="eyebrow">Local review screen</p>
+<h1>Approval queue</h1>
+<p class="lede">Every proposal the five agents made on their last run. Nothing is posted, paid or filed from here: a decision and its reason are recorded in the same queue files the CLI uses (<code>uv run python -m shared.approvals</code>).</p>
+
+{% if missing|length == MODULES|length %}
+<div class="card empty">
+  <p><b>No queues yet.</b></p>
+  <p>Run the agents in dry-run mode first, then reload:</p>
+  <pre><code>./scripts/demo.sh</code></pre>
+  <p class="small">or restart with <code>uv run python -m webui --refresh</code>. Reading from <code>{{ out }}</code>.</p>
+</div>
+{% else %}
+<div class="grid cols-5">
+  {% for r in mods %}
+  <a class="card modcard {{ 'on' if module == r.module.id else '' }}" href="{{ link(module=('' if module == r.module.id else r.module.id)) }}">
+    <div class="t">{{ r.module.title }}</div>
+    <div class="job">{{ r.module.job }}</div>
+    {% if r.counts %}
+    <div class="stat"><b>{{ r.counts.pending + r.counts.held }}</b><span class="muted small">open of {{ r.counts.total }}</span></div>
+    <div class="stats">
+      <span>{{ r.counts.flagged }} flagged</span>
+      <span>{{ r.counts.approved }} approved</span>
+      <span>{{ r.counts.rejected }} rejected</span>
+    </div>
+    {% else %}
+    <div class="muted small">Not run yet: <code>{{ r.module.id }}/run.py</code></div>
+    {% endif %}
+  </a>
+  {% endfor %}
+</div>
+
+<div class="chips" role="navigation" aria-label="Filters">
+  {% for s in statuses %}
+  <a class="chip {{ 'on' if status == s else '' }}" href="{{ link(status=s) }}">{{ s|capitalize }}</a>
+  {% endfor %}
+  <span class="sep"></span>
+  <a class="chip {{ 'on' if flagged else '' }}" href="{{ link(flagged=('' if flagged else '1')) }}">Flagged only</a>
+  <span class="muted small" style="margin-left:auto">{{ items|length }} item{{ '' if items|length == 1 else 's' }}</span>
+</div>
+
+{% if items %}
+<ul class="list">
+  {% for it in items %}
+  <li>
+    <a class="row" href="/item/{{ it.module.id }}/{{ it.n }}">
+      <span class="meta"><b>{{ it.module.title }}</b>{{ KIND_LABELS.get(it.p.kind, it.p.kind) }} #{{ it.n }}</span>
+      <span class="sum">{{ it.p.summary }}</span>
+      <span class="status">{{ status(it.p.decision) }}</span>
+      {% if it.p.flags %}
+      <span class="flags">{% for f in it.p.flags %}<span class="badge flag" title="{{ f }}">{{ f|truncate(70) }}</span>{% endfor %}</span>
+      {% endif %}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="card empty">Nothing matches these filters.</div>
+{% endif %}
+{% endif %}
+{% endblock %}
