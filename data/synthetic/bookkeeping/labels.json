@@ -1,0 +1,949 @@
+{
+  "categories": {
+    "T001": "5100",
+    "T002": "5050",
+    "T003": "5120",
+    "T004": "4010",
+    "T005": "5030",
+    "T006": "5080",
+    "T007": "5050",
+    "T008": "5050",
+    "T009": "5040",
+    "T010": "5050",
+    "T011": "5010",
+    "T012": "5030",
+    "T013": "5070",
+    "T014": "5070",
+    "T015": "4010",
+    "T016": "5040",
+    "T017": "5080",
+    "T018": "5130",
+    "T019": "5020",
+    "T020": "5090",
+    "T021": "5030",
+    "T022": "5030",
+    "T023": "1500",
+    "T024": "5030",
+    "T025": "5050",
+    "T026": "5050",
+    "T027": "5010",
+    "T028": "5060",
+    "T029": "4010",
+    "T030": "5040",
+    "T031": "5140",
+    "T032": "5130",
+    "T033": "5060",
+    "T034": "4020",
+    "T035": "5020",
+    "T036": "3100",
+    "T037": "5040",
+    "T038": "5030",
+    "T039": "5050",
+    "T040": "5070",
+    "T041": "5110",
+    "T042": "5030",
+    "T043": "5040",
+    "T044": "5080",
+    "T045": "5030",
+    "T046": "4010",
+    "T047": "5050",
+    "T048": "5070",
+    "T049": "5070",
+    "T050": "5010",
+    "T051": "5080",
+    "T052": "5030",
+    "T053": "5030",
+    "T054": "5040",
+    "T055": "5030",
+    "T056": "5070",
+    "T057": "5030",
+    "T058": "5030",
+    "T059": "5070",
+    "T060": "5020",
+    "T061": "5090",
+    "T062": "5030",
+    "T063": "5030",
+    "T064": "5130",
+    "T065": "5040",
+    "T066": "2100",
+    "T067": "5080",
+    "T068": "4010",
+    "T069": "5040",
+    "T070": "2100",
+    "T071": "4020",
+    "T072": "5130",
+    "T073": "5030",
+    "T074": "5090",
+    "T075": "5020",
+    "T076": "5040",
+    "T077": "5030",
+    "T078": "5070",
+    "T079": "2200",
+    "T080": "5020",
+    "T081": "4010",
+    "T082": "5010"
+  },
+  "ledger_wrong": [
+    "T008",
+    "T009",
+    "T011",
+    "T013",
+    "T020",
+    "T022",
+    "T023",
+    "T024",
+    "T029",
+    "T031",
+    "T037",
+    "T038",
+    "T041",
+    "T047",
+    "T051",
+    "T054",
+    "T057",
+    "T065",
+    "T071",
+    "T075",
+    "T078",
+    "T079",
+    "T082"
+  ],
+  "links": [
+    [
+      "R002",
+      "T003"
+    ],
+    [
+      "R003",
+      "T002"
+    ],
+    [
+      "R004",
+      "T001"
+    ],
+    [
+      "R005",
+      "T005"
+    ],
+    [
+      "R006",
+      "T009"
+    ],
+    [
+      "R007",
+      "T008"
+    ],
+    [
+      "R008",
+      "T006"
+    ],
+    [
+      "R009",
+      "T007"
+    ],
+    [
+      "R010",
+      "T011"
+    ],
+    [
+      "R011",
+      "T010"
+    ],
+    [
+      "R012",
+      "T014"
+    ],
+    [
+      "R013",
+      "T012"
+    ],
+    [
+      "R014",
+      "T013"
+    ],
+    [
+      "R015",
+      "T020"
+    ],
+    [
+      "R015",
+      "T061"
+    ],
+    [
+      "R016",
+      "T018"
+    ],
+    [
+      "R017",
+      "T016"
+    ],
+    [
+      "R018",
+      "T041"
+    ],
+    [
+      "R019",
+      "T021"
+    ],
+    [
+      "R020",
+      "T022"
+    ],
+    [
+      "R021",
+      "T028"
+    ],
+    [
+      "R022",
+      "T023"
+    ],
+    [
+      "R023",
+      "T024"
+    ],
+    [
+      "R024",
+      "T025"
+    ],
+    [
+      "R025",
+      "T030"
+    ],
+    [
+      "R026",
+      "T027"
+    ],
+    [
+      "R027",
+      "T033"
+    ],
+    [
+      "R028",
+      "T031"
+    ],
+    [
+      "R029",
+      "T040"
+    ],
+    [
+      "R030",
+      "T032"
+    ],
+    [
+      "R031",
+      "T038"
+    ],
+    [
+      "R032",
+      "T037"
+    ],
+    [
+      "R033",
+      "T042"
+    ],
+    [
+      "R034",
+      "T039"
+    ],
+    [
+      "R035",
+      "T043"
+    ],
+    [
+      "R038",
+      "T048"
+    ],
+    [
+      "R039",
+      "T047"
+    ],
+    [
+      "R040",
+      "T054"
+    ],
+    [
+      "R041",
+      "T050"
+    ],
+    [
+      "R042",
+      "T055"
+    ],
+    [
+      "R043",
+      "T057"
+    ],
+    [
+      "R044",
+      "T056"
+    ],
+    [
+      "R045",
+      "T063"
+    ],
+    [
+      "R046",
+      "T058"
+    ],
+    [
+      "R047",
+      "T062"
+    ],
+    [
+      "R048",
+      "T065"
+    ],
+    [
+      "R049",
+      "T064"
+    ],
+    [
+      "R050",
+      "T067"
+    ],
+    [
+      "R051",
+      "T074"
+    ],
+    [
+      "R052",
+      "T077"
+    ],
+    [
+      "R054",
+      "T078"
+    ],
+    [
+      "R055",
+      "T082"
+    ]
+  ],
+  "notes": {
+    "T008": "USD 49.00 at 1.4247 incl. card FX fee",
+    "T020": "split 1/2",
+    "T026": "duplicate charge",
+    "T036": "owner draw",
+    "T038": "tip added after receipt",
+    "T054": "refund",
+    "T061": "split 2/2"
+  },
+  "period": "2026-10",
+  "receipts": {
+    "R001": {
+      "currency": "CAD",
+      "date": "2026-09-28",
+      "duplicate_of": null,
+      "gst_hst_cents": 663,
+      "gst_number": "872365557RT0001",
+      "key": "orphan-kestrel-sep",
+      "merchant": "Kestrel Marketplace",
+      "orphan": true,
+      "total_cents": 5762
+    },
+    "R002": {
+      "currency": "CAD",
+      "date": "2026-10-01",
+      "duplicate_of": null,
+      "gst_hst_cents": 0,
+      "gst_number": null,
+      "key": "ridgeway-1",
+      "merchant": "Ridgeway Mutual Insurance",
+      "orphan": false,
+      "total_cents": 11875
+    },
+    "R003": {
+      "currency": "CAD",
+      "date": "2026-10-01",
+      "duplicate_of": null,
+      "gst_hst_cents": 312,
+      "gst_number": "910706925RT0001",
+      "key": "slatebox-1",
+      "merchant": "Slatebox",
+      "orphan": false,
+      "total_cents": 2712
+    },
+    "R004": {
+      "currency": "CAD",
+      "date": "2026-10-01",
+      "duplicate_of": null,
+      "gst_hst_cents": 31200,
+      "gst_number": "453824598RT0001",
+      "key": "kingsway-1",
+      "merchant": "Kingsway Properties",
+      "orphan": false,
+      "total_cents": 271200
+    },
+    "R005": {
+      "currency": "CAD",
+      "date": "2026-10-02",
+      "duplicate_of": null,
+      "gst_hst_cents": 127,
+      "gst_number": null,
+      "key": "bluedoor-1",
+      "merchant": "Blue Door Cafe",
+      "orphan": false,
+      "total_cents": 1102
+    },
+    "R006": {
+      "currency": "CAD",
+      "date": "2026-10-03",
+      "duplicate_of": null,
+      "gst_hst_cents": 1170,
+      "gst_number": "872365557RT0001",
+      "key": "kestrel-1",
+      "merchant": "Kestrel Marketplace",
+      "orphan": false,
+      "total_cents": 10168
+    },
+    "R007": {
+      "currency": "USD",
+      "date": "2026-10-03",
+      "duplicate_of": null,
+      "gst_hst_cents": 0,
+      "gst_number": null,
+      "key": "cloudnest-1",
+      "merchant": "Cloudnest",
+      "orphan": false,
+      "total_cents": 4900
+    },
+    "R008": {
+      "currency": "CAD",
+      "date": "2026-10-03",
+      "duplicate_of": null,
+      "gst_hst_cents": 718,
+      "gst_number": null,
+      "key": "northline-1",
+      "merchant": "Northline Fuel",
+      "orphan": false,
+      "total_cents": 6240
+    },
+    "R009": {
+      "currency": "CAD",
+      "date": "2026-10-04",
+      "duplicate_of": null,
+      "gst_hst_cents": 169,
+      "gst_number": null,
+      "key": "nimbus-1",
+      "merchant": "Nimbus Drive",
+      "orphan": false,
+      "total_cents": 1468
+    },
+    "R010": {
+      "currency": "CAD",
+      "date": "2026-10-05",
+      "duplicate_of": null,
+      "gst_hst_cents": 1950,
+      "gst_number": "991927916RT0001",
+      "key": "brightreach-1",
+      "merchant": "BrightReach Ads",
+      "orphan": false,
+      "total_cents": 16950
+    },
+    "R011": {
+      "currency": "CAD",
+      "date": "2026-10-05",
+      "duplicate_of": null,
+      "gst_hst_cents": 520,
+      "gst_number": "191161750RT0001",
+      "key": "tallyhub-1",
+      "merchant": "Tallyhub",
+      "orphan": false,
+      "total_cents": 4520
+    },
+    "R012": {
+      "currency": "CAD",
+      "date": "2026-10-06",
+      "duplicate_of": null,
+      "gst_hst_cents": 212,
+      "gst_number": "788234410RT0001",
+      "key": "zip-1",
+      "merchant": "ZipRide",
+      "orphan": false,
+      "total_cents": 1842
+    },
+    "R013": {
+      "currency": "CAD",
+      "date": "2026-10-06",
+      "duplicate_of": null,
+      "gst_hst_cents": 143,
+      "gst_number": null,
+      "key": "northbound-1",
+      "merchant": "Northbound Coffee Roasters",
+      "orphan": false,
+      "total_cents": 1243
+    },
+    "R014": {
+      "currency": "CAD",
+      "date": "2026-10-06",
+      "duplicate_of": null,
+      "gst_hst_cents": 242,
+      "gst_number": "788234410RT0001",
+      "key": "zip-2",
+      "merchant": "ZipRide",
+      "orphan": false,
+      "total_cents": 2107
+    },
+    "R015": {
+      "currency": "CAD",
+      "date": "2026-10-06",
+      "duplicate_of": null,
+      "gst_hst_cents": 32500,
+      "gst_number": "444388019RT0001",
+      "key": "okafor-1",
+      "merchant": "Doyle Studio",
+      "orphan": false,
+      "total_cents": 282500
+    },
+    "R016": {
+      "currency": "CAD",
+      "date": "2026-10-07",
+      "duplicate_of": null,
+      "gst_hst_cents": 300,
+      "gst_number": null,
+      "key": "parcelway-1",
+      "merchant": "Parcelway",
+      "orphan": false,
+      "total_cents": 2610
+    },
+    "R017": {
+      "currency": "CAD",
+      "date": "2026-10-07",
+      "duplicate_of": null,
+      "gst_hst_cents": 532,
+      "gst_number": "233962519RT0001",
+      "key": "paperline-1",
+      "merchant": "Paperline Office Supply",
+      "orphan": false,
+      "total_cents": 4621
+    },
+    "R018": {
+      "currency": "CAD",
+      "date": "2026-10-08",
+      "duplicate_of": null,
+      "gst_hst_cents": 1095,
+      "gst_number": "800105010RT0001",
+      "key": "lakeview-1",
+      "merchant": "Lakeview Hydro",
+      "orphan": false,
+      "total_cents": 9515
+    },
+    "R019": {
+      "currency": "CAD",
+      "date": "2026-10-08",
+      "duplicate_of": null,
+      "gst_hst_cents": 238,
+      "gst_number": null,
+      "key": "bluedoor-2",
+      "merchant": "Blue Door Cafe",
+      "orphan": false,
+      "total_cents": 2068
+    },
+    "R020": {
+      "currency": "CAD",
+      "date": "2026-10-09",
+      "duplicate_of": null,
+      "gst_hst_cents": 212,
+      "gst_number": null,
+      "key": "marigold-1",
+      "merchant": "Marigold Bakery",
+      "orphan": false,
+      "total_cents": 1840
+    },
+    "R021": {
+      "currency": "CAD",
+      "date": "2026-10-09",
+      "duplicate_of": null,
+      "gst_hst_cents": 845,
+      "gst_number": "565664432RT0001",
+      "key": "aurora-1",
+      "merchant": "Aurora Mobile",
+      "orphan": false,
+      "total_cents": 7345
+    },
+    "R022": {
+      "currency": "CAD",
+      "date": "2026-10-10",
+      "duplicate_of": null,
+      "gst_hst_cents": 24687,
+      "gst_number": "802843045RT0001",
+      "key": "circuithub-1",
+      "merchant": "Circuit Hub",
+      "orphan": false,
+      "total_cents": 214587
+    },
+    "R023": {
+      "currency": "CAD",
+      "date": "2026-10-10",
+      "duplicate_of": null,
+      "gst_hst_cents": 445,
+      "gst_number": null,
+      "key": "saffron-1",
+      "merchant": "Saffron Leaf Kitchen",
+      "orphan": false,
+      "total_cents": 3870
+    },
+    "R024": {
+      "currency": "CAD",
+      "date": "2026-10-11",
+      "duplicate_of": null,
+      "gst_hst_cents": 234,
+      "gst_number": "479302307RT0001",
+      "key": "quillmail-1",
+      "merchant": "Quillmail",
+      "orphan": false,
+      "total_cents": 2034
+    },
+    "R025": {
+      "currency": "CAD",
+      "date": "2026-10-12",
+      "duplicate_of": null,
+      "gst_hst_cents": 429,
+      "gst_number": "872365557RT0001",
+      "key": "kestrel-2",
+      "merchant": "Kestrel Marketplace",
+      "orphan": false,
+      "total_cents": 3728
+    },
+    "R026": {
+      "currency": "CAD",
+      "date": "2026-10-12",
+      "duplicate_of": null,
+      "gst_hst_cents": 1105,
+      "gst_number": null,
+      "key": "harbour-1",
+      "merchant": "Harbour Print Shop",
+      "orphan": false,
+      "total_cents": 9605
+    },
+    "R027": {
+      "currency": "CAD",
+      "date": "2026-10-12",
+      "duplicate_of": null,
+      "gst_hst_cents": 1157,
+      "gst_number": "995932169RT0001",
+      "key": "brookline-1",
+      "merchant": "Brookline Fibre",
+      "orphan": false,
+      "total_cents": 10057
+    },
+    "R028": {
+      "currency": "CAD",
+      "date": "2026-10-13",
+      "duplicate_of": null,
+      "gst_hst_cents": 1677,
+      "gst_number": null,
+      "key": "learnwell-1",
+      "merchant": "Learnwell",
+      "orphan": false,
+      "total_cents": 14577
+    },
+    "R029": {
+      "currency": "CAD",
+      "date": "2026-10-14",
+      "duplicate_of": null,
+      "gst_hst_cents": 183,
+      "gst_number": "788234410RT0001",
+      "key": "zip-3",
+      "merchant": "ZipRide",
+      "orphan": false,
+      "total_cents": 1588
+    },
+    "R030": {
+      "currency": "CAD",
+      "date": "2026-10-14",
+      "duplicate_of": null,
+      "gst_hst_cents": 215,
+      "gst_number": null,
+      "key": "parcelway-3",
+      "merchant": "Parcelway",
+      "orphan": false,
+      "total_cents": 1865
+    },
+    "R031": {
+      "currency": "CAD",
+      "date": "2026-10-14",
+      "duplicate_of": null,
+      "gst_hst_cents": 1092,
+      "gst_number": null,
+      "key": "fennel-1",
+      "merchant": "Fennel & Ash Bistro",
+      "orphan": false,
+      "total_cents": 9492
+    },
+    "R032": {
+      "currency": "CAD",
+      "date": "2026-10-14",
+      "duplicate_of": null,
+      "gst_hst_cents": 2054,
+      "gst_number": "919595889RT0001",
+      "key": "lumen-1",
+      "merchant": "Lumen Lighting Studio",
+      "orphan": false,
+      "total_cents": 17854
+    },
+    "R033": {
+      "currency": "CAD",
+      "date": "2026-10-15",
+      "duplicate_of": null,
+      "gst_hst_cents": 127,
+      "gst_number": null,
+      "key": "bluedoor-3",
+      "merchant": "Blue Door Cafe",
+      "orphan": false,
+      "total_cents": 1102
+    },
+    "R034": {
+      "currency": "CAD",
+      "date": "2026-10-15",
+      "duplicate_of": null,
+      "gst_hst_cents": 151,
+      "gst_number": "910706925RT0001",
+      "key": "slatebox-2",
+      "merchant": "Slatebox",
+      "orphan": false,
+      "total_cents": 1311
+    },
+    "R035": {
+      "currency": "CAD",
+      "date": "2026-10-16",
+      "duplicate_of": null,
+      "gst_hst_cents": 377,
+      "gst_number": "872365557RT0001",
+      "key": "kestrel-3",
+      "merchant": "Kestrel Marketplace",
+      "orphan": false,
+      "total_cents": 3276
+    },
+    "R036": {
+      "currency": "CAD",
+      "date": "2026-10-12",
+      "duplicate_of": "R027",
+      "gst_hst_cents": 1157,
+      "gst_number": "995932169RT0001",
+      "key": "brookline-dup",
+      "merchant": "Brookline Fibre",
+      "orphan": false,
+      "total_cents": 10057
+    },
+    "R037": {
+      "currency": "CAD",
+      "date": "2026-10-17",
+      "duplicate_of": null,
+      "gst_hst_cents": 1235,
+      "gst_number": null,
+      "key": "orphan-spa",
+      "merchant": "Glow Day Spa",
+      "orphan": true,
+      "total_cents": 10735
+    },
+    "R038": {
+      "currency": "CAD",
+      "date": "2026-10-18",
+      "duplicate_of": null,
+      "gst_hst_cents": 1846,
+      "gst_number": "959099179RT0001",
+      "key": "lakeshore-1",
+      "merchant": "Lakeshore Rail",
+      "orphan": false,
+      "total_cents": 16046
+    },
+    "R039": {
+      "currency": "CAD",
+      "date": "2026-10-18",
+      "duplicate_of": null,
+      "gst_hst_cents": 780,
+      "gst_number": "598235554RT0001",
+      "key": "inkframe-1",
+      "merchant": "Inkframe Design Suite",
+      "orphan": false,
+      "total_cents": 6779
+    },
+    "R040": {
+      "currency": "CAD",
+      "date": "2026-10-19",
+      "duplicate_of": null,
+      "gst_hst_cents": -377,
+      "gst_number": "872365557RT0001",
+      "key": "kestrel-refund",
+      "merchant": "Kestrel Marketplace",
+      "orphan": false,
+      "total_cents": -3276
+    },
+    "R041": {
+      "currency": "CAD",
+      "date": "2026-10-19",
+      "duplicate_of": null,
+      "gst_hst_cents": 1950,
+      "gst_number": "991927916RT0001",
+      "key": "brightreach-2",
+      "merchant": "BrightReach Ads",
+      "orphan": false,
+      "total_cents": 16950
+    },
+    "R042": {
+      "currency": "CAD",
+      "date": "2026-10-20",
+      "duplicate_of": null,
+      "gst_hst_cents": 884,
+      "gst_number": null,
+      "key": "rideau-1",
+      "merchant": "Rideau Grill",
+      "orphan": false,
+      "total_cents": 7684
+    },
+    "R043": {
+      "currency": "CAD",
+      "date": "2026-10-20",
+      "duplicate_of": null,
+      "gst_hst_cents": 320,
+      "gst_number": "104255315RT0001",
+      "key": "plateau-1",
+      "merchant": "Caf\u00e9 du Plateau",
+      "orphan": false,
+      "total_cents": 7358
+    },
+    "R044": {
+      "currency": "CAD",
+      "date": "2026-10-21",
+      "duplicate_of": null,
+      "gst_hst_cents": 2457,
+      "gst_number": "701423340RT0001",
+      "key": "wellesley-1",
+      "merchant": "Wellesley Suites Hotel",
+      "orphan": false,
+      "total_cents": 22113
+    },
+    "R045": {
+      "currency": "CAD",
+      "date": "2026-10-22",
+      "duplicate_of": null,
+      "gst_hst_cents": 2418,
+      "gst_number": null,
+      "key": "fennel-2",
+      "merchant": "Fennel & Ash Bistro",
+      "orphan": false,
+      "total_cents": 24800
+    },
+    "R046": {
+      "currency": "CAD",
+      "date": "2026-10-22",
+      "duplicate_of": null,
+      "gst_hst_cents": 153,
+      "gst_number": null,
+      "key": "bluedoor-4",
+      "merchant": "Blue Door Cafe",
+      "orphan": false,
+      "total_cents": 1328
+    },
+    "R047": {
+      "currency": "CAD",
+      "date": "2026-10-23",
+      "duplicate_of": null,
+      "gst_hst_cents": 316,
+      "gst_number": null,
+      "key": "greenbowl-1",
+      "merchant": "Green Bowl Co",
+      "orphan": false,
+      "total_cents": 2745
+    },
+    "R048": {
+      "currency": "CAD",
+      "date": "2026-10-24",
+      "duplicate_of": null,
+      "gst_hst_cents": 1547,
+      "gst_number": "550825333RT0001",
+      "key": "deskcraft-1",
+      "merchant": "Deskcraft Goods",
+      "orphan": false,
+      "total_cents": 13447
+    },
+    "R049": {
+      "currency": "CAD",
+      "date": "2026-10-24",
+      "duplicate_of": null,
+      "gst_hst_cents": 543,
+      "gst_number": null,
+      "key": "parcelway-2",
+      "merchant": "Parcelway",
+      "orphan": false,
+      "total_cents": 4723
+    },
+    "R050": {
+      "currency": "CAD",
+      "date": "2026-10-24",
+      "duplicate_of": null,
+      "gst_hst_cents": 784,
+      "gst_number": null,
+      "key": "northline-2",
+      "merchant": "Northline Fuel",
+      "orphan": false,
+      "total_cents": 6811
+    },
+    "R051": {
+      "currency": "CAD",
+      "date": "2026-10-26",
+      "duplicate_of": null,
+      "gst_hst_cents": 12350,
+      "gst_number": "387463266RT0001",
+      "key": "halden-1",
+      "merchant": "Halden & Co CPA",
+      "orphan": false,
+      "total_cents": 107350
+    },
+    "R052": {
+      "currency": "CAD",
+      "date": "2026-10-28",
+      "duplicate_of": null,
+      "gst_hst_cents": 107,
+      "gst_number": null,
+      "key": "northbound-2",
+      "merchant": "Northbound Coffee Roasters",
+      "orphan": false,
+      "total_cents": 932
+    },
+    "R053": {
+      "currency": "CAD",
+      "date": "2026-10-29",
+      "duplicate_of": null,
+      "gst_hst_cents": 2761,
+      "gst_number": null,
+      "key": "orphan-estimate",
+      "merchant": "Paperline Office Supply",
+      "orphan": true,
+      "total_cents": 24000
+    },
+    "R054": {
+      "currency": "CAD",
+      "date": "2026-10-29",
+      "duplicate_of": null,
+      "gst_hst_cents": 229,
+      "gst_number": "788234410RT0001",
+      "key": "zip-5",
+      "merchant": "ZipRide",
+      "orphan": false,
+      "total_cents": 1994
+    },
+    "R055": {
+      "currency": "CAD",
+      "date": "2026-10-30",
+      "duplicate_of": null,
+      "gst_hst_cents": 832,
+      "gst_number": null,
+      "key": "harbour-2",
+      "merchant": "Harbour Print Shop",
+      "orphan": false,
+      "total_cents": 7232
+    },
+    "R056": {
+      "currency": "CAD",
+      "date": "2026-10-30",
+      "duplicate_of": null,
+      "gst_hst_cents": 130,
+      "gst_number": null,
+      "key": "orphan-bluedoor",
+      "merchant": "Blue Door Cafe",
+      "orphan": true,
+      "total_cents": 1130
+    }
+  }
+}

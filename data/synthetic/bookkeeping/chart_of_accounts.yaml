@@ -1,0 +1,237 @@
+# Synthetic chart of accounts for the bookkeeping module. Keywords drive the rules baseline only.
+entity:
+  name: Larchmont Design Co.
+  province: 'ON'
+  currency: CAD
+  fiscal_year_end: 12-31
+  owner: Allison Hill
+fallback: '9999'
+accounts:
+- code: '1500'
+  name: Computer Equipment (capital)
+  type: asset
+  min_amount: 500
+  description: Computers, monitors and hardware costing $500 or more per item; capitalised, not expensed.
+  keywords:
+  - laptop
+  - computer
+  - notebook pc
+  - workstation
+- code: '2100'
+  name: Visa Payable (card payments)
+  type: liability
+  evidence_required: false
+  description: Payments from the bank account to the business credit card. Transfer, not an expense.
+  keywords:
+  - payment - thank you
+  - pmt visa
+  - visa payment
+- code: '2200'
+  name: GST/HST Payable
+  type: liability
+  evidence_required: false
+  description: GST/HST remittances to the CRA.
+  keywords:
+  - govt canada
+  - gst34
+  - gst/hst payment
+  - receiver general
+- code: '3100'
+  name: Owner's Draws
+  type: equity
+  evidence_required: false
+  description: Money taken out by the owner.
+  keywords:
+  - owner draw
+- code: '4010'
+  name: Sales - Online (card processor payouts)
+  type: income
+  evidence_required: false
+  description: Payouts from the online card processor.
+  keywords:
+  - stripe transfer
+  - stripe payout
+- code: '4020'
+  name: Sales - Client Payments
+  type: income
+  evidence_required: false
+  description: EFT and cheque deposits from clients.
+  keywords:
+  - eft credit
+  - mobile deposit
+  - deposit
+- code: '5010'
+  name: Advertising & Marketing
+  type: expense
+  description: Online ads, printing of marketing material, business cards.
+  keywords:
+  - ads
+  - advertising
+  - campaign
+  - business cards
+  - flyers
+  - print shop
+  - promotion
+- code: '5020'
+  name: Bank Charges & Fees
+  type: expense
+  evidence_required: false
+  description: Account fees, transfer fees, interest.
+  keywords:
+  - account fee
+  - e-trf fee
+  - service charge
+  - interest charge
+  - monthly fee
+  - annual fee
+- code: '5030'
+  name: Meals & Entertainment
+  type: expense
+  description: Restaurant meals, coffee and food delivery for business purposes (50% deductible).
+  keywords:
+  - cafe
+  - coffee
+  - bistro
+  - bakery
+  - grill
+  - kitchen
+  - restaurant
+  - latte
+  - lunch
+  - dinner
+  - espresso
+  - sandwich
+  - beans
+  - croissant
+- code: '5040'
+  name: Office Supplies & Small Equipment
+  type: expense
+  description: Stationery, paper, toner and small items under $500.
+  keywords:
+  - office
+  - paper
+  - toner
+  - stationery
+  - pens
+  - notebooks
+  - desk
+  - lamp
+  - stand
+  - monitor arm
+  - cable
+  - mktp
+- code: '5050'
+  name: Software & Subscriptions
+  type: expense
+  description: SaaS, cloud storage and software licences.
+  keywords:
+  - subscription
+  - subscr
+  - software
+  - saas
+  - plan
+  - licence
+  - license
+  - cloud
+  - storage
+  - workspace
+  - seat
+- code: '5060'
+  name: Telephone & Internet
+  type: expense
+  description: Mobile phone and internet service.
+  keywords:
+  - mobile
+  - wireless
+  - fibre
+  - internet
+  - phone
+- code: '5070'
+  name: Travel
+  type: expense
+  description: Rail, air, hotel, taxi and rideshare while travelling or between client sites.
+  keywords:
+  - rail
+  - train
+  - hotel
+  - suites
+  - taxi
+  - trip
+  - ride
+  - air
+  - fare
+  - flight
+- code: '5080'
+  name: Vehicle - Fuel & Parking
+  type: expense
+  description: Fuel and parking for the business vehicle.
+  keywords:
+  - fuel
+  - gas
+  - parking
+  - park lot
+  - petrol
+  - litres
+- code: '5090'
+  name: Professional & Contractor Fees
+  type: expense
+  description: Accountants, lawyers, freelance designers and other contractors.
+  keywords:
+  - cpa
+  - accounting services
+  - legal
+  - consulting
+  - design services
+  - contractor
+  - bookkeeping services
+  - professional
+- code: '5100'
+  name: Rent
+  type: expense
+  description: Office or studio rent.
+  keywords:
+  - rent
+  - lease
+  - properties
+- code: '5110'
+  name: Utilities
+  type: expense
+  description: Hydro, gas and water for the premises.
+  keywords:
+  - hydro
+  - electricity
+  - utility
+  - water
+- code: '5120'
+  name: Insurance
+  type: expense
+  description: Business insurance premiums.
+  keywords:
+  - insurance
+  - 'ins '
+  - premium
+  - mutual
+- code: '5130'
+  name: Shipping & Postage
+  type: expense
+  description: Couriers and postage.
+  keywords:
+  - parcel
+  - shipping
+  - postage
+  - courier
+- code: '5140'
+  name: Training & Professional Development
+  type: expense
+  description: Courses, workshops and conferences.
+  keywords:
+  - course
+  - courses
+  - training
+  - workshop
+  - certificate
+- code: '9999'
+  name: Uncategorised - Needs Review
+  type: suspense
+  description: Holding account for transactions nobody has categorised yet.
+  keywords: []

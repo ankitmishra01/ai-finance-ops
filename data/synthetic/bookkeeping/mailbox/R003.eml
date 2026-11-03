@@ -1,0 +1,21 @@
+From: Slatebox Billing <billing@slatebox.test>
+To: books@larchmont.test
+Subject: Your Slatebox receipt [SB-88213]
+Date: Thu, 01 Oct 2026 17:12:00 -0400
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Thanks for your payment to Slatebox.
+
+Amount paid: $27.12
+Date paid: October 1, 2026
+Payment method: Visa ending in 4421
+Receipt number: SB-88213
+
+Summary
+Slatebox Pro subscription (monthly)    $24.00
+Subtotal    $24.00
+Tax    $3.12
+Amount paid    $27.12
+GST/HST registration: 91070 6925 RT0001
