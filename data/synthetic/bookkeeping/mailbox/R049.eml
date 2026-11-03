@@ -1,0 +1,20 @@
+From: Parcelway <ereceipt@parcelway.test>
+To: books@larchmont.test
+Subject: E-receipt - Parcelway
+Date: Sat, 24 Oct 2026 10:40:00 -0400
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Here is your e-receipt.
+
+PARCELWAY
+2102 Larson Views, Toronto, ON N5E7T5
+Date: 2026-10-24  10:40
+
+Priority parcel to Vancouver BC    41.80
+SUBTOTAL                      41.80
+HST                            5.43
+TOTAL                         47.23
+
+VISA ************4421   APPROVED

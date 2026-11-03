@@ -9,6 +9,7 @@ dependencies = [
     "faker>=30",
     "reportlab>=4",
     "pyyaml>=6",
+    "pypdf>=6.21.4",
 ]
 
 [dependency-groups]

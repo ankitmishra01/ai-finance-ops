@@ -1,0 +1,20 @@
+From: Learnwell Billing <billing@learnwell.test>
+To: books@larchmont.test
+Subject: Your Learnwell receipt [LW-90012]
+Date: Tue, 13 Oct 2026 08:43:00 -0400
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Thanks for your payment to Learnwell.
+
+Amount paid: $145.77
+Date paid: October 13, 2026
+Payment method: Visa ending in 4421
+Receipt number: LW-90012
+
+Summary
+Course: Accessible web design certificate    $129.00
+Subtotal    $129.00
+Tax    $16.77
+Amount paid    $145.77
