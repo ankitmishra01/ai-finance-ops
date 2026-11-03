@@ -12,7 +12,7 @@
   <p class="eyebrow">Reference build · synthetic data</p>
   <h1>Five finance-admin agents that stop at an approval queue</h1>
   <p class="lede">Invoicing, bills, payroll, GST/HST and bookkeeping for a Canadian small business. Claude reads the messy documents through schema-forced tool calls; tax, payroll and file-format maths is plain tested code; and nothing is posted, paid or filed until a person approves it.</p>
-  <p class="small muted">Every figure on this site comes from a dry run of the five agents and from <code>evals/run_all.py</code>, built {{ built }}. Scores are for the deterministic rules baseline; Claude has not been scored yet.</p>
+  <p class="small muted">Every figure on this site comes from a dry run of the five agents and from <code>evals/run_all.py</code>, built {{ built }}. Eval scores cover both the deterministic rules baseline and Claude (claude-sonnet-5-5, scored 3 Nov 2026 from recorded runs).</p>
 </section>
 
 <div class="kpis">
@@ -68,12 +68,16 @@
 </div>
 
 {% if pieces %}
-<h3 id="pieces">The shared pieces</h3>
-<div class="tablewrap"><table>
-  <thead><tr><th>Piece</th><th>What it does</th><th>Why it is shaped this way</th></tr></thead>
-  <tbody>{% for r in pieces %}<tr>{% for c in r %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
-</table></div>
-<p class="small muted">From <a href="{{ repo }}/blob/main/docs/architecture.md">docs/architecture.md</a>, which also has the sequence diagram for one run.</p>
+<details id="pieces">
+  <summary><b>The shared pieces</b> <span class="muted small">{{ pieces|length }} building blocks, from docs/architecture.md</span></summary>
+  <div class="body">
+    <div class="tablewrap"><table>
+      <thead><tr><th>Piece</th><th>What it does</th><th>Why it is shaped this way</th></tr></thead>
+      <tbody>{% for r in pieces %}<tr>{% for c in r %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    </table></div>
+    <p class="small muted">From <a href="{{ repo }}/blob/main/docs/architecture.md">docs/architecture.md</a>, which also has the sequence diagram for one run.</p>
+  </div>
+</details>
 {% endif %}
 
 <h2 id="run">Run it yourself</h2>

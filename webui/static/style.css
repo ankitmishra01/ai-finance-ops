@@ -256,7 +256,8 @@ details { background: var(--surface); border: 1px solid var(--line); border-left
 details:has(> summary .badge.flag) { border-left-color: var(--warn); }
 details > summary:hover { background: var(--surface-2); border-radius: var(--r-md); }
 details[open] > summary:hover { border-radius: var(--r-md) var(--r-md) 0 0; }
-details > summary { cursor: pointer; padding: 10px 14px; list-style: none; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+details > summary { cursor: pointer; padding: 9px 13px; list-style: none; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; font-size: .88rem; }
+details > summary > b { font-size: .95rem; }
 details > summary::-webkit-details-marker { display: none; }
 details > summary::before { content: "\25B8"; color: var(--ink-3); }
 details[open] > summary::before { content: "\25BE"; }
@@ -268,6 +269,20 @@ main p, main li, main dd, main td { overflow-wrap: anywhere; }
 
 /* ---- right-hand sidebar (static demo site) ---- */
 .layout { display: grid; grid-template-columns: minmax(0, 1fr) 248px; gap: 40px; align-items: start; }
+.content { counter-reset: sec; }
+.content h2 { counter-increment: sec; display: flex; align-items: baseline; gap: 10px;
+  border-top: 1px solid var(--line); padding-top: 20px; margin-top: 2.8rem; scroll-margin-top: 16px; }
+.content h2::before { content: "0" counter(sec); font: 600 11px var(--mono); color: var(--accent); letter-spacing: .05em; }
+.content h2 .muted.small { font: 500 11px var(--mono); }
+.runmeta { margin: 4px 0 0; padding: 9px 14px; background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: var(--r-md); font: 12px/1.6 var(--mono); color: var(--ink-2); }
+.runmeta code { background: var(--bg); }
+.console { max-height: 460px; overflow: auto; }
+.evaltree { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; align-items: start; margin-top: 10px; }
+.evalcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px 14px; min-width: 0; }
+.evalcard h4 { margin: 0 0 8px; font: 600 10.5px var(--mono); text-transform: uppercase; letter-spacing: .07em; color: var(--ink-2); }
+.evalcard .tablewrap { border: 0; margin: 0; background: none; }
+.evalcard td { padding: 5px 8px 5px 0; }
 .sidebar { position: sticky; top: 72px; display: flex; flex-direction: column; gap: 2px;
   border-left: 1px solid var(--line); padding-left: 20px; font-size: 13px; }
 .sidebar .sidehead { font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase;

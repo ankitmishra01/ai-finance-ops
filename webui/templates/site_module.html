@@ -24,7 +24,7 @@
   <div class="kpi k-good"><div class="v">{{ h.value }}</div><div class="l">{{ h.label }} (rules baseline)</div></div>
   {% endfor %}
 </div>
-<p class="small muted">A person approves: {{ m.approves }}. Dry run of <code>{{ m.id }}/run.py</code> on the synthetic data, built {{ built }}.</p>
+<div class="runmeta">A person approves: {{ m.approves }}. Dry run of <code>{{ m.id }}/run.py</code> on the synthetic data, built {{ built }}.</div>
 
 <h2 id="inputs">Inputs</h2>
 <div class="grid split">
@@ -47,7 +47,7 @@
 
 <h2 id="outputs">Outputs</h2>
 <p>What the dry run printed. Nothing below was written to a ledger: every line is a proposal waiting for a decision.</p>
-<pre><code>$ uv run python {{ m.id }}/run.py
+<pre class="console"><code>$ uv run python {{ m.id }}/run.py
 {{ page.log }}</code></pre>
 <details>
   <summary><b>Files the dry run wrote</b> <span class="muted small">{{ page.files|length }} files</span></summary>
@@ -79,11 +79,13 @@
 {% endfor %}
 
 <h2 id="evals">Evals</h2>
-<p>From <code>evals/run_all.py</code> on the labelled synthetic sets. These are the deterministic rules baseline; where the rules and the documents were written together the familiar-format scores flatter it, and the held-out figures are the honest baseline the Claude extractor is meant to beat.</p>
+<p>From <code>evals/run_all.py</code> on the labelled synthetic sets: the deterministic rules baseline, with Claude (claude-sonnet-5-5) scored 3 Nov 2026 from recorded runs. The rules and the documents were written together, so the familiar-format rules scores flatter it; the held-out figures are the honest comparison.</p>
 {% for n in page.not_run %}<div class="note">{{ n }}</div>{% endfor %}
 <div class="evaltree">
 {% for s in page.evals %}
-  <h4>{{ s.title }}</h4>
+  {% if not (s.rows and s.rows|length == 1 and s.rows[0].key == 'extractor') %}
+  <div class="evalcard">
+  <h4>{{ s.title|replace(' / ', ' · ') }}</h4>
   {% if s.matrix %}
   <div class="tablewrap"><table>
     <thead><tr><th>labelled \ predicted</th>{% for l in s.matrix.labels %}<th class="num">{{ l }}</th>{% endfor %}</tr></thead>
@@ -96,6 +98,8 @@
     {% if r.entries %}<tr><td colspan="2"><ul class="small" style="margin:0;padding-left:18px">{% for it in r.entries %}<li><code>{{ it }}</code></li>{% endfor %}{% if r.more %}<li class="muted">and {{ r.more }} more</li>{% endif %}</ul></td></tr>{% endif %}
     {% endfor %}
   </tbody></table></div>
+  {% endif %}
+  </div>
   {% endif %}
 {% endfor %}
 </div>
