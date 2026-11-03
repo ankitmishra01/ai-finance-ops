@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "BrightReach Ads",
+    "date": "2026-10-05",
+    "currency": "CAD",
+    "subtotal": 150.0,
+    "gst_hst": 19.5,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 169.5,
+    "is_refund": false,
+    "gst_number": "99192 7916 RT0001",
+    "invoice_number": "BR-4UX7-1001",
+    "payment_date": null,
+    "summary": "Sponsored post ad campaign, Sep 28 to Oct 4"
+  }
+}

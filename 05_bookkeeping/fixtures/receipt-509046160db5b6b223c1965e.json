@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Kestrel Marketplace",
+    "date": "2026-10-19",
+    "currency": "CAD",
+    "subtotal": -28.99,
+    "gst_hst": -3.77,
+    "other_tax": 0,
+    "tip": 0,
+    "total": -32.76,
+    "is_refund": true,
+    "gst_number": "87236 5557 RT0001",
+    "invoice_number": "702-1209554-3310",
+    "payment_date": null,
+    "summary": "Refund for black toner cartridge"
+  }
+}

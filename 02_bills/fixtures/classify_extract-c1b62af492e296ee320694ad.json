@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "The attached PDF is a supplier invoice (TR-512) with a specific total owing of 344.93 CAD.",
+    "vendor_name": "Marshall Traiteur Ltee",
+    "vendor_province": "QC",
+    "vendor_country": "CA",
+    "gst_number": "151834736RT0001",
+    "invoice_number": "TR-512",
+    "invoice_date": "2026-10-30",
+    "terms": "Net 15",
+    "currency": "CAD",
+    "subtotal": "300.00",
+    "gst_hst": "15.00",
+    "other_tax": "29.93",
+    "other_tax_kind": "QST",
+    "qst_number": "3315992115TQ0001",
+    "total": "344.93",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Client workshop lunch catering for 15 guests",
+    "category": "meals",
+    "notes": []
+  }
+}

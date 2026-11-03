@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "other",
+    "doc_type_reason": "This is a portal notification saying an invoice is available but it contains no invoice number, amounts, or totals.",
+    "vendor_name": null,
+    "vendor_province": null,
+    "vendor_country": null,
+    "gst_number": null,
+    "invoice_number": null,
+    "invoice_date": null,
+    "terms": null,
+    "currency": null,
+    "subtotal": null,
+    "gst_hst": null,
+    "other_tax": null,
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": null,
+    "recipient_name": null,
+    "description": null,
+    "category": null,
+    "notes": []
+  }
+}

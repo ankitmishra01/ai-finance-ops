@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Cloudnest",
+    "date": "2026-10-03",
+    "currency": "USD",
+    "subtotal": 49.0,
+    "gst_hst": 0,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 49.0,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "CN-2026-10-0471",
+    "payment_date": null,
+    "summary": "Cloudnest Team plan, 3 seats, monthly subscription"
+  }
+}

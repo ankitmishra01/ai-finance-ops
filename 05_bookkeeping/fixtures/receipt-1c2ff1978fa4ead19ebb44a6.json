@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Kestrel Marketplace Canada Ltd.",
+    "date": "2026-10-03",
+    "currency": "CAD",
+    "subtotal": 89.98,
+    "gst_hst": 11.7,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 101.68,
+    "is_refund": false,
+    "gst_number": "87236 5557 RT0001",
+    "invoice_number": "702-4418831-2209",
+    "payment_date": null,
+    "summary": "Aluminium laptop stand and 3-pack of 2m USB-C cables"
+  }
+}

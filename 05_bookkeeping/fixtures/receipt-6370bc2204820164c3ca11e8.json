@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Lumen Lighting Studio",
+    "date": "2026-10-14",
+    "currency": "CAD",
+    "subtotal": 158.0,
+    "gst_hst": 20.54,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 178.54,
+    "is_refund": false,
+    "gst_number": "91959 5889 RT0001",
+    "invoice_number": "LL-20417",
+    "payment_date": null,
+    "summary": "2 LED desk lamps"
+  }
+}

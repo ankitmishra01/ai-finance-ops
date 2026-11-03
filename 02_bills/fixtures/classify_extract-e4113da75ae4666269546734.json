@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "A supplier invoice (FD-7781) from Crosby Furniture Depot Ltd. requesting payment of a specific total for goods supplied.",
+    "vendor_name": "Crosby Furniture Depot Ltd.",
+    "vendor_province": "ON",
+    "vendor_country": "CA",
+    "gst_number": "271822785RT0001",
+    "invoice_number": "FD-7781",
+    "invoice_date": "2026-11-02",
+    "terms": "Payment due within 14 days of the invoice date",
+    "currency": "CAD",
+    "subtotal": "1250.00",
+    "gst_hst": "162.50",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "1412.50",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "2 standing desks at 625.00 each",
+    "category": "office",
+    "notes": []
+  }
+}

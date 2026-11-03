@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Tallyhub",
+    "date": "2026-10-05",
+    "currency": "CAD",
+    "subtotal": 40.0,
+    "gst_hst": 5.2,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 45.2,
+    "is_refund": false,
+    "gst_number": "19116 1750 RT0001",
+    "invoice_number": "TH-3301927",
+    "payment_date": null,
+    "summary": "Tallyhub Essentials plan for October 2026"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Nimbus Drive",
+    "date": "2026-10-04",
+    "currency": "CAD",
+    "subtotal": 12.99,
+    "gst_hst": 0,
+    "other_tax": 1.69,
+    "tip": 0,
+    "total": 14.68,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "ND-0098812",
+    "payment_date": null,
+    "summary": "Nimbus Drive 2 TB storage plan, monthly subscription"
+  }
+}

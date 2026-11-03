@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "The attachment is a tax invoice from Miles Office Supply Ltd. with an invoice number, line items and an amount due of $84.75.",
+    "vendor_name": "Miles Office Supply Ltd.",
+    "vendor_province": "ON",
+    "vendor_country": "CA",
+    "gst_number": "700133895RT0001",
+    "invoice_number": "OS-7712",
+    "invoice_date": "2026-10-28",
+    "terms": "Net 15",
+    "currency": "CAD",
+    "subtotal": "75.00",
+    "gst_hst": "9.75",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "84.75",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Printer paper (5 reams) and toner cartridge",
+    "category": "office",
+    "notes": []
+  }
+}

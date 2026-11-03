@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice CR-3302 from Smith Courier Services typed in the email body, with an invoice number and a total owing of $62.15.",
+    "vendor_name": "Smith Courier Services",
+    "vendor_province": "ON",
+    "vendor_country": "CA",
+    "gst_number": "693103418RT0001",
+    "invoice_number": "CR-3302",
+    "invoice_date": "2026-10-30",
+    "terms": "Net 7",
+    "currency": "CAD",
+    "subtotal": "55.00",
+    "gst_hst": "7.15",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "62.15",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Same-day delivery x3",
+    "category": "shipping",
+    "notes": []
+  }
+}

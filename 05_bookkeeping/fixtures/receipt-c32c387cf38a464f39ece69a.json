@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Parcelway",
+    "date": "2026-10-14",
+    "currency": "CAD",
+    "subtotal": 16.5,
+    "gst_hst": 2.15,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 18.65,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Regular parcel shipment to Montreal QC"
+  }
+}

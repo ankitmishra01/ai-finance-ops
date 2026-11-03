@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "ZipRide",
+    "date": "2026-10-06",
+    "currency": "CAD",
+    "subtotal": 16.15,
+    "gst_hst": 2.42,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 21.07,
+    "is_refund": false,
+    "gst_number": "78823 4410 RT0001",
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Evening ZipRide trip with booking fee"
+  }
+}

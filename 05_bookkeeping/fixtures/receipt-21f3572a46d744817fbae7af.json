@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Slatebox",
+    "date": "2026-10-01",
+    "currency": "CAD",
+    "subtotal": 24.0,
+    "gst_hst": 3.12,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 27.12,
+    "is_refund": false,
+    "gst_number": "91070 6925 RT0001",
+    "invoice_number": "SB-88213",
+    "payment_date": null,
+    "summary": "Slatebox Pro monthly subscription"
+  }
+}

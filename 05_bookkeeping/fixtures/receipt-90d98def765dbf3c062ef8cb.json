@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Brookline Fibre",
+    "date": "2026-10-12",
+    "currency": "CAD",
+    "subtotal": 89.0,
+    "gst_hst": 11.57,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 100.57,
+    "is_refund": false,
+    "gst_number": "99593 2169 RT0001",
+    "invoice_number": "BF-2026-10-55102",
+    "payment_date": null,
+    "summary": "October business fibre internet 1 Gbps"
+  }
+}

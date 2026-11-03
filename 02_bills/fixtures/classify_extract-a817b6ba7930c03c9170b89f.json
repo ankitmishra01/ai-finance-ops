@@ -1,0 +1,29 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "The PDF is a supplier invoice (IM-0931) from Taylor Imprimerie Inc. requesting payment of a specific total for printed trade show banners.",
+    "vendor_name": "Taylor Imprimerie Inc.",
+    "vendor_province": "QC",
+    "vendor_country": "CA",
+    "gst_number": "837631167RT0001",
+    "invoice_number": "IM-0931",
+    "invoice_date": "2026-10-29",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "450.00",
+    "gst_hst": "22.50",
+    "other_tax": "44.89",
+    "other_tax_kind": "QST",
+    "qst_number": "123456789TQ001",
+    "total": "517.39",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Printed vinyl trade show banners",
+    "category": "advertising",
+    "notes": [
+      "The QST registration number as printed (123456789TQ001) has only 9 digits before 'TQ' instead of the usual 10, so it appears malformed; copied as printed.",
+      "The QST number looks like a placeholder sequence (123456789)."
+    ]
+  }
+}

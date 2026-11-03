@@ -1,0 +1,28 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "statement",
+    "doc_type_reason": "The email is a tenant ledger statement summarising paid months and an open balance, not a standalone invoice with its own amounts and tax breakdown.",
+    "vendor_name": null,
+    "vendor_province": null,
+    "vendor_country": null,
+    "gst_number": null,
+    "invoice_number": null,
+    "invoice_date": null,
+    "terms": null,
+    "currency": null,
+    "subtotal": null,
+    "gst_hst": null,
+    "other_tax": null,
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": null,
+    "recipient_name": null,
+    "description": null,
+    "category": null,
+    "notes": [
+      "Statement lists November rent R-1101 of $3,955.00 open; no separate invoice was provided in this message."
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Lakeshore Rail",
+    "date": "2026-10-18",
+    "currency": "CAD",
+    "subtotal": 142.0,
+    "gst_hst": 18.46,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 160.46,
+    "is_refund": false,
+    "gst_number": "95909 9179 RT0001",
+    "invoice_number": "LR-K7Q2M9",
+    "payment_date": null,
+    "summary": "Return train ticket Toronto to Ottawa, 1 adult"
+  }
+}

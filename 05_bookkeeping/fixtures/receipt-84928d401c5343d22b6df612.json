@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": false,
+    "merchant": "Kestrel Marketplace Canada Ltd.",
+    "date": "2026-09-28",
+    "currency": "CAD",
+    "subtotal": 50.99,
+    "gst_hst": 6.63,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 57.62,
+    "is_refund": false,
+    "gst_number": "87236 5557 RT0001",
+    "invoice_number": "702-0045126-7781",
+    "payment_date": null,
+    "summary": "Desk organiser tray (order confirmation, estimated HST)"
+  }
+}

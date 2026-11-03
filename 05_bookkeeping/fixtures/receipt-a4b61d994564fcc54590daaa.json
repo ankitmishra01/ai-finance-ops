@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Lakeview Hydro",
+    "date": "2026-10-08",
+    "currency": "CAD",
+    "subtotal": 84.2,
+    "gst_hst": 10.95,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 95.15,
+    "is_refund": false,
+    "gst_number": "80010 5010 RT0001",
+    "invoice_number": "LH-7781203",
+    "payment_date": "2026-10-16",
+    "summary": "Studio electricity, Sep 5 to Oct 4, with delivery and regulatory charges"
+  }
+}

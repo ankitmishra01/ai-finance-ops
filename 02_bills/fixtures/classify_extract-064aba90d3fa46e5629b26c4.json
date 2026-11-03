@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "The attached PDF is a supplier invoice (SJ-2207) requesting payment of a specific total of 1379.70 CAD for legal services.",
+    "vendor_name": "Sanchez Services Juridiques Inc.",
+    "vendor_province": "QC",
+    "vendor_country": "CA",
+    "gst_number": "198393019RT0001",
+    "invoice_number": "SJ-2207",
+    "invoice_date": "2026-10-28",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "1200.00",
+    "gst_hst": "60.00",
+    "other_tax": "119.70",
+    "other_tax_kind": "QST",
+    "qst_number": "1252860896TQ0001",
+    "total": "1379.70",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Legal review of supplier agreement",
+    "category": "professional_fees",
+    "notes": []
+  }
+}

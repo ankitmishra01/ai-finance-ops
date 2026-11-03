@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Quillmail",
+    "date": "2026-10-11",
+    "currency": "CAD",
+    "subtotal": 18.0,
+    "gst_hst": 2.34,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 20.34,
+    "is_refund": false,
+    "gst_number": "47930 2307 RT0001",
+    "invoice_number": "QM-447120",
+    "payment_date": null,
+    "summary": "Quillmail Starter, 2 mailboxes, monthly subscription"
+  }
+}

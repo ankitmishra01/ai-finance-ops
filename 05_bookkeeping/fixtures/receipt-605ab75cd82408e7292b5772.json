@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Saffron Leaf Kitchen",
+    "date": "2026-10-10",
+    "currency": "CAD",
+    "subtotal": 34.25,
+    "gst_hst": 0,
+    "other_tax": 4.45,
+    "tip": 0,
+    "total": 38.7,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "DL-55821",
+    "payment_date": null,
+    "summary": "Delivery team lunch: butter chicken, rice, naan"
+  }
+}

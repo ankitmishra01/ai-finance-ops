@@ -1,0 +1,30 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice INV-88 from Brennan Bookkeeping Services asks for payment of a specific total of $723.20 for bookkeeping work.",
+    "vendor_name": "Brennan Bookkeeping Services",
+    "vendor_province": "ON",
+    "vendor_country": "CA",
+    "gst_number": "115430399RT0001",
+    "invoice_number": "INV-88",
+    "invoice_date": "2026-11-02",
+    "terms": "Payment is due within 30 days",
+    "currency": "CAD",
+    "subtotal": "640.00",
+    "gst_hst": "83.20",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "723.20",
+    "recipient_name": null,
+    "description": "Bookkeeping services for October",
+    "category": "professional_fees",
+    "notes": [
+      "Terms printed as 'Payment is due within 30 days' (equivalent to Net 30).",
+      "No 'Bill to' customer name is printed in the email.",
+      "Invoice is typed in the email body, not a PDF attachment."
+    ]
+  }
+}

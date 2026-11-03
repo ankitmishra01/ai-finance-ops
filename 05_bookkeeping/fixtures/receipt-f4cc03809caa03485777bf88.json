@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Learnwell",
+    "date": "2026-10-13",
+    "currency": "CAD",
+    "subtotal": 129.0,
+    "gst_hst": 0,
+    "other_tax": 16.77,
+    "tip": 0,
+    "total": 145.77,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "LW-90012",
+    "payment_date": null,
+    "summary": "Accessible web design certificate course"
+  }
+}

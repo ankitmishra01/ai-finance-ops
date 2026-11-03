@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Kestrel Marketplace Canada Ltd.",
+    "date": "2026-10-12",
+    "currency": "CAD",
+    "subtotal": 32.99,
+    "gst_hst": 4.29,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 37.28,
+    "is_refund": false,
+    "gst_number": "87236 5557 RT0001",
+    "invoice_number": "702-7731042-8812",
+    "payment_date": null,
+    "summary": "5 reams of copy paper"
+  }
+}

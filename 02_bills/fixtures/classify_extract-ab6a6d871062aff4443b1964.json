@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice OF-4410 from Castaneda Office Furnishings Ltd. requesting payment of a specific total for office furniture.",
+    "vendor_name": "Castaneda Office Furnishings Ltd.",
+    "vendor_province": "SK",
+    "vendor_country": "CA",
+    "gst_number": "767010655RT0001",
+    "invoice_number": "OF-4410",
+    "invoice_date": "2026-10-27",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "250.00",
+    "gst_hst": "12.50",
+    "other_tax": "15.00",
+    "other_tax_kind": "PST",
+    "qst_number": null,
+    "total": "277.50",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Office furniture: 2 filing cabinets",
+    "category": "office",
+    "notes": []
+  }
+}

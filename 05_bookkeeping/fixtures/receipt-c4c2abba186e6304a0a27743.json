@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Kingsway Properties",
+    "date": "2026-10-01",
+    "currency": "CAD",
+    "subtotal": 2400.0,
+    "gst_hst": 312.0,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 2712.0,
+    "is_refund": false,
+    "gst_number": "45382 4598 RT0001",
+    "invoice_number": "KP-2026-10-204",
+    "payment_date": "2026-10-01",
+    "summary": "October 2026 studio rent, Unit 204"
+  }
+}

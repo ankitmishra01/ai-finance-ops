@@ -1,0 +1,30 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice (Bill No. US-2026-1031) requesting payment of a specific amount (299.00 USD) for an annual software plan.",
+    "vendor_name": "Lewis Analytics LLC",
+    "vendor_province": null,
+    "vendor_country": "US",
+    "gst_number": null,
+    "invoice_number": "US-2026-1031",
+    "invoice_date": "2026-10-31",
+    "terms": "Due on receipt",
+    "currency": "USD",
+    "subtotal": "299.00",
+    "gst_hst": "0",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "299.00",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Analytics Pro plan, annual subscription",
+    "category": "software",
+    "notes": [
+      "US supplier (Portland, OR); no GST/HST or QST registration number printed and no tax charged.",
+      "Invoice states all amounts are in USD.",
+      "No tax line is printed on the invoice; gst_hst reported as 0 as no GST/HST was charged."
+    ]
+  }
+}

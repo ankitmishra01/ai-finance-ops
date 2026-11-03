@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Marigold Bakery",
+    "date": "2026-10-09",
+    "currency": "CAD",
+    "subtotal": 16.28,
+    "gst_hst": 2.12,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 18.4,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "Box of 12 pastries"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice number 1045 from Lee Renovations requesting payment of a specific total of $508.50 for door repair work.",
+    "vendor_name": "Lee Renovations",
+    "vendor_province": "ON",
+    "vendor_country": "CA",
+    "gst_number": null,
+    "invoice_number": "1045",
+    "invoice_date": "2026-10-26",
+    "terms": "Net 15",
+    "currency": "CAD",
+    "subtotal": "450.00",
+    "gst_hst": "58.50",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "508.50",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Repair of office door and frame",
+    "category": "repairs",
+    "notes": [
+      "No GST/HST registration number is printed on the invoice."
+    ]
+  }
+}

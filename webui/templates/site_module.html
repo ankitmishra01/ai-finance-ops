@@ -10,10 +10,12 @@
 {% block content %}
 <div class="layout">
 <div class="content">
+<div class="hero">
 <div class="crumbs"><a href="../../">Overview</a> / {{ m.id }}</div>
 <p class="eyebrow">{{ m.job }}</p>
 <h1>{{ m.title }}</h1>
 {% if page.intro %}<p class="lede">{{ page.intro }}</p>{% endif %}
+</div>
 
 <div class="kpis">
   <div class="kpi"><div class="v">{{ page.counts.total }}</div><div class="l">proposals</div></div>

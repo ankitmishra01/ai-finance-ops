@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Ridgeway Mutual Insurance",
+    "date": "2026-10-01",
+    "currency": "CAD",
+    "subtotal": 118.75,
+    "gst_hst": 0,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 118.75,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": "RM-POL-4471-10",
+    "payment_date": null,
+    "summary": "October commercial general liability insurance monthly premium"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Inkframe Design Suite",
+    "date": "2026-10-18",
+    "currency": "CAD",
+    "subtotal": 59.99,
+    "gst_hst": 7.8,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 67.79,
+    "is_refund": false,
+    "gst_number": "59823 5554 RT0001",
+    "invoice_number": "IF-2210934",
+    "payment_date": null,
+    "summary": "Monthly Inkframe Design Suite single licence"
+  }
+}

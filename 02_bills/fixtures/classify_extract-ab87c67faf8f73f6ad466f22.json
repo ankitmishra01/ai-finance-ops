@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice TL-88213 from Smith Telecom Ltd. requests payment of a specific total of 201.60 CAD for phone services.",
+    "vendor_name": "Smith Telecom Ltd.",
+    "vendor_province": "BC",
+    "vendor_country": "CA",
+    "gst_number": "881618490RT0001",
+    "invoice_number": "TL-88213",
+    "invoice_date": "2026-10-18",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "180.00",
+    "gst_hst": "9.00",
+    "other_tax": "12.60",
+    "other_tax_kind": "PST",
+    "qst_number": null,
+    "total": "201.60",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Business phone lines, October",
+    "category": "utilities",
+    "notes": []
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "The attachment is a supplier invoice (Bill No. SM-301) requesting payment of a specific balance due of 169.50 for a window decal.",
+    "vendor_name": "FITZPATRICK SIGN MAKERS",
+    "vendor_province": "ON",
+    "vendor_country": "CA",
+    "gst_number": "87654321RT001",
+    "invoice_number": "SM-301",
+    "invoice_date": "2026-10-10",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "150.00",
+    "gst_hst": "19.50",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "169.50",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Window decal",
+    "category": "advertising",
+    "notes": [
+      "GST/HST number 87654321RT001 has only 8 digits before 'RT'; a valid business number has 9 digits. Copied as printed."
+    ]
+  }
+}

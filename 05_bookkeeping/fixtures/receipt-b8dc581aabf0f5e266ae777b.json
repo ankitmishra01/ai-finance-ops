@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Glow Day Spa",
+    "date": "2026-10-17",
+    "currency": "CAD",
+    "subtotal": 95.0,
+    "gst_hst": 12.35,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 107.35,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "60 minute massage"
+  }
+}

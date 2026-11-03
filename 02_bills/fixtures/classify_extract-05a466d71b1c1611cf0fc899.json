@@ -1,0 +1,28 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "receipt",
+    "doc_type_reason": "The email confirms receipt of a payment of $96.05 for invoice OS-7610 and does not request payment.",
+    "vendor_name": null,
+    "vendor_province": null,
+    "vendor_country": null,
+    "gst_number": null,
+    "invoice_number": null,
+    "invoice_date": null,
+    "terms": null,
+    "currency": null,
+    "subtotal": null,
+    "gst_hst": null,
+    "other_tax": null,
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": null,
+    "recipient_name": null,
+    "description": null,
+    "category": null,
+    "notes": [
+      "Payment confirmation from Miles Office Supply Ltd. for invoice OS-7610, amount $96.05."
+    ]
+  }
+}

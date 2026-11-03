@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "is_receipt": true,
+    "merchant": "Northbound Coffee Roasters",
+    "date": "2026-10-06",
+    "currency": "CAD",
+    "subtotal": 11.0,
+    "gst_hst": 1.43,
+    "other_tax": 0,
+    "tip": 0,
+    "total": 12.43,
+    "is_refund": false,
+    "gst_number": null,
+    "invoice_number": null,
+    "payment_date": null,
+    "summary": "2 cold brews"
+  }
+}

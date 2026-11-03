@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice MC-118 from Young Marine Consulting requesting payment of a specific total for advisory services.",
+    "vendor_name": "YOUNG MARINE CONSULTING",
+    "vendor_province": "NS",
+    "vendor_country": "CA",
+    "gst_number": "519283279RT0001",
+    "invoice_number": "MC-118",
+    "invoice_date": "2026-10-12",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "900.00",
+    "gst_hst": "135.00",
+    "other_tax": "0",
+    "other_tax_kind": null,
+    "qst_number": null,
+    "total": "1035.00",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Advisory services, October",
+    "category": "professional_fees",
+    "notes": []
+  }
+}

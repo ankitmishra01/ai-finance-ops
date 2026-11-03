@@ -1,0 +1,26 @@
+{
+  "model": "claude-sonnet-5-5",
+  "backend": "cli",
+  "output": {
+    "doc_type": "bill",
+    "doc_type_reason": "Supplier invoice QC-4410 from Ball Traduction Inc. with an invoice number and a total of 574.88 owing for translation services.",
+    "vendor_name": "Ball Traduction Inc.",
+    "vendor_province": "QC",
+    "vendor_country": "CA",
+    "gst_number": "589638345RT0001",
+    "invoice_number": "QC-4410",
+    "invoice_date": "2026-10-19",
+    "terms": "Net 30",
+    "currency": "CAD",
+    "subtotal": "500.00",
+    "gst_hst": "25.00",
+    "other_tax": "49.88",
+    "other_tax_kind": "QST",
+    "qst_number": "1006543210TQ0001",
+    "total": "574.88",
+    "recipient_name": "Tamarack Test Studio Inc.",
+    "description": "Document translation, 4,000 words",
+    "category": "professional_fees",
+    "notes": []
+  }
+}
