@@ -25,7 +25,7 @@ flowchart LR
     subgraph shared["shared/"]
         MAIL["mail.py<br/>read_mailbox, build_eml"]
         LLM["llm.py<br/>replay / live / record"]
-        TAX["tax.py<br/>GST/HST/PST rates,<br/>GST/HST number check"]
+        TAX["tax.py<br/>GST/HST, QST, PST/RST,<br/>GST/HST + QST number checks"]
         APPR["approvals.py<br/>ApprovalQueue"]
         LEDGER["ledger.py<br/>SQLite stand-in for<br/>QuickBooks / Xero / Wave"]
     end
@@ -34,7 +34,7 @@ flowchart LR
     FIX[("module/fixtures/*.json<br/>recorded responses")]
     TOK[("runs/token_log.jsonl<br/>tokens, cache hits,<br/>cost by module + task")]
     HUMAN{{"Person:<br/>approve / reject / hold"}}
-    OUT["Outputs: invoice PDFs, AP aging,<br/>payslips, PD7A summary, CPA 005 sample,<br/>GST34 working paper, exceptions report"]
+    OUT["Outputs: invoice PDFs, AP aging,<br/>payslips, PD7A summary, CPA 005 sample,<br/>GST34 working paper, QST worksheet,<br/>exceptions report"]
 
     MB --> MAIL --> modules
     OPS --> modules
@@ -57,8 +57,8 @@ flowchart LR
 | `shared/llm.py` | One function, `extract()`, that forces a single tool call validated against a JSON schema. `AFO_LLM_MODE=replay` (default) reads a recorded response from disk, `live` calls the API, `record` calls it and saves the response. | Downstream code never parses prose. Tests and CI need no key and cost nothing. The system prompt (rules, chart of accounts) is marked for prompt caching because it repeats on every document in a run. |
 | Token log | Every live call appends model, input/output/cache tokens, estimated cost and latency to `runs/token_log.jsonl`, tagged by module and task. `llm.token_report()` sums it by module. | Gives the cost side of an ROI case per automation, to set against the hours the job took by hand. |
 | `shared/approvals.py` | `ApprovalQueue.propose()` records a summary, the payload that would be committed, and any flags. `review()` asks y/n per item; `auto=True` approves only unflagged items and holds the rest. | Agents propose, people approve. Flags are the agent's way of saying "a person must look at this". |
-| `shared/ledger.py` | SQLite tables for customers, invoices, vendors, bills, transactions and pay runs, with integer cents. `update_customer` / `update_transaction` only touch whitelisted columns. New columns are added by idempotent migrations on connect. | A real adapter (QuickBooks, Xero) can replace it without changing agent logic. |
-| `shared/tax.py` | Provincial GST/HST/PST rates, half-up rounding to the cent, GST/HST registration-number format and BN check digit. | Shared by invoicing, bills, GST/HST and bookkeeping so rates live in one place. |
+| `shared/ledger.py` | SQLite tables for customers, invoices, vendors, bills, transactions and pay runs, with integer cents. `update_customer` / `update_transaction` only touch whitelisted columns. New columns are added by idempotent migrations on connect; provincial sales tax has its own columns (`invoices.provincial_tax_cents`, `bills.other_tax_kind`, `bills.qst_itr_cents`), apart from GST/HST. | A real adapter (QuickBooks, Xero) can replace it without changing agent logic. |
+| `shared/tax.py` | Provincial GST/HST rates; QST (9.975%), BC and SK PST and MB RST on the pre-GST price, each citing its official page; half-up rounding to the cent (Decimal for 9.975%); GST/HST registration-number format and BN check digit; QST registration-number format. | Shared by invoicing, bills, GST/HST and bookkeeping so rates live in one place. |
 | `shared/mail.py` | Reads `.eml` exports; builds them for the synthetic-data generators, with an optional pinned MIME boundary so fixtures are byte-identical across runs. | Stands in for an IMAP or Gmail adapter. |
 
 ## One run, end to end (02_bills)

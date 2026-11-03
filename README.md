@@ -1,10 +1,10 @@
 # ai-finance-ops
 
-Five human-in-the-loop agents that do recurring finance admin for a Canadian small business: invoicing, bills, payroll, GST/HST and bookkeeping.
+Five human-in-the-loop agents that do recurring finance admin for a Canadian small business: invoicing, bills, payroll, GST/HST and QST, and bookkeeping.
 
 Claude extractors read the messy documents through schema-forced tool calls; tax, payroll and file-format maths is plain tested code (payroll matches the CRA's PDOC calculator to the cent on both cases checked), and nothing is posted, paid or filed without a person's approval.
 
-296 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
+345 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
 
 Each agent takes a recurring back-office job, does the reading, matching and drafting, and stops at an approval queue so a person decides what is posted, paid or filed.
 
@@ -14,15 +14,15 @@ All data in this repository is synthetic. Nothing here connects to a real bank, 
 
 | Module | Recurring job | What the agent does | What a person approves |
 |---|---|---|---|
-| [01_invoicing](01_invoicing/) | Month-end client invoicing | Finds billable clients in the ops data, reads billing changes from email, builds lines (hourly, retainer, milestone), applies GST/HST by place of supply, renders invoice PDFs | New customers, customer changes, each invoice |
-| [02_bills](02_bills/) | Accounts payable intake | Classifies a shared finance mailbox, extracts bills from PDFs and email bodies, checks totals, tax rate and GST/HST number, decides ITC eligibility, detects duplicates, buckets by due date | Each bill before it is posted |
+| [01_invoicing](01_invoicing/) | Month-end client invoicing | Finds billable clients in the ops data, reads billing changes from email, builds lines (hourly, retainer, milestone), applies GST/HST by place of supply plus QST, PST or RST where the supplier is registered, renders invoice PDFs | New customers, customer changes, each invoice |
+| [02_bills](02_bills/) | Accounts payable intake | Classifies a shared finance mailbox, extracts bills from PDFs and email bodies, checks totals, tax rates and GST/HST and QST numbers, records QST/PST/RST separately, decides ITC and QST input tax refund eligibility, detects duplicates, buckets by due date | Each bill before it is posted |
 | [03_payroll](03_payroll/) | Ontario pay run | Reads pay-change emails, computes gross pay and CPP/CPP2, EI, federal and Ontario tax with the CRA T4127 formulas, produces payslips, PD7A remittance summary, a sample CPA 005 payment file and the journal | Each pay line, then the run |
-| [04_gst_hst](04_gst_hst/) | Quarterly GST/HST return | Applies a cited rules file to every transaction, classifies supply type and ITC treatment, computes the GST34 lines with a transaction-level working paper, computes the filing deadline | Flagged transactions, then the return |
+| [04_gst_hst](04_gst_hst/) | Quarterly GST/HST and QST returns | Applies a cited rules file to every transaction, classifies supply type and ITC treatment, computes the GST34 lines and the QST worksheet (Revenu Quebec FPZ-500 lines 203 to 209, with input tax refunds) with transaction-level traces, computes the filing deadline | Flagged transactions, then each return |
 | [05_bookkeeping](05_bookkeeping/) | Records and evidence | Reads receipts, matches them to bank and card lines (FX, splits, tips), proposes recategorisations, files evidence by period, reports exceptions | Each evidence link and category change |
 
 ## What a run looks like
 
-`./scripts/demo.sh` dry-runs all five agents on the synthetic data in about five seconds and prints a summary of each. The excerpts below were copied from a real run of `uv run python 03_payroll/run.py` and `uv run python 02_bills/run.py` (rules extractor, no API key, 3 November 2026). Every flag is something the agent will not decide on its own.
+`./scripts/demo.sh` dry-runs all five agents on the synthetic data in about five seconds and prints a summary of each. The excerpts below were copied from a real run of `uv run python 03_payroll/run.py` and `uv run python 02_bills/run.py` (rules extractor, no API key, 3 November 2026; the bills run was re-captured after QST/PST support was added). Every flag is something the agent will not decide on its own.
 
 ```text
 $ uv run python 03_payroll/run.py
@@ -50,7 +50,7 @@ Re-run with --approve to review, or --auto-approve for a demo.
 
 ```text
 $ uv run python 02_bills/run.py
-Read 36 messages with the rules extractor: 24 bill, 6 other, 3 receipt, 3 statement
+Read 40 messages with the rules extractor: 28 bill, 6 other, 3 receipt, 3 statement
 
 file     vendor                         invoice                 total due        bucket               ITC  flags
 01.eml   Ford Properties Ltd.           R-1101          CAD $3,955.00 2026-10-01 overdue          $455.00  -
@@ -63,12 +63,15 @@ file     vendor                         invoice                 total due       
 28.eml   Jones Cleaning Services        CL-1044           CAD $293.80 2026-12-01 next 30 days      $33.80  possible duplicate: same vendor, amount and dates as 24.eml
 32.eml   Fowler Cloud Software Inc.     CS-20481          CAD $650.88 2026-11-14 next 30 days      $74.88  duplicate: same vendor and invoice number as 05.eml
 ...
+38.eml   Taylor Imprimerie Inc.         IM-0931           CAD $517.39 2026-11-28 next 30 days      $22.50  QST number '123456789TQ001' is not 10 digits + TQ + 4 digits
+...
 
 AP aging as of 2026-11-03 (exact duplicates excluded):
-  CAD: overdue $4,009.24, due this week $4,039.75, next 30 days $4,423.73, later $1,356.00
+  CAD: overdue $4,009.24, due this week $4,039.75, next 30 days $6,943.25, later $1,356.00
   USD: overdue $299.00, due this week $0.00, next 30 days $0.00, later $0.00
+Provincial tax on bills: PST $27.60, QST $194.52; QST input tax refunds claimable $134.67 (PST and RST are a cost)
 
-24 bills proposed, 11 flagged for a person.
+28 bills proposed, 12 flagged for a person.
 ```
 
 Architecture, with diagrams of `shared/`, the approval gate and the token log: [docs/architecture.md](docs/architecture.md).
@@ -79,13 +82,13 @@ Every model step has two implementations: a deterministic rules baseline, which 
 
 | Module | Rules baseline, familiar formats | Rules baseline, harder cases | Tests |
 |---|---|---|---|
-| 01_invoicing | 96.1% mean field accuracy on customer details (34 cases) | 7 of 8 misses fall on 9 untuned phrasings | 54 |
-| 02_bills | 100% classification, 100% fields (30 templated emails) | 50% classification, 40% fields (6 held-out formats) | 65 |
+| 01_invoicing | 94.1% mean field accuracy on customer details (37 cases) | 7 of 13 misses fall on 9 untuned phrasings and 5 on 3 Quebec-format cases (French address order, accented city); QST/PST charged only where the supplier is registered | 66 |
+| 02_bills | 100% classification, 100% fields (34 templated emails) | 50% classification, 40% fields (6 held-out formats); provincial tax amount, kind and QST number read on 5 of 6 bills that carry it (the miss is the French TPS/TVQ invoice) | 77 |
 | 03_payroll | Change-request extraction: precision 1.00, recall 0.75 (21 emails) | Deductions (CPP, CPP2, EI, federal and Ontario tax) match CRA PDOC to the cent for the 2 hand-checked employees ([PDOC check](03_payroll/README.md#pdoc-check), 3 Nov 2026) | 50 |
-| 04_gst_hst | 93.3% category and ITC treatment (30 labelled) | Gold labels reproduce all 18 GST34 lines exactly; rules labels match 10 of 18, every error flagged for review | 61 |
+| 04_gst_hst | 93.3% category and ITC treatment (30 labelled); 9 of 9 Quebec rows | Gold labels reproduce all 18 GST34 lines and all 7 QST lines exactly; rules labels match 10 of 18 GST34 lines and 7 of 7 QST lines, every error flagged for review | 75 |
 | 05_bookkeeping | Matching precision 1.00, recall 0.98; categorisation 93.9% (82 lines) | French receipt with comma decimals is missed and shows as an orphan | 50 |
-| shared/ | Unit tests: ledger migrations and update whitelists, GST/HST number validator, MIME boundary, record/replay | | 16 |
-| **Total** | | | **296** |
+| shared/ | Unit tests: ledger migrations and update whitelists, GST/HST and QST number validators, QST/PST/RST rates and rounding, MIME boundary, record/replay | | 27 |
+| **Total** | | | **345** |
 
 
 ## How to score Claude
@@ -132,7 +135,7 @@ AFO_LLM_MODE=live ANTHROPIC_API_KEY=... uv run python 02_bills/run.py
 
 ## Credit
 
-Inspired by Kieran Donnelly's post on the finance and admin automations he runs at Kwanda AI with Claude Code, rebuilt here for Canadian rules (GST/HST, CPP/EI, PD7A, CPA-005).
+Inspired by Kieran Donnelly's post on the finance and admin automations he runs at Kwanda AI with Claude Code, rebuilt here for Canadian rules (GST/HST, QST, PST/RST, CPP/EI, PD7A, CPA-005).
 
 ## License
 
