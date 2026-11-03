@@ -3,7 +3,7 @@ from datetime import date
 
 import pytest
 
-from shared import ledger, llm
+from shared import ledger, llm, tax
 from shared.approvals import ApprovalQueue
 
 import invoicing
@@ -50,7 +50,7 @@ def test_line_amount_half_up(hours, rate, expected):
     ("NS", 300000, 42000, "HST 14%"),
     ("NB", 120000, 18000, "HST 15%"),
     ("AB", 7500, 375, "GST 5%"),
-    ("QC", 1800000, 90000, "GST 5%"),   # QST not charged by this module
+    ("QC", 1800000, 90000, "GST 5%"),   # GST only; QST is provincial_tax_for
     ("BC", 1, 0, "GST 5%"),
     ("SK", 10, 1, "GST 5%"),            # 0.5 cent rounds up
 ])
@@ -113,6 +113,30 @@ def test_cra_fields_customer_name_and_terms_needed_from_500():
     assert check_cra_fields(_inv(49999, customer={"legal_name": None}, payment_terms=""), sup) == []
 
 
+REGS = {"QC": {"registered": True, "number": "1218654370TQ0001"}, "BC": {"registered": True, "number": "PST-1"},
+        "SK": {"registered": False}}
+
+
+@pytest.mark.parametrize("prov,sub,expected", [
+    ("QC", 1800000, (179550, "QST", "QST 9.975%", "1218654370TQ0001")),
+    ("QC", 10000, (998, "QST", "QST 9.975%", "1218654370TQ0001")),   # 997.5 rounds up
+    ("BC", 192500, (13475, "PST", "PST 7%", "PST-1")),
+    ("SK", 112500, (0, "", "", "")),      # not registered in SK
+    ("MB", 100000, (0, "", "", "")),      # not in the registrations at all
+    ("ON", 100000, (0, "", "", "")),      # HST province: no separate provincial tax
+    (None, 100000, (0, "", "", "")),
+])
+def test_provincial_tax_only_where_registered(prov, sub, expected):
+    assert invoicing.provincial_tax_for(sub, prov, REGS) == expected
+
+
+def test_supplier_config_loaded_with_ops(ops):
+    regs = ops["supplier"]["provincial_registrations"]
+    assert regs["QC"]["registered"] and regs["BC"]["registered"]
+    assert not regs["SK"]["registered"] and not regs["MB"]["registered"]
+    assert "provincial_registrations" not in invoicing.load_ops(supplier_config=None)["supplier"]
+
+
 # ---- month plan on the synthetic data --------------------------------------
 
 def test_invoice_arithmetic_and_numbering(plan):
@@ -121,7 +145,7 @@ def test_invoice_arithmetic_and_numbering(plan):
     assert nums == sorted(nums)
     for i in plan.invoices:
         assert i.subtotal_cents == sum(ln.amount_cents for ln in i.lines)
-        assert i.total_cents == i.subtotal_cents + i.tax_cents
+        assert i.total_cents == i.subtotal_cents + i.tax_cents + i.provincial_tax_cents
         assert i.tax_cents == tax_for(i.subtotal_cents, i.place_of_supply)[0]
 
 
@@ -173,6 +197,45 @@ def test_milestone_only_completed_in_period(plan):
     (inv,) = invs(plan, "C005")
     assert [ln.amount_cents for ln in inv.lines] == [1800000]
     assert inv.due_date == inv.issue_date  # due on receipt
+
+
+def test_qst_and_pst_on_the_month(plan):
+    (qc,) = invs(plan, "C005")
+    assert (qc.place_of_supply, qc.tax_cents, qc.provincial_tax_code, qc.provincial_tax_cents) == \
+        ("QC", 90000, "QST", 179550)
+    assert qc.total_cents == 1800000 + 90000 + 179550
+    assert not qc.flags                       # QST needs no extra review
+    (bc,) = invs(plan, "C004")
+    assert bc.provincial_tax_code == "PST" and bc.provincial_tax_cents == tax.bc_pst_cents(bc.subtotal_cents)
+    assert any("BC PST applies only to listed services" in f for f in bc.flags)
+    # SK (C007, and C012 after its move) and MB (C010): supplier not registered, GST only.
+    for cid in ("C007", "C010", "C012"):
+        assert all(i.provincial_tax_cents == 0 and i.provincial_tax_code == "" for i in invs(plan, cid))
+    # HST provinces never get a separate provincial tax.
+    assert all(i.provincial_tax_cents == 0 for i in plan.invoices if i.place_of_supply in ("ON", "NS", "NB", "PE"))
+
+
+def test_no_registrations_means_gst_hst_only():
+    ops = invoicing.load_ops(supplier_config=None)
+    plan = plan_month(ops, invoicing.load_mail(), PERIOD, ISSUE, RulesExtractor())
+    assert all(i.provincial_tax_cents == 0 for i in plan.invoices)
+
+
+def test_registering_in_sk_charges_pst_and_flags_taxability(ops):
+    ops2 = json.loads(json.dumps(ops))
+    ops2["supplier"]["provincial_registrations"]["SK"] = {"registered": True, "number": ""}
+    plan = plan_month(ops2, invoicing.load_mail(), PERIOD, ISSUE, RulesExtractor())
+    (inv,) = invs(plan, "C007")
+    assert inv.provincial_tax_cents == tax.sk_pst_cents(inv.subtotal_cents) > 0
+    assert any("no SK registration number" in f for f in inv.flags)
+
+
+def test_qst_without_valid_number_is_flagged(ops):
+    ops2 = json.loads(json.dumps(ops))
+    ops2["supplier"]["provincial_registrations"]["QC"]["number"] = "12345TQ1"
+    plan = plan_month(ops2, invoicing.load_mail(), PERIOD, ISSUE, RulesExtractor())
+    (inv,) = invs(plan, "C005")
+    assert any("QST number is not 10 digits + TQ + 4 digits" in f for f in inv.flags)
 
 
 def test_small_invoice_tier(plan):
@@ -229,6 +292,18 @@ def test_commit_writes_ledger_pdfs_and_detects_rerun_duplicates(ops, tmp_path):
 
     top = max(int(p.payload["number"].split("-")[1]) for p in approved)
     assert invoicing.next_seq_from_ledger(con) == top + 1
+
+    # The Quebec invoice is clean, so it is approved: QST sits in its own ledger column and on the PDF.
+    qc = next(p.payload for p in approved if p.payload["client_id"] == "C005")
+    row = con.execute("select tax_cents, provincial_tax_cents, provincial_tax_code from invoices where number=?",
+                      (qc["number"],)).fetchone()
+    assert tuple(row) == (90000, 179550, "QST")
+    qc_pdf = (tmp_path / "invoices" / f"{qc['number']}.pdf").read_bytes()
+    for needle in ["QST 9.975% \\(QC\\)", "$1,795.50", "QST registration no.: 1218654370TQ0001", "$20,695.50"]:
+        assert needle.encode() in qc_pdf, needle
+    on = next(p.payload for p in approved if p.payload["place_of_supply"] == "ON")
+    on_pdf = (tmp_path / "invoices" / f"{on['number']}.pdf").read_bytes()
+    assert b"QST" not in on_pdf and b"PST" not in on_pdf
 
     again = plan_month(ops, invoicing.load_mail(), PERIOD, ISSUE, RulesExtractor())
     invoicing.flag_ledger_duplicates(again, con)

@@ -270,5 +270,29 @@
     "po_number": "785197",
     "province": "NB",
     "split_invoices": false
+  },
+  "NEW-Q001": {
+    "address": "752 boul. Ren\u00e9-L\u00e9vesque Ouest, Montr\u00e9al, QC H3B 2R1",
+    "billing_email": "comptabilite@paynedentalgroup.test",
+    "legal_name": "Payne Dental Group Ltd.",
+    "po_number": null,
+    "province": "QC",
+    "split_invoices": false
+  },
+  "NEW-Q002": {
+    "address": "3444 rue Sherbrooke Est, Montr\u00e9al, QC H2L 8P5",
+    "billing_email": "comptabilite@huertabuilders.test",
+    "legal_name": "Huerta Builders Ltd.",
+    "po_number": "4500039219",
+    "province": "QC",
+    "split_invoices": false
+  },
+  "NEW-Q003": {
+    "address": "1444 boul. Le Corbusier, Laval, QC H7S 5C5",
+    "billing_email": "comptabilite@vaughnlogistics.test",
+    "legal_name": "Vaughn Logistics Ltd.",
+    "po_number": null,
+    "province": "QC",
+    "split_invoices": false
   }
 }

@@ -245,6 +245,57 @@ def onboarding_case(g: Gen, supplier: dict, variant: int, day: int) -> dict:
             "contract_text": text, "emails": emails, "label": label}
 
 
+def quebec_cases(g: Gen, supplier: dict) -> list[tuple[dict, list[dict], dict]]:
+    """Three Quebec onboarding threads: (case fields, emails, label).
+
+    Q1: bill-to address in the French Canadian format, "Montréal (Québec) H3B 4W8".
+    Q2: province spelled "Québec" with the accent, English address order.
+    Q3: the client gives its QST registration number, which is not a PO number.
+    """
+    out = []
+    streets = [("boul. René-Lévesque Ouest", "Montréal", "H3B"), ("rue Sherbrooke Est", "Montréal", "H2L"),
+               ("boul. Le Corbusier", "Laval", "H7S")]
+    for k, (street_name, city, fsa) in enumerate(streets):
+        legal, short, domain = g.company()
+        contact = g.person(domain)
+        num = g.rng.randrange(100, 4000)
+        postal = f"{fsa} {g.rng.randrange(1, 9)}{g.rng.choice('ABCEGHJKLMNPRSTVWXYZ')}{g.rng.randrange(1, 9)}"
+        sig = f"\n\n{contact['name']}\n{contact['title']}, {short}\n{contact['email']}\n"
+        billing = f"comptabilite@{domain}"
+        po = None
+        mail = {"sender": f'"{contact["name"]}" <{contact["email"]}>', "to": supplier["email"],
+                "date": g.when(6 + k * 4)}
+        if k == 0:
+            mail |= {"subject": "Adresse de facturation / billing address",
+                     "body": (f"Hi {supplier['contact_name']},\n\nPlease address invoices to our head office:\n\n"
+                              f"{legal}\n{num}, {street_name}\n{city} (Québec) {postal}\n\n"
+                              f"Invoices go to {billing}.{sig}")}
+            text = contract_text(supplier["name"], legal, None, "operations", "Fees as set out in Schedule A.",
+                                 "net 30 days from the invoice date")
+        elif k == 1:
+            po = g.po()
+            mail |= {"subject": "PO and billing",
+                     "body": (f"Hello {supplier['contact_name']},\n\nOur purchase order for this mandate is {po}. "
+                              f"Please send invoices to {billing}.{sig}")}
+            text = (contract_text(supplier["name"], legal, None, "operations", "Fees as set out in Schedule A.",
+                                  "net 30 days from the invoice date")
+                    .replace('("Client")', f'("Client"), having its office at {num} {street_name}, {city}, '
+                                           f'Québec {postal}', 1))
+        else:
+            qst_no = f"{g.rng.randrange(10**9, 10**10)}TQ0001"
+            mail |= {"subject": "Vendor setup",
+                     "body": (f"Hi {supplier['contact_name']},\n\nFor your vendor file: our GST number is "
+                              f"{g.rng.randrange(10**8, 10**9)}RT0001 and our QST number is {qst_no}. "
+                              f"We do not issue purchase orders. Send invoices to {billing}; the billing address "
+                              f"is {num} {street_name}, {city}, QC {postal}.{sig}")}
+            text = contract_text(supplier["name"], legal, None, "operations", "Fees as set out in Schedule A.",
+                                 "net 30 days from the invoice date")
+        label = {"legal_name": legal, "billing_email": billing, "province": "QC",
+                 "address": f"{num} {street_name}, {city}, QC {postal}", "po_number": po, "split_invoices": False}
+        out.append(({"client_name": short, "contract_text": text}, [mail], label))
+    return out
+
+
 def write_eml(path: Path, m: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(build_eml(sender=m["sender"], to=m["to"], subject=m["subject"],
@@ -544,6 +595,19 @@ def generate(out: Path = OUT) -> dict:
                   "contract_text": None, "emails": ["eval/mail/H009-1.eml"]})
     labels["CHG-H009"] = {"legal_name": None, "billing_email": None, "province": None, "address": None,
                           "po_number": None, "split_invoices": True}
+
+    # Quebec cases, added with QST support and not used to tune the rules baseline. Generated last,
+    # so every case above keeps its bytes. The province decides whether QST is charged.
+    for i, (case, mail_list, label) in enumerate(quebec_cases(g, supplier)):
+        cid = f"Q{i + 1:03d}"
+        rels = []
+        for j, m in enumerate(mail_list):
+            rel = f"eval/mail/{cid}-{j + 1}.eml"
+            eval_mail.append((rel, m))
+            rels.append(rel)
+        cases.append({"case_id": f"NEW-{cid}", "kind": "new_client_quebec", "client_id": None, **case,
+                      "emails": rels})
+        labels[f"NEW-{cid}"] = label
 
     ops = {"generated_by": "01_invoicing/invoicing_data.py", "seed": SEED, "period": PERIOD,
            "supplier": supplier, "clients": clients, "customers": customers, "contracts": contracts,

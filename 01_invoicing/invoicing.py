@@ -1,7 +1,8 @@
 """Deterministic core of month-end invoicing.
 
 Everything here is plain code: which clients are billable, invoice lines, GST/HST by place
-of supply, due dates, CRA invoice-content checks and anomaly flags. The only model step
+of supply, QST/PST/RST where the supplier is registered for it, due dates, CRA invoice-content
+checks and anomaly flags. The only model step
 (reading contracts and emails for customer details) is injected as an Extractor.
 Amounts are integer cents; hours x rate is rounded half-up to the cent.
 """
@@ -17,6 +18,8 @@ from decimal import ROUND_HALF_UP, Decimal
 from email.utils import parseaddr
 from pathlib import Path
 
+import yaml
+
 from shared import ledger, tax
 from shared.approvals import ApprovalQueue
 from shared.mail import Mail, read_mailbox
@@ -24,6 +27,7 @@ from shared.mail import Mail, read_mailbox
 from invoicing_extract import Email, ExtractionInput, Extractor
 
 DATA = Path(__file__).resolve().parent.parent / "data" / "synthetic" / "invoicing"
+SUPPLIER_CONFIG = Path(__file__).resolve().parent / "supplier_config.yaml"
 
 # CRA: information required on an invoice, by total amount (tax included), to support the
 # recipient's input tax credit claim. Input Tax Credit Information (GST/HST) Regulations
@@ -55,6 +59,20 @@ def tax_for(subtotal_cents: int, province: str) -> tuple[int, str, str]:
     kind = "HST" if rate > 0.05 else "GST"
     pct = f"{rate * 100:g}%"
     return tax.gst_hst_cents(subtotal_cents, province), f"{kind}-{province}", f"{kind} {pct}"
+
+
+def provincial_tax_for(subtotal_cents: int, province: str | None, registrations: dict) -> tuple[int, str, str, str]:
+    """QST/PST/RST, charged only if the supplier is registered in the customer's province.
+
+    Returns (tax cents, code like 'QST', label like 'QST 9.975%', supplier's registration number);
+    (0, '', '', '') when nothing is charged. Computed on the subtotal before GST.
+    """
+    code = tax.provincial_tax_code(province)
+    reg = registrations.get(province or "", {})
+    if not code or not reg.get("registered"):
+        return 0, "", "", ""
+    return (tax.provincial_tax_cents(subtotal_cents, province), code, tax.provincial_tax_label(province),
+            str(reg.get("number") or ""))
 
 
 def due_date(issue: date, terms: str) -> date:
@@ -133,6 +151,11 @@ class DraftInvoice:
     po_number: str | None
     cra_tier: str
     flags: list[str] = field(default_factory=list)
+    # QST/PST/RST, kept apart from GST/HST because it goes to a different authority.
+    provincial_tax_cents: int = 0
+    provincial_tax_code: str = ""
+    provincial_tax_label: str = ""
+    provincial_tax_number: str = ""
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -154,8 +177,18 @@ class Plan:
 # Loading
 # ---------------------------------------------------------------------------
 
-def load_ops(path: Path = DATA / "ops.json") -> dict:
-    return json.loads(Path(path).read_text())
+def load_supplier_config(path: Path = SUPPLIER_CONFIG) -> dict:
+    return yaml.safe_load(Path(path).read_text()) or {}
+
+
+def load_ops(path: Path = DATA / "ops.json", supplier_config: Path | None = SUPPLIER_CONFIG) -> dict:
+    """The ERP export, with the supplier's provincial registrations from supplier_config.yaml.
+    supplier_config=None leaves them out, so only GST/HST is charged."""
+    ops = json.loads(Path(path).read_text())
+    if supplier_config is not None:
+        regs = load_supplier_config(supplier_config).get("provincial_registrations", {})
+        ops["supplier"].setdefault("provincial_registrations", regs)
+    return ops
 
 
 def mails_by_client(ops: dict, mails: list[Mail]) -> dict[str, list[Email]]:
@@ -291,9 +324,29 @@ def check_cra_fields(inv: DraftInvoice, supplier: dict) -> list[str]:
     return [f for f in CRA_FIELDS_BY_TIER[inv.cra_tier] if not present[f]]
 
 
+def provincial_tax_flags(inv: DraftInvoice) -> list[str]:
+    """Checks on the QST/PST/RST charged. Each one holds the invoice for a person."""
+    if not inv.provincial_tax_cents:
+        return []
+    flags = []
+    if inv.provincial_tax_code == "QST":
+        # Revenu Quebec ties a customer's input tax refund to the supplier's QST number on the
+        # invoice, as the CRA does for ITCs; the $100 threshold below mirrors SOR/91-45 s. 3 (assumed).
+        ok, why = tax.validate_qst_number(inv.provincial_tax_number)
+        if not ok and inv.total_cents >= 10000:
+            flags.append(f"QST charged but the supplier's QST number is {why}; set it in supplier_config.yaml")
+    else:
+        flags.append(f"{inv.provincial_tax_code} charged in {inv.place_of_supply}: {inv.place_of_supply} "
+                     f"{inv.provincial_tax_code} applies only to listed services; confirm this supply is taxable")
+        if not inv.provincial_tax_number:
+            flags.append(f"{inv.provincial_tax_code} charged but no {inv.place_of_supply} registration number on file")
+    return flags
+
+
 def plan_month(ops: dict, mails: list[Mail], period: str, issue: date, extractor: Extractor) -> Plan:
     """Build customer and invoice proposals for one period. Pure: writes nothing."""
     supplier = ops["supplier"]
+    registrations = supplier.get("provincial_registrations", {})
     linked = mails_by_client(ops, mails)
     issued = {(i["client_id"], i["period"]): i["number"] for i in ops.get("issued_invoices", [])}
     seq = supplier.get("next_invoice_seq", 1)
@@ -341,6 +394,8 @@ def plan_month(ops: dict, mails: list[Mail], period: str, issue: date, extractor
             subtotal = sum(ln.amount_cents for ln in lines)
             prov = cust.province if cust.province in tax.RATES else None
             tax_cents, code, label = tax_for(subtotal, prov) if prov else (0, "UNKNOWN", "")
+            p_cents, p_code, p_label, p_number = provincial_tax_for(subtotal, prov, registrations)
+            total = subtotal + tax_cents + p_cents
             if (cid, period) in issued:
                 flags.append(f"duplicate: {issued[(cid, period)]} already issued to this client for {period}")
             inv = DraftInvoice(
@@ -348,12 +403,14 @@ def plan_month(ops: dict, mails: list[Mail], period: str, issue: date, extractor
                 period=period, issue_date=issue.isoformat(), due_date=due_date(issue, terms).isoformat(),
                 payment_terms=terms, customer=asdict(cust), place_of_supply=prov or "",
                 lines=lines, subtotal_cents=subtotal, tax_cents=tax_cents, tax_code=code, tax_label=label,
-                total_cents=subtotal + tax_cents, po_number=cust.po_number, cra_tier=cra_tier(subtotal + tax_cents),
-                flags=flags,
+                total_cents=total, po_number=cust.po_number, cra_tier=cra_tier(total), flags=flags,
+                provincial_tax_cents=p_cents, provincial_tax_code=p_code, provincial_tax_label=p_label,
+                provincial_tax_number=p_number,
             )
             missing = check_cra_fields(inv, supplier)
             if missing:
                 inv.flags.append(f"CRA invoice fields missing for {inv.cra_tier} tier: {', '.join(missing)}")
+            inv.flags += provincial_tax_flags(inv)
             invoices.append(inv)
             seq += 1
 
@@ -416,8 +473,10 @@ def build_queue(plan: Plan) -> tuple[ApprovalQueue, dict[str, list[int]]]:
             cust_idx[cust.client_id] = len(q.items) - 1
     deps: dict[str, list[int]] = {}
     for inv in plan.invoices:
+        prov_part = (f" + {inv.provincial_tax_label} {tax.fmt(inv.provincial_tax_cents)}"
+                     if inv.provincial_tax_cents else "")
         summary = (f"{inv.number} {inv.customer.get('legal_name')} {tax.fmt(inv.subtotal_cents)} + "
-                   f"{inv.tax_label or 'tax ?'} {tax.fmt(inv.tax_cents)} = {tax.fmt(inv.total_cents)}, "
+                   f"{inv.tax_label or 'tax ?'} {tax.fmt(inv.tax_cents)}{prov_part} = {tax.fmt(inv.total_cents)}, "
                    f"due {inv.due_date}")
         q.propose("invoice", summary, inv.to_dict(), inv.flags)
         deps[inv.number] = [cust_idx[inv.client_id]] if inv.client_id in cust_idx else []
@@ -465,7 +524,9 @@ def commit(q: ApprovalQueue, plan: Plan, con, out_dir: Path) -> dict:
         iid = ledger.create_invoice(con, number=inv["number"], customer_id=cust_id, period=inv["period"],
                                     issue_date=inv["issue_date"], due_date=inv["due_date"], lines=lines,
                                     tax_code=inv["tax_code"], tax_cents=inv["tax_cents"],
-                                    po_number=inv.get("po_number"), currency="CAD")
+                                    po_number=inv.get("po_number"), currency="CAD",
+                                    provincial_tax_cents=inv.get("provincial_tax_cents", 0),
+                                    provincial_tax_code=inv.get("provincial_tax_code") or None)
         ledger.set_status(con, "invoices", iid, "approved")
         pdf = render_invoice(inv, plan.supplier, Path(out_dir) / "invoices" / f"{inv['number']}.pdf")
         written["invoices"] += 1

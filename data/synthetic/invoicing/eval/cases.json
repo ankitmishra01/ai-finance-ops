@@ -341,5 +341,35 @@
     "emails": [
       "eval/mail/H009-1.eml"
     ]
+  },
+  {
+    "case_id": "NEW-Q001",
+    "kind": "new_client_quebec",
+    "client_id": null,
+    "client_name": "Payne Dental Group",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Payne Dental Group Ltd. (\"Client\").\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/Q001-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-Q002",
+    "kind": "new_client_quebec",
+    "client_id": null,
+    "client_name": "Huerta Builders",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Huerta Builders Ltd. (\"Client\"), having its office at 3444 rue Sherbrooke Est, Montr\u00e9al, Qu\u00e9bec H2L 8P5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/Q002-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-Q003",
+    "kind": "new_client_quebec",
+    "client_id": null,
+    "client_name": "Vaughn Logistics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Vaughn Logistics Ltd. (\"Client\").\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/Q003-1.eml"
+    ]
   }
 ]

@@ -1,0 +1,25 @@
+# Provincial sales-tax registrations of the synthetic supplier, Tamarack Lane Advisory Inc.
+# (its GST/HST number is in data/synthetic/invoicing/ops.json). Every number here is made up.
+#
+# The agent charges a province's QST, PST or RST only when the supplier is marked registered for
+# it here and the customer's bill-to province is that province. Rates come from shared/tax.py.
+#
+# Whether a supplier has to register is not decided by this file or the agent. A Canadian
+# supplier outside Quebec selling to Quebec businesses, for example, may or may not need a QST
+# registration depending on its activity there. Set these from the supplier's actual registrations.
+#
+# QST (Quebec) applies to most services on the same base as the GST. BC PST, SK PST and MB RST apply
+# to goods and to a listed set of services only, so the agent flags every invoice on which it charges
+# one of them for a person to confirm that the service is taxable in that province.
+
+provincial_registrations:
+  QC:
+    registered: true
+    number: "1218654370TQ0001"     # QST: 10 digits + TQ + 4 digits
+  BC:
+    registered: true
+    number: "PST-1234-5678"
+  SK:
+    registered: false
+  MB:
+    registered: false

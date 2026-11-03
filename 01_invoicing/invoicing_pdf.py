@@ -2,7 +2,9 @@
 
 The layout carries every field the CRA lists for invoices of $500 or more (the strictest tier),
 whatever the amount: supplier name and GST/HST registration number, invoice date, customer name,
-description of each supply, payment terms, the GST/HST charged and the total.
+description of each supply, payment terms, the GST/HST charged and the total. When QST, PST or
+RST is charged it gets its own line and the supplier's registration number for that tax is
+printed under the GST/HST number.
 """
 
 from __future__ import annotations
@@ -40,6 +42,9 @@ def render_invoice(inv: dict, supplier: dict, path: Path, *, draft: bool = False
     c.drawString(x0, y - 14, supplier.get("address", ""))
     c.drawString(x0, y - 26, f"GST/HST registration no.: {supplier.get('gst_hst_number') or 'NOT ON FILE'}")
     c.drawString(x0, y - 38, f"Email: {supplier.get('email', '')}")
+    p_code = inv.get("provincial_tax_code") if inv.get("provincial_tax_cents") else ""
+    if p_code:
+        c.drawString(x0, y - 50, f"{p_code} registration no.: {inv.get('provincial_tax_number') or 'NOT ON FILE'}")
 
     c.setFont("Helvetica-Bold", 20)
     c.drawRightString(w - x0, y, "INVOICE")
@@ -92,16 +97,19 @@ def render_invoice(inv: dict, supplier: dict, path: Path, *, draft: bool = False
     totals = [
         ("Subtotal (taxable supplies)", fmt(inv["subtotal_cents"])),
         (f"{inv['tax_label']} ({inv['place_of_supply']})" if inv["tax_label"] else "GST/HST", fmt(inv["tax_cents"])),
-        ("Total (CAD)", fmt(inv["total_cents"])),
     ]
+    if p_code:
+        totals.append((f"{inv['provincial_tax_label']} ({inv['place_of_supply']})", fmt(inv["provincial_tax_cents"])))
+    totals.append(("Total (CAD)", fmt(inv["total_cents"])))
     for i, (k, v) in enumerate(totals):
-        c.setFont("Helvetica-Bold" if i == 2 else "Helvetica", 9)
+        c.setFont("Helvetica-Bold" if i == len(totals) - 1 else "Helvetica", 9)
         c.drawRightString(cols[2] + 60, y - 14 * i, k)
         c.drawRightString(cols[3], y - 14 * i, v)
 
     c.setFont("Helvetica", 8)
-    c.drawString(x0, 90, "All supplies on this invoice are taxable at the rate shown. "
-                         "Prices exclude GST/HST, which is shown separately.")
+    taxes = f"GST/HST and {p_code}" if p_code else "GST/HST"
+    c.drawString(x0, 90, "All supplies on this invoice are taxable at the rates shown. "
+                         f"Prices exclude {taxes}, shown separately.")
     c.drawString(x0, 78, f"Please quote {inv['number']} with your payment. Amounts in Canadian dollars.")
     c.save()
     return path
