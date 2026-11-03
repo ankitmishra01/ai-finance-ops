@@ -1,0 +1,16 @@
+From: Accounts Receivable <billing@gray-accounting.test>
+To: ap@tamarack-studio.test
+Subject: Monthly account statement
+Date: Sun, 01 Nov 2026 09:10:00 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Account statement for Tamarack Test Studio Inc. as of October 31, 2026
+
+Opening balance: $0.00
+Invoice 2026-0193: $2,712.00
+Payments: $0.00
+Balance outstanding: $2,712.00
+
+This is a statement, not an invoice.
