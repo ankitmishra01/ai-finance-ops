@@ -74,8 +74,10 @@ def test_migration_upgrades_old_db(tmp_path):
     old.close()
     con = ledger.connect(db)
     assert {"currency", "total_cents", "other_tax_cents"} <= ledger.columns(con, "bills")
-    assert {"po_number", "currency"} <= ledger.columns(con, "invoices")
-    assert tuple(con.execute("select number, currency, other_tax_cents from bills").fetchone()) == ("A-1", "CAD", 0)
+    assert {"po_number", "currency", "provincial_tax_cents"} <= ledger.columns(con, "invoices")
+    assert {"other_tax_kind", "qst_itr_cents"} <= ledger.columns(con, "bills")
+    assert tuple(con.execute("select number, currency, other_tax_cents, qst_itr_cents from bills").fetchone()) \
+        == ("A-1", "CAD", 0, 0)
     assert ledger.migrate(con) == []          # idempotent
 
 
@@ -93,6 +95,56 @@ def test_eml_pinned_boundary():
     a, b = mail.build_eml(**kw, boundary="==fixed=="), mail.build_eml(**kw, boundary="==fixed==")
     assert a == b and b'boundary="==fixed=="' in a
     assert mail.build_eml(**{**kw, "attachments": ()}, boundary="==fixed==").count(b"boundary") == 0
+
+
+def test_provincial_tax_rates_and_rounding():
+    # 9.975% of $100.00 is 997.5 cents: half-up gives 998. Float maths would risk 997.
+    assert tax.qst_cents(10000) == 998
+    assert tax.qst_cents(50000) == 4988       # $500.00 -> $49.88, as on a Quebec invoice
+    assert tax.qst_cents(200) == 20           # 19.95 cents rounds up
+    assert tax.bc_pst_cents(18000) == 1260
+    assert tax.sk_pst_cents(10050) == 603
+    assert tax.mb_rst_cents(76000) == 5320
+    assert tax.provincial_tax_cents(10000, "ON") == 0
+    assert tax.provincial_tax_cents(10000, "AB") == 0
+    assert [tax.provincial_tax_code(p) for p in ("QC", "BC", "SK", "MB", "ON", None)] == \
+        ["QST", "PST", "PST", "RST", None, None]
+    assert tax.provincial_tax_label("QC") == "QST 9.975%"
+
+
+def test_provincial_rates_agree_with_rates_table():
+    from decimal import Decimal
+    for prov, (_, rate, _) in tax.PROVINCIAL_TAX.items():
+        assert Decimal(rate) == Decimal(str(tax.RATES[prov][1]))
+
+
+@pytest.mark.parametrize("raw,ok,reason", [
+    ("1006543210TQ0001", True, "ok"),
+    ("1006543210 tq 0001", True, "ok"),
+    ("1006543210-TQ-0002", True, "ok"),
+    ("100654321TQ0001", False, "not 10 digits + TQ + 4 digits"),
+    ("1006543210TQ001", False, "not 10 digits + TQ + 4 digits"),
+    ("1006543210RT0001", False, "not 10 digits + TQ + 4 digits"),
+    ("NR12345678", False, "NR number (specified QST system); confirm with Revenu Quebec"),
+    ("", False, "missing"),
+])
+def test_qst_number(raw, ok, reason):
+    assert tax.validate_qst_number(raw) == (ok, reason)
+    assert tax.qst_number_format_ok(raw) is ok
+
+
+def test_provincial_tax_columns():
+    con = ledger.connect()
+    assert {"provincial_tax_cents", "provincial_tax_code"} <= ledger.columns(con, "invoices")
+    assert {"other_tax_kind", "qst_itr_cents"} <= ledger.columns(con, "bills")
+    iid = ledger.create_invoice(con, number="INV-3", customer_id=1, period="2026-10", issue_date="2026-10-25",
+                                due_date="2026-11-24", lines=[{"amount_cents": 10000}], tax_code="GST-QC",
+                                tax_cents=500, provincial_tax_cents=998, provincial_tax_code="QST")
+    row = con.execute("select tax_cents, provincial_tax_cents, provincial_tax_code from invoices where id=?",
+                      (iid,)).fetchone()
+    assert tuple(row) == (500, 998, "QST")
+    vid = ledger.upsert_vendor(con, "Q Inc.", qst_number="1006543210TQ0001")
+    assert con.execute("select qst_number from vendors where id=?", (vid,)).fetchone()[0] == "1006543210TQ0001"
 
 
 @pytest.mark.parametrize("raw,ok,reason", [

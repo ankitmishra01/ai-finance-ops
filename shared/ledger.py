@@ -45,6 +45,13 @@ MIGRATIONS = [
     ("bills", "other_tax_cents", "integer default 0"),
     ("invoices", "po_number", "text"),
     ("invoices", "currency", "text default 'CAD'"),
+    # Provincial sales tax kept apart from GST/HST: it is reported to a different authority
+    # (Revenu Quebec for QST, the province for PST/RST), and only QST is refundable to a registrant.
+    ("invoices", "provincial_tax_cents", "integer default 0"),
+    ("invoices", "provincial_tax_code", "text"),
+    ("bills", "other_tax_kind", "text"),
+    ("bills", "qst_itr_cents", "integer default 0"),
+    ("vendors", "qst_number", "text"),
 ]
 
 # Columns each update_* helper may change. Keys are never interpolated unless listed here.
@@ -109,24 +116,27 @@ def upsert_customer(con, name: str, email: str, province: str, address: str = ""
 
 
 def create_invoice(con, *, number, customer_id, period, issue_date, due_date, lines, tax_code, tax_cents,
-                   po_number=None, currency="CAD") -> int:
+                   po_number=None, currency="CAD", provincial_tax_cents=0, provincial_tax_code=None) -> int:
+    """tax_cents is GST/HST only; QST/PST/RST goes in provincial_tax_cents."""
     subtotal = sum(l["amount_cents"] for l in lines)
     cur = con.execute(
         "insert into invoices (number, customer_id, period, issue_date, due_date, subtotal_cents,"
-        " tax_cents, tax_code, lines_json, po_number, currency) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        " tax_cents, tax_code, lines_json, po_number, currency, provincial_tax_cents, provincial_tax_code)"
+        " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (number, customer_id, period, issue_date, due_date, subtotal, tax_cents, tax_code, json.dumps(lines),
-         po_number, currency),
+         po_number, currency, provincial_tax_cents, provincial_tax_code),
     )
     return cur.lastrowid
 
 
-def upsert_vendor(con, name: str, email: str = "", gst_number: str = "", terms_days: int = 30) -> int:
+def upsert_vendor(con, name: str, email: str = "", gst_number: str = "", terms_days: int = 30,
+                  qst_number: str = "") -> int:
     row = con.execute("select id from vendors where name = ?", (name,)).fetchone()
     if row:
         return row["id"]
     cur = con.execute(
-        "insert into vendors (name, email, gst_number, terms_days) values (?, ?, ?, ?)",
-        (name, email, gst_number, terms_days),
+        "insert into vendors (name, email, gst_number, terms_days, qst_number) values (?, ?, ?, ?, ?)",
+        (name, email, gst_number, terms_days, qst_number),
     )
     return cur.lastrowid
 
