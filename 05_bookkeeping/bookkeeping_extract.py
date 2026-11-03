@@ -6,8 +6,8 @@
    with a confidence and a short reason.
 
 RulesExtractor is a deterministic baseline (regex + keyword scoring) used in tests
-and CI. ClaudeExtractor sends the same inputs to shared.llm.extract with a forced
-JSON schema. Neither does any arithmetic that matters downstream: matching, tax
+and CI. ClaudeExtractor sends the same inputs to shared.llm.extract with a
+schema-checked JSON answer. Neither does any arithmetic that matters downstream: matching, tax
 checks and filing are plain code in bookkeeping_match.py and bookkeeping.py.
 """
 
@@ -399,7 +399,7 @@ class RulesExtractor:
 # ---------------------------------------------------------------- Claude
 
 class ClaudeExtractor:
-    """Calls Claude through shared.llm.extract with a forced JSON schema."""
+    """Calls Claude through shared.llm.extract with a schema-checked JSON answer."""
 
     name = "claude"
 

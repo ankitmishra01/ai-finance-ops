@@ -2,13 +2,13 @@
 
 Five human-in-the-loop agents that do recurring finance admin for a Canadian small business: invoicing, bills, payroll, GST/HST and QST, and bookkeeping.
 
-Claude extractors read the messy documents through schema-forced tool calls; tax, payroll and file-format maths is plain tested code (payroll matches the CRA's PDOC calculator to the cent on both cases checked), and nothing is posted, paid or filed without a person's approval.
+Claude extractors read the messy documents and answer through a JSON schema that is checked before any code uses the result; tax, payroll and file-format maths is plain tested code (payroll matches the CRA's PDOC calculator to the cent on both cases checked), and nothing is posted, paid or filed without a person's approval.
 
-359 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude)).
+407 tests and labelled evals run in CI with no API key. The published scores are for a deterministic rules baseline: Claude has not been scored yet ([how to score it](#how-to-score-claude), one command).
 
 Each agent takes a recurring back-office job, does the reading, matching and drafting, and stops at an approval queue so a person decides what is posted, paid or filed.
 
-All data in this repository is synthetic. Nothing here connects to a real bank, the CRA, or an accounting platform; those boundaries are stubbed behind small adapters. This is a reference build, not a deployed product.
+All data in this repository is synthetic. By default nothing connects to a real bank, the CRA, or an accounting platform: the ledger is SQLite and the mailbox is a folder of `.eml` files. Opt-in adapters for QuickBooks Online, Xero and IMAP/Gmail implement the same interfaces ([production boundaries](#production-boundaries)); they are unit-tested against schema-shaped mock responses and have not been run against a live account. This is a reference build, not a deployed product.
 
 ## The five agents
 
@@ -102,7 +102,7 @@ Recording a decision does not post anything. The ledger, payment-file and filing
 
 ## Where things stand
 
-Every model step has two implementations: a deterministic rules baseline, which runs in tests and CI, and a Claude extractor behind a forced JSON-schema tool call. The numbers below are for the **rules baseline only**, computed by `evals/run_all.py` on synthetic labelled sets. Because the rules and the synthetic documents were written together, the scores on familiar formats are flattering; the held-out or unfamiliar-phrasing figures are the honest baseline that the Claude extractor is meant to beat. Claude has not been scored yet and no model responses have been recorded or invented; run `AFO_LLM_MODE=record` with an API key to produce both.
+Every model step has two implementations: a deterministic rules baseline, which runs in tests and CI, and a Claude extractor that answers through a schema-checked tool call. The numbers below are for the **rules baseline only**, computed by `evals/run_all.py` on synthetic labelled sets. Because the rules and the synthetic documents were written together, the scores on familiar formats are flattering; the held-out or unfamiliar-phrasing figures are the honest baseline that the Claude extractor is meant to beat. Claude has not been scored yet and no model responses have been recorded or invented; [one command](#how-to-score-claude) produces both.
 
 | Module | Rules baseline, familiar formats | Rules baseline, harder cases | Tests |
 |---|---|---|---|
@@ -111,40 +111,77 @@ Every model step has two implementations: a deterministic rules baseline, which 
 | 03_payroll | Change-request extraction: precision 1.00, recall 0.75 (21 emails) | Deductions (CPP, CPP2, EI, federal and Ontario tax) match CRA PDOC to the cent for the 2 hand-checked employees ([PDOC check](03_payroll/README.md#pdoc-check), 3 Nov 2026) | 50 |
 | 04_gst_hst | 93.3% category and ITC treatment (30 labelled); 9 of 9 Quebec rows | Gold labels reproduce all 18 GST34 lines and all 7 QST lines exactly; rules labels match 10 of 18 GST34 lines and 7 of 7 QST lines, every error flagged for review | 75 |
 | 05_bookkeeping | Matching precision 1.00, recall 0.98; categorisation 93.9% (82 lines) | French receipt with comma decimals is missed and shows as an orphan | 50 |
-| shared/ | Unit tests: ledger migrations and update whitelists, GST/HST and QST number validators, QST/PST/RST rates and rounding, MIME boundary, record/replay | | 27 |
+| shared/ | Unit tests: ledger migrations and update whitelists, GST/HST and QST number validators, QST/PST/RST rates and rounding, MIME boundary, record/replay; QuickBooks, Xero and IMAP adapters against schema-shaped mocks; both Claude backends and the eval harness with fake clients | | 75 |
 | webui/, scripts/build_site.py | Approval gate rules, web and CLI decisions on the same queue files, evidence pages, static site build | | 14 |
-| **Total** | | | **359** |
+| **Total** | | | **407** |
 
 
 ## How to score Claude
 
-The rules baseline is what CI scores. To score the Claude extractors on the same labelled sets you need an Anthropic API key; nothing below has been run yet.
+One command scores every labelled set with the rules baseline and with Claude side by side, records each Claude response as a replayable fixture, writes the comparison to `evals/results/` and refreshes the table below. Nothing below has been run yet.
 
 ```bash
 uv sync
-export ANTHROPIC_API_KEY=sk-ant-...        # keep it out of the repo; .env is gitignored
 
-# 1. Score rules and Claude side by side on every labelled set, and record each response.
-#    Results go to evals/results.json; responses to <module>/fixtures/*.json.
-AFO_LLM_MODE=record uv run python evals/run_all.py
+# With an Anthropic API key (keep it out of the repo; .env is gitignored):
+export ANTHROPIC_API_KEY=sk-ant-...
+uv run python evals/run_all.py --extractor claude --record
 
-# 2. What it cost, by module, from runs/token_log.jsonl.
-uv run python -c "import json; from shared.llm import token_report; print(json.dumps(token_report(), indent=2))"
+# Or with a Claude subscription, through the locally installed, signed-in `claude` CLI (no API key):
+uv run python evals/run_all.py --extractor claude-cli --record
 
-# 3. Run one agent with Claude doing the reading.
+# Another model (default: claude-sonnet-5-5, set in shared/pricing.yaml):
+uv run python evals/run_all.py --extractor claude --record --model claude-opus-5-5
+
+# One agent with Claude doing the reading:
 AFO_LLM_MODE=live uv run python 02_bills/run.py --extractor claude
-
-# Optional: choose the model (default is set in shared/llm.py).
-AFO_MODEL=<model-id> AFO_LLM_MODE=record uv run python evals/run_all.py
+AFO_LLM_MODE=live AFO_LLM_BACKEND=cli uv run python 02_bills/run.py --extractor claude
 ```
 
-Each eval reports a `claude` (or `claude_extractor`) block next to `rules` when the mode is `live` or `record`; in `replay` mode it says "not run". Check `shared/pricing.yaml` against current Anthropic pricing before quoting a cost figure. Commit recorded fixtures only if they came from a real `record` run.
+What it writes:
+
+- `evals/results/results.json`: every score, the run's settings (mode, backend, requested model, the model ids Claude reported) and the token cost by module.
+- `evals/results/comparison.md` and the block below: per module, the headline metrics for rules and Claude, then tokens and USD per document processed. That is the token-analytics view of ROI: the cost of each automated document, to set against the time the same document takes by hand.
+- `<module>/fixtures/*.json`: each response, keyed by prompt and schema, so CI can replay the run with no key. Fixtures recorded through the CLI replay exactly like API ones.
+
+How the two backends differ:
+
+- `--extractor claude` uses the Anthropic SDK. Cost per document is estimated from the token log at the first-party API rates in `shared/pricing.yaml`, which cites [Anthropic's pricing page](https://platform.claude.com/docs/en/about-claude/pricing); check it before quoting a figure.
+- `--extractor claude-cli` runs `claude -p ... --output-format json` under a Claude subscription. Its scores are real model outputs, and the table names the exact model id the CLI reports. A subscription is not billed per token: the log records `subscription (no per-token billing)`, and shows an API-equivalent estimate only where the CLI reports token usage.
+
+Both backends put the schema in front of Claude, check the answer against it, and retry once if it does not fit. Commit recorded fixtures only if they came from a real `record` run.
+
+<!-- eval-table:start -->
+_Generated by `evals/run_all.py` on 2026-11-03 16:02; extractor `rules`, mode `replay`._
+
+| Module | Metric | Rules baseline | Claude |
+|---|---|---|---|
+| invoicing | Customer details: mean field accuracy | 96.1% | not run |
+| invoicing | Customer details: all fields correct | 76.5% | not run |
+| bills | Classification, templated | 100.0% | not run |
+| bills | Field accuracy, templated | 100.0% | not run |
+| bills | Classification, held-out formats | 50.0% | not run |
+| bills | Field accuracy, held-out formats | 40.0% | not run |
+| bills | Flag recall | 100.0% | not run |
+| payroll | Change requests: precision | 100.0% | not run |
+| payroll | Change requests: recall | 75.0% | not run |
+| payroll | Change requests: field accuracy | 97.5% | not run |
+| gst_hst | Category, eval set | 93.3% | not run |
+| gst_hst | ITC treatment, eval set | 93.3% | not run |
+| gst_hst | GST34 lines matching | 10 of 18 | not run |
+| bookkeeping | Receipts: all fields correct | 98.2% | not run |
+| bookkeeping | Matching precision | 100.0% | not run |
+| bookkeeping | Matching recall | 98.1% | not run |
+| bookkeeping | Categorisation accuracy | 93.9% | not run |
+
+Claude has not been scored in this run. To score it: `uv run python evals/run_all.py --extractor claude --record` (API key) or `--extractor claude-cli --record` (local Claude Code subscription).
+<!-- eval-table:end -->
 
 ## Design principles
 
 - **Agents propose, people approve.** Every write goes through `shared/approvals.py`. Every `run.py` is a dry run unless told otherwise.
-- **Deterministic where it can be, model where it must be.** Tax maths, payroll deductions and file formats are plain code with tests. Claude reads unstructured documents and classifies edge cases, always through a forced JSON-schema tool call.
-- **Token analytics as the ROI ledger.** Every model call logs tokens, cache hits and estimated cost by module and task to `runs/token_log.jsonl`, so the cost of each automation can be set against the hours it replaces.
+- **Deterministic where it can be, model where it must be.** Tax maths, payroll deductions and file formats are plain code with tests. Claude reads unstructured documents and classifies edge cases, always through a JSON schema checked in `shared/schema.py`.
+- **Token analytics as the ROI ledger.** Every model call logs tokens, cache hits and estimated cost by run, module, task and document to `runs/token_log.jsonl`, and the eval harness reports tokens and USD per document, so the cost of each automation can be set against the hours it replaces.
 - **Replayable.** `AFO_LLM_MODE=record` saves each Claude response next to its module (`<module>/fixtures/`) and `replay` serves them back, so a scored run can be reproduced offline. None are committed yet, because none have been recorded; tests and CI use the rules baseline and need no key.
 
 ## Run it
@@ -152,11 +189,25 @@ Each eval reports a `claude` (or `claude_extractor`) block next to `rules` when 
 ```bash
 uv sync
 uv run pytest -q                      # all tests, no API key needed
-uv run python evals/run_all.py        # accuracy on labelled synthetic sets
+uv run python evals/run_all.py        # accuracy on labelled synthetic sets -> evals/results/
 uv run python 01_invoicing/run.py     # dry run of one module
 ./scripts/demo.sh                     # dry run of all five, compact summary
 AFO_LLM_MODE=live ANTHROPIC_API_KEY=... uv run python 02_bills/run.py
 ```
+
+## Production boundaries
+
+The agents talk to two interfaces in `shared/protocols.py`: `LedgerAdapter` and `Mailbox`. Defaults stay local; real adapters are opt-in through environment variables and read their credentials from the environment only.
+
+| Setting | Default | Opt-in adapter | Credentials (env only) |
+|---|---|---|---|
+| `AFO_LEDGER` | `sqlite` (`shared/ledger.py`) | `quickbooks`: QuickBooks Online Accounting API v3 (`shared/adapters/quickbooks.py`) | `QBO_CLIENT_ID`, `QBO_CLIENT_SECRET`, `QBO_REFRESH_TOKEN`, `QBO_REALM_ID` |
+| | | `xero`: Xero Accounting API (`shared/adapters/xero.py`) | `XERO_CLIENT_ID`, `XERO_CLIENT_SECRET`, `XERO_REFRESH_TOKEN`, `XERO_TENANT_ID` |
+| `AFO_MAILBOX` | `eml` (`shared/mail.py`) | `imap`: Gmail or any IMAP server, read-only, stdlib `imaplib` (`shared/adapters/imap.py`) | `AFO_IMAP_USER` and `AFO_IMAP_PASSWORD` or `AFO_IMAP_OAUTH_TOKEN` |
+
+Each adapter maps customers, invoices, bills and journal entries to the platform's documented endpoints, with citations in its docstring; uses OAuth2 refresh tokens, retries 429 and 5xx with Retry-After, and sends an idempotency key derived from the content (QuickBooks `requestid`, Xero `Idempotency-Key`) so a retried post cannot create a duplicate. The tests use hand-built mock responses shaped from the documented schemas, labelled as such in `tests/schema_mocks.py`; none were recorded from a real account. `02_bills` and `03_payroll` read through `get_mailbox()`, and `02_bills` posts approved bills through `get_ledger()`.
+
+Security, PII, the audit log, idempotency, retries and how the approval gate maps to segregation of duties: [docs/production.md](docs/production.md).
 
 ## Credit
 

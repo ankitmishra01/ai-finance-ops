@@ -23,7 +23,7 @@ from bills import BUCKETS, bucket_totals, ledger_bills, post_approved, process, 
 from bills_extract import get_extractor  # noqa: E402
 from shared import ledger  # noqa: E402
 from shared.approvals import ApprovalQueue  # noqa: E402
-from shared.mail import read_mailbox  # noqa: E402
+from shared.adapters import get_ledger, get_mailbox  # noqa: E402
 from shared.tax import fmt  # noqa: E402
 
 DATA = ROOT / "data" / "synthetic" / "bills"
@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     extractor = get_extractor(args.extractor)
-    mails = read_mailbox(args.inbox)
+    mails = get_mailbox(args.inbox).fetch()   # .eml folder by default; AFO_MAILBOX=imap for a live mailbox
     extracted = [(m.path.name, extractor.extract(m)) for m in mails]
 
     counts: dict[str, int] = {}
@@ -76,7 +76,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.approve or args.auto_approve:
         approved = queue.review(auto=args.auto_approve)
-        ids = post_approved(con, [p.payload for p in approved])
+        target = get_ledger(con)                  # SQLite by default; AFO_LEDGER=quickbooks or xero
+        ids = post_approved(target, [p.payload for p in approved])
         print(f"\nPosted {len(ids)} bills to {args.ledger}; "
               f"{sum(p.decision == 'held' for p in queue.items)} held, "
               f"{sum(p.decision == 'rejected' for p in queue.items)} rejected.")

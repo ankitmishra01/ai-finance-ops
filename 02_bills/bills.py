@@ -427,22 +427,25 @@ def propose_all(queue, reviews: list[BillReview]) -> None:
         queue.propose("bill", f"{r.source}: {r.summary()}", r.payload(), flags=r.flags)
 
 
-def post_approved(con, approved_payloads: list[dict]) -> list[int]:
-    """Write approved bills to the ledger. Only called after a person (or auto-review) approves."""
+def post_approved(target, approved_payloads: list[dict]) -> list:
+    """Write approved bills to the ledger. Only called after a person (or auto-review) approves.
+
+    `target` is a sqlite3 connection or any shared.protocols.LedgerAdapter (QuickBooks, Xero)."""
+    led = ledger.as_adapter(target)
     ids = []
     for p in approved_payloads:
         days, _, _ = parse_terms(p.get("terms"))
-        vid = ledger.upsert_vendor(con, p["vendor"], gst_number=p["gst_number"] or "",
-                                   terms_days=days if isinstance(days, int) else 30,
-                                   qst_number=p.get("qst_number") or "")
-        ids.append(ledger.create_bill(
-            con, vendor_id=vid, number=p["number"], bill_date=p["bill_date"], due_date=p["due_date"],
+        vid = led.upsert_vendor(p["vendor"], gst_number=p["gst_number"] or "",
+                                terms_days=days if isinstance(days, int) else 30,
+                                qst_number=p.get("qst_number") or "")
+        ids.append(led.create_bill(
+            vendor_id=vid, number=p["number"], bill_date=p["bill_date"], due_date=p["due_date"],
             subtotal_cents=p["subtotal_cents"], tax_cents=p["tax_cents"],
             other_tax_cents=p.get("other_tax_cents") or 0, other_tax_kind=p.get("other_tax_kind"),
             qst_itr_cents=p.get("qst_itr_cents") or 0, total_cents=p.get("total_cents"),
             currency=p.get("currency") or "CAD", itc_eligible=1 if p["itc_status"] == "eligible" else 0, category=p["category"],
             status="approved", source=p["source"]))
-    con.commit()
+    led.commit()
     return ids
 
 
