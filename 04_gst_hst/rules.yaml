@@ -1,0 +1,343 @@
+# GST/HST classification rules for a small Ontario-registered business filing
+# quarterly under the regular method (not the Quick Method).
+#
+# These rules are written once and applied to every transaction in the quarter:
+#   - the Extractor reads each free-text description and picks a `category`
+#     (plus a place of supply and a confidence score);
+#   - deterministic code looks the category up here to get the supply type, the
+#     ITC treatment and the GST34 lines it feeds, and raises the listed flags.
+# The Claude extractor receives this file (rendered) as its system prompt, and the
+# rules extractor compiles the `keywords` regexes below.
+#
+# Citations: ETA = Excise Tax Act, R.S.C. 1985, c. E-15. Verify every reference
+# against the current text before relying on it; this is not tax advice.
+
+version: 1
+jurisdiction: Canada (federal GST/HST), registrant resident in Ontario
+method: regular   # Quick Method filers use different line 101/103 rules
+
+sources:
+  eta:
+    title: Excise Tax Act (Part IX, Schedules V and VI)
+    url: https://laws-lois.justice.gc.ca/eng/acts/E-15/
+  gst34_lines:
+    title: CRA - Complete and file a GST/HST return, line-by-line instructions
+    url: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/complete-file-instructions.html
+  type_of_supply:
+    title: CRA - Type of supply (taxable, zero-rated, exempt)
+    url: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/charge-collect-type-supply.html
+  place_of_supply:
+    title: CRA - Place of supply rules
+    url: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/charge-collect-place-supply.html
+  memo_3_3:
+    title: CRA GST/HST Memorandum 3-3, Place of Supply
+    url: https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/3-3.html
+  itc:
+    title: CRA - Input tax credits
+    url: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/calculate-prepare-report/input-tax-credit.html
+  rc4022:
+    title: CRA Guide RC4022, General Information for GST/HST Registrants
+    url: https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/rc4022/general-information-gst-hst-registrants.html
+  itc_info_regs:
+    title: Input Tax Credit Information (GST/HST) Regulations, SOR/91-45, s. 3
+    url: https://laws-lois.justice.gc.ca/eng/regulations/SOR-91-45/section-3.html
+  hst_regs:
+    title: New Harmonized Value-added Tax System Regulations, No. 2 (SOR/2010-117)
+    url: https://laws-lois.justice.gc.ca/eng/regulations/SOR-2010-117/index.html
+  digital_economy:
+    title: CRA - GST/HST for digital economy businesses
+    url: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/digital-economy-gsthst.html
+  notice_322:
+    title: CRA Notice 322, Recovery of the GST/HST Under the Digital Economy Measures
+    url: https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/notice322/recovery-gst-hst-under-digital-economy-measures.html
+  rc4027:
+    title: CRA Guide RC4027, Doing Business in Canada - GST/HST Information for Non-Residents
+    url: https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/rc4027/doing-business-canada-gst-hst-information-non-residents.html
+  deadlines:
+    title: CRA - GST/HST reporting requirements and deadlines
+    url: https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/file-gst-hst-return/reporting-requirements-deadlines.html
+  holidays:
+    title: CRA - Public holidays and due dates
+    url: https://www.canada.ca/en/revenue-agency/services/tax/public-holidays.html
+
+# ---------------------------------------------------------------------------
+# Supply types. Exactly one per transaction.
+# ---------------------------------------------------------------------------
+supply_types:
+  taxable:
+    meaning: Taxable at the GST rate (5%) or the HST rate of the participating province where the supply is made.
+    cite: [ETA s. 165(1)-(2), type_of_supply]
+  zero_rated:
+    meaning: Taxable at 0%. No tax charged, but ITCs on related inputs stay available. Includes most exported services.
+    cite: [ETA Schedule VI, type_of_supply]
+  exempt:
+    meaning: Not taxable. No tax charged and no ITC on inputs used to make the supply. Includes long-term residential rent, most financial services, insurance policies.
+    cite: [ETA Schedule V, type_of_supply]
+  out_of_scope:
+    meaning: Not a supply for GST/HST purposes in Canada (transfers, loan principal, tax remittances, owner draws), or a supply made outside Canada by a non-registrant that carries no Canadian tax.
+    cite: [ETA s. 123(1) "supply", ETA s. 142-143]
+
+# ---------------------------------------------------------------------------
+# ITC treatments. Fraction is applied to the GST/HST shown on the supplier's
+# document; deterministic code rounds half-up to the cent.
+# ---------------------------------------------------------------------------
+itc_treatments:
+  full:
+    fraction: 1.0
+    meaning: Full ITC for GST/HST paid on inputs acquired for use in commercial activities.
+    cite: [ETA s. 169(1), itc]
+  restricted_50:
+    fraction: 0.5
+    meaning: Meals and entertainment. ITC limited to 50% of the tax, matching the 50% income-tax deduction limit. This module claims 50% as it goes, so no year-end line 104 recapture is needed.
+    cite: [ETA s. 236(1), rc4022 "Meal and entertainment expenses"]
+  none:
+    fraction: 0.0
+    meaning: No ITC. Personal consumption, exempt inputs (no tax charged), recreational club memberships, or tax paid to a simplified-registration non-resident vendor.
+    cite: [ETA s. 169(1), ETA s. 170(1)(a), ETA s. 211.17, rc4022]
+  not_applicable:
+    fraction: 0.0
+    meaning: Not a purchase (sales, credit notes, transfers).
+    cite: []
+
+# ---------------------------------------------------------------------------
+# Categories. The extractor's job is to choose one. Order = priority for the
+# rules extractor (first matching category wins), so specific rules sit above
+# general ones (personal before meals, credit note before sale, etc.).
+#
+# lines: which GST34 lines the transaction feeds.
+#   101   net amount counts as sales and other revenue (regular method includes
+#         zero-rated and exempt supplies; credit notes reduce it)
+#   103   GST/HST collected or collectible
+#   106   ITC
+#   107   GST/HST credited to customers on credit notes
+#   405   self-assessed GST/HST on imported taxable supplies
+# ---------------------------------------------------------------------------
+categories:
+  out_of_scope_transfer:
+    direction: any
+    supply_type: out_of_scope
+    itc_treatment: not_applicable
+    lines: []
+    meaning: Bank transfers between own accounts, owner draws or contributions, loan principal, and GST/HST or income-tax payments to the CRA. Not supplies.
+    cite: [ETA s. 123(1) "supply"]
+    keywords:
+      - '\btransfer to (savings|personal)\b'
+      - '\bowner (draw|contribution)\b'
+      - '\bloan (repayment|principal)\b'
+      - '\b(receiver general|cra)\b.*\b(payment|remittance)\b'
+      - '\bgst/hst (payment|remittance)\b'
+
+  credit_note:
+    direction: out
+    supply_type: taxable
+    itc_treatment: not_applicable
+    lines: ["101", "107"]
+    meaning: Refund or credit note issued to a customer that reverses part of an earlier taxable sale, including the GST/HST on it. The tax credited is deducted on line 107; the net reduces line 101.
+    cite: [ETA s. 232(3), rc4022 "Credit notes" (line 107), gst34_lines]
+    flags_if_large: true
+    keywords:
+      - '\bcredit note\b'
+      - '\b(refund|credit) (issued )?to (customer|client)\b'
+      - '\bCN-\d+'
+
+  sale_export:
+    direction: in
+    supply_type: zero_rated
+    itc_treatment: not_applicable
+    lines: ["101"]
+    meaning: Advisory, professional or consulting service supplied to a non-resident customer who is not in Canada when the service is performed. Zero-rated.
+    cite: [ETA Schedule VI Part V s. 23, ETA Schedule VI Part V s. 7, memo_3_3, rc4027]
+    keywords:
+      - '\b(usa|u\.s\.a\.|united states)\b'
+      - '\bwire in usd\b'
+
+  sale_exempt_residential_rent:
+    direction: in
+    supply_type: exempt
+    itc_treatment: not_applicable
+    lines: ["101"]
+    meaning: Rent received for long-term (one month or more) residential accommodation. Exempt; no tax charged, and ITCs on inputs used for the rental are not available.
+    cite: [ETA Schedule V Part I s. 6, type_of_supply]
+    keywords:
+      - '\bresidential\b.*\brent\b'
+      - '\brent\b.*\bresidential\b'
+      - '\btenant\b.*\brent\b'
+
+  sale_domestic:
+    direction: in
+    supply_type: taxable
+    itc_treatment: not_applicable
+    lines: ["101", "103"]
+    meaning: Service supplied to a Canadian customer. Taxable at the rate of the province of the recipient's business address (general place-of-supply rule for services) - 13% HST in ON, 5% GST in AB and BC (BC PST is not GST/HST and is not reported here).
+    cite: [ETA s. 165, ETA s. 144.1, hst_regs, place_of_supply]
+    keywords:
+      - '\binv-?\d+'
+      - '\b(payment|deposit|e-transfer|wire) (received|in|from)\b'
+
+  personal:
+    direction: out
+    supply_type: taxable
+    itc_treatment: none
+    lines: []
+    always_flag: personal expense paid from the business account; no ITC, post as owner draw or shareholder loan
+    meaning: Personal consumption by the owner or family, including recreational or sporting club memberships. No ITC.
+    cite: [ETA s. 169(1) (commercial activity only), ETA s. 170(1)(a), rc4022]
+    keywords:
+      - '\bpersonal\b'
+      - '\bfamily\b'
+      - '\b(fitness|golf|country|yacht) club\b'
+      - '\bgroceries\b'
+
+  meals_entertainment:
+    direction: out
+    supply_type: taxable
+    itc_treatment: restricted_50
+    lines: ["106"]
+    meaning: Food, beverages and entertainment for business purposes (client meals, team dinners, event tickets). ITC limited to 50% of the GST/HST.
+    cite: [ETA s. 236(1), Income Tax Act s. 67.1 (the 50% limit ETA s. 236 refers to), rc4022 "Meal and entertainment expenses"]
+    keywords:
+      - '\b(restaurant|bistro|cafe|café|coffee|lunch|dinner|breakfast|catering|pub|brewery|tickets?)\b'
+      - '\bclient entertainment\b'
+
+  insurance:
+    direction: out
+    supply_type: exempt
+    itc_treatment: none
+    lines: []
+    meaning: Insurance premiums. The issuance of an insurance policy is an exempt financial service, so there is no GST/HST and no ITC. (Ontario 8% retail sales tax on some premiums is provincial and is not recoverable here.)
+    cite: [ETA s. 123(1) "financial service" (d), ETA Schedule V Part VII s. 1, type_of_supply]
+    keywords:
+      - '\binsurance\b'
+      - '\bpremium\b'
+
+  bank_fees:
+    direction: out
+    supply_type: exempt
+    itc_treatment: none
+    lines: []
+    meaning: Bank account, wire, overdraft and interest charges. Exempt financial services; no ITC. (Card-processor merchant fees can include taxable components; treat those as purchase_general if tax is shown.)
+    cite: [ETA s. 123(1) "financial service", ETA Schedule V Part VII s. 1, type_of_supply]
+    keywords:
+      - '\b(monthly )?(account|service|wire|transfer|overdraft|nsf) (fee|charge)s?\b'
+      - '\bbank fee'
+      - '\binterest charge'
+
+  foreign_digital_service:
+    direction: out
+    supply_type: out_of_scope
+    itc_treatment: none
+    lines: ["405"]
+    # Share of use in commercial activities. Below the exclusive-use threshold
+    # (90%) the business self-assesses HST on line 405.
+    default_commercial_use_pct: 100
+    always_flag: foreign digital-service charge; check whether the vendor charged GST/HST (if it did under simplified registration, no ITC is allowed - give the vendor our BN and ask for a s. 232 refund)
+    meaning: Software, cloud or other digital service from a vendor outside Canada. Supply made outside Canada. If the vendor is not registered no tax is charged and no ITC arises. A registrant acquiring the service for use exclusively (90%+) in commercial activities does not self-assess; otherwise it self-assesses on line 405. Tax charged by a simplified-registration vendor cannot be claimed as an ITC.
+    cite: [ETA s. 217 "imported taxable supply", ETA s. 218, ETA s. 211.17, notice_322, digital_economy, gst34_lines]
+    keywords:
+      - '\b(usd|eur|gbp)\b.*\b(subscription|saas|plan|licen[cs]e|cloud|hosting|software)\b'
+      - '\b(subscription|saas|plan|licen[cs]e|cloud|hosting|software)\b.*\b(usd|eur|gbp|usa|ireland|uk|united kingdom|san francisco|dublin)\b'
+      - '\bforeign transaction\b'
+
+  capital_asset:
+    direction: out
+    supply_type: taxable
+    itc_treatment: full
+    lines: ["106"]
+    always_flag: capital personal property; confirm it is used more than 50% in commercial activities and record it for CCA
+    meaning: Equipment, computers, furniture or vehicles bought as capital property. Full ITC if used primarily (more than 50%) in commercial activities; no ITC otherwise. Passenger vehicles have extra limits.
+    cite: [ETA s. 199(2), ETA s. 201, rc4022 "Capital property"]
+    keywords:
+      - '\bcapital (asset|purchase|equipment)\b'
+      - '\b(laptops?|server|workstation|equipment|furniture)\b.*\b(purchase|bought)\b'
+      - '\bpurchase of\b.*\b(laptops?|server|workstation|equipment|furniture)\b'
+
+  purchase_general:
+    direction: out
+    supply_type: taxable
+    itc_treatment: full
+    lines: ["106"]
+    meaning: Ordinary business purchases from Canadian suppliers - commercial office rent, telecom, office supplies, courier, contractors, professional fees, Canadian software. Full ITC for the GST/HST shown.
+    cite: [ETA s. 169(1), itc]
+    keywords:
+      - '\b(office rent|commercial lease|telecom|mobile plan|internet|office supplies|courier|contractor|accounting|legal fees|bookkeeping|printing|software|postage|parking|hosting)\b'
+
+# Fallback when nothing matches: the rules extractor picks purchase_general for
+# money out and sale_domestic for money in, at low confidence, so it is flagged.
+fallback:
+  out: purchase_general
+  in: sale_domestic
+  confidence: 0.4
+
+# ---------------------------------------------------------------------------
+# Place of supply (sales). General rule for services: the province of the
+# recipient's address obtained in the ordinary course of business.
+# ---------------------------------------------------------------------------
+place_of_supply:
+  home_province: "ON"
+  cite: [ETA s. 144.1, hst_regs, place_of_supply, memo_3_3]
+  province_tokens:
+    # Patterns are case-sensitive; (?i) marks the case-insensitive ones, so the
+    # two-letter codes do not match ordinary words such as "on".
+    "ON": ['\bON\b', '(?i)\bontario\b', '(?i)\btoronto\b', '(?i)\bottawa\b', '(?i)\bmississauga\b', '(?i)\bhamilton\b', '(?i)\bkingston\b', '(?i)\bwaterloo\b', '(?i)\bguelph\b']
+    AB: ['\bAB\b', '(?i)\balberta\b', '(?i)\bcalgary\b', '(?i)\bedmonton\b', '(?i)\bred deer\b', '(?i)\blethbridge\b']
+    BC: ['\bBC\b', '(?i)\bbritish columbia\b', '(?i)\bvancouver\b', '(?i)\bvictoria\b', '(?i)\bkelowna\b', '(?i)\bburnaby\b']
+  outside_canada_tokens: ['\bUSA?\b', '(?i)\bunited states\b', '(?i)\bireland\b', '(?i)\bunited kingdom\b', '\bUK\b', '(?i)\bsan francisco\b', '(?i)\bdublin\b', '(?i)\baustin\b', '(?i)\bseattle\b']
+
+# ---------------------------------------------------------------------------
+# Thresholds and flag rules (all amounts in cents).
+# ---------------------------------------------------------------------------
+thresholds:
+  low_confidence: 0.75
+  # Flag any ITC on a purchase of $30 or more that has no supplier GST/HST
+  # registration number. The legal requirement (SOR/91-45 s. 3(b)) starts at
+  # $100 since 2021; between $30 and $100 the flag is advisory.
+  bn_flag_cents: 3000
+  bn_required_cents: 10000
+  large_refund_cents: 100000
+  exclusive_commercial_use_pct: 90
+  capital_primary_use_pct: 50
+  rate_tolerance_cents: 1
+  valid_purchase_rates: [0.0, 0.05, 0.13, 0.14, 0.15]
+
+flags:
+  low_confidence: classifier confidence below threshold
+  rule_conflict: extractor's supply type or ITC treatment disagrees with the rules for its category; the rules value is used
+  personal: personal expense (see category)
+  missing_bn: ITC claimed without a supplier GST/HST registration number on a purchase of $30 or more
+  bad_bn: supplier registration number is not in the 9-digit + RT + 4-digit format
+  large_refund: credit note or refund at or above the large-refund threshold
+  foreign_digital: foreign digital-service charge (see category)
+  totals_mismatch: net + GST/HST does not equal the bank amount
+  rate_mismatch: GST/HST charged does not match the rate for the place of supply (sales) or any Canadian rate (purchases)
+  duplicate: same date, amount and description as an earlier transaction; ITC on the later copy is held out
+  tax_on_exempt: tax shown on a supply the rules treat as exempt or out of scope
+  unknown_place: no province or country found for a sale; home province assumed
+
+# ---------------------------------------------------------------------------
+# GST34 return lines (regular method). See gst34_lines source.
+# ---------------------------------------------------------------------------
+return_lines:
+  "101": Sales and other revenue, excluding GST/HST; includes zero-rated and exempt supplies; net of credit notes
+  "103": GST/HST collected or collectible. Where more was collected than the rate requires, the amount collected is reported (ETA s. 225(1))
+  "104": Adjustments added to net tax (e.g. bad debt recovered, year-end meals recapture). Zero here because meals are claimed at 50% as incurred
+  "105": Total GST/HST and adjustments = 103 + 104
+  "106": Input tax credits
+  "107": Adjustments deducted from net tax (GST/HST credited to customers on credit notes, bad debts)
+  "108": Total ITCs and adjustments = 106 + 107
+  "109": Net tax = 105 - 108
+  "110": Instalments paid (quarterly filers normally zero)
+  "111": Rebates
+  "112": Total other credits = 110 + 111
+  "113A": Balance = 109 - 112
+  "205": GST/HST due on purchase of taxable real property or emission allowances
+  "405": Other GST/HST to be self-assessed (imported taxable supplies used less than 90% in commercial activities)
+  "113B": Total other debits = 205 + 405
+  "113C": Balance = 113A + 113B
+  "114": Refund claimed (if 113C is negative)
+  "115": Payment enclosed / amount owing (if 113C is positive)
+
+filing:
+  rule: Monthly and quarterly filers file and pay no later than one month after the end of the reporting period.
+  cite: [ETA s. 238(1)(a), ETA s. 245(2), deadlines, rc4022]
+  weekend_holiday: If the due date falls on a Saturday, Sunday or a CRA-recognised public holiday, a return or payment is on time if received by the next business day.
+  weekend_holiday_cite: [holidays, Interpretation Act s. 26]
