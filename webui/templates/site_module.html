@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status, flaglist, evidence_panel %}
+{% set m = page.m %}
+{% block title %}{{ m.title }} · ai-finance-ops{% endblock %}
+{% block nav %}
+<a href="../../">Overview</a>
+{% for p in MODULES %}<a href="../{{ p.slug }}/" class="{{ 'on' if p.id == m.id else '' }}">{{ p.title }}</a>{% endfor %}
+<a href="{{ repo }}/tree/main/{{ m.id }}">GitHub</a>
+{% endblock %}
+{% block content %}
+<div class="crumbs"><a href="../../">Overview</a> / {{ m.id }}</div>
+<p class="eyebrow">{{ m.job }}</p>
+<h1>{{ m.title }}</h1>
+{% if page.intro %}<p class="lede">{{ page.intro }}</p>{% endif %}
+
+<div class="kpis">
+  <div class="kpi"><div class="v">{{ page.counts.total }}</div><div class="l">proposals</div></div>
+  <div class="kpi"><div class="v">{{ page.counts.flagged }}</div><div class="l">flagged for a person</div></div>
+  {% for h in page.headline[:2] %}
+  <div class="kpi"><div class="v">{{ h.value }}</div><div class="l">{{ h.label }} (rules baseline)</div></div>
+  {% endfor %}
+</div>
+<p class="small muted">A person approves: {{ m.approves }}. Dry run of <code>{{ m.id }}/run.py</code> on the synthetic data, built {{ built }}.</p>
+
+<h2>Inputs</h2>
+<div class="grid split">
+  <div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Input</th><th>Contents</th></tr></thead>
+      <tbody>{% for i in page.inputs %}<tr><td><a href="{{ repo }}/tree/main/{{ i.path }}"><code>{{ i.name }}</code></a></td><td>{{ i.detail }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+  <div>
+    {% if page.sample %}
+    <div class="mail">
+      <div class="head"><span class="eyebrow">Sample input · {{ page.sample.name }}</span><br><b>{{ page.sample.subject }}</b><br><span class="muted">{{ page.sample.from }}</span>
+      {% if page.sample.attachments %}<br><span class="muted">Attachments: {{ page.sample.attachments|join(', ') }}</span>{% endif %}</div>
+      <pre>{{ page.sample.body }}</pre>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<h2>Outputs</h2>
+<p>What the dry run printed. Nothing below was written to a ledger: every line is a proposal waiting for a decision.</p>
+<pre><code>$ uv run python {{ m.id }}/run.py
+{{ page.log }}</code></pre>
+<details>
+  <summary><b>Files the dry run wrote</b> <span class="muted small">{{ page.files|length }} files</span></summary>
+  <div class="body"><ul class="files">{% for f in page.files %}<li><a href="files/{{ f.rel }}">{{ f.rel }}</a> <span class="muted small">{{ f.size }}</span></li>{% endfor %}</ul></div>
+</details>
+<details>
+  <summary><b>Proposals by kind</b> <span class="muted small">{{ page.counts.total }} in the queue</span></summary>
+  <div class="body">
+    <ul>{% for k, n in page.kinds %}<li>{{ KIND_LABELS.get(k, k) }}: {{ n }}</li>{% endfor %}</ul>
+    <div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Kind</th><th>Summary</th></tr></thead>
+      <tbody>{% for p in page.queue.items %}<tr><td>{{ loop.index }}</td><td>{{ KIND_LABELS.get(p.kind, p.kind) }}</td><td>{{ p.summary }}{% if p.flags %} <span class="badge flag">flagged</span>{% endif %}</td></tr>{% endfor %}</tbody>
+    </table></div>
+  </div>
+</details>
+
+<h2>Flags raised <span class="muted small">{{ page.flagged|length }}</span></h2>
+<p>Things the agent will not decide on its own. Open one to see the evidence a reviewer gets in the local web UI.</p>
+{% for f in page.flagged %}
+<details>
+  <summary><span class="badge flag">#{{ f.n }}</span> <span>{{ f.p.summary }}</span></summary>
+  <div class="body">
+    {{ flaglist(f.p.flags) }}
+    {{ evidence_panel(f.ev, pdf_url=f.pdf_url, embed=False) }}
+  </div>
+</details>
+{% else %}
+<div class="card empty">No flags on this run.</div>
+{% endfor %}
+
+<h2>Evals</h2>
+<p>From <code>evals/run_all.py</code> on the labelled synthetic sets. These are the deterministic rules baseline; where the rules and the documents were written together the familiar-format scores flatter it, and the held-out figures are the honest baseline the Claude extractor is meant to beat.</p>
+{% for n in page.not_run %}<div class="note">{{ n }}</div>{% endfor %}
+<div class="evaltree">
+{% for s in page.evals %}
+  <h4>{{ s.title }}</h4>
+  {% if s.matrix %}
+  <div class="tablewrap"><table>
+    <thead><tr><th>labelled \ predicted</th>{% for l in s.matrix.labels %}<th class="num">{{ l }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for r in s.matrix.rows %}<tr><td>{{ r[0] }}</td>{% for c in r[1:] %}<td class="num">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}
+  <div class="tablewrap"><table><tbody>
+    {% for r in s.rows %}
+    <tr><td>{{ r.key }}</td><td class="num">{{ r.value }}</td></tr>
+    {% if r.entries %}<tr><td colspan="2"><ul class="small" style="margin:0;padding-left:18px">{% for it in r.entries %}<li><code>{{ it }}</code></li>{% endfor %}{% if r.more %}<li class="muted">and {{ r.more }} more</li>{% endif %}</ul></td></tr>{% endif %}
+    {% endfor %}
+  </tbody></table></div>
+  {% endif %}
+{% endfor %}
+</div>
+{% endblock %}
+{% block footer %}All data is synthetic. Agents propose; a person approves. Built {{ built }} · <a href="{{ repo }}">Source on GitHub</a>{% endblock %}
