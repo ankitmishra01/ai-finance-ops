@@ -82,9 +82,25 @@ Remittance amount = employee CPP + CPP2 + employer CPP + CPP2 + employee EI + em
 
 Year-to-date amounts for periods 1 to 20 are produced by running the same engine at each employee's pre-change rate, so they are consistent with this period's maths.
 
-**Check results against the CRA Payroll Deductions Online Calculator (PDOC):**
-https://www.canada.ca/en/revenue-agency/services/e-services/e-services-businesses/payroll-deductions-online-calculator.html.
-The unit tests assert two employees against values worked by hand from the T4127 formulas (written out in `test_payroll_calc.py`), but they were not compared with PDOC output when this module was written.
+## PDOC check
+
+Checked on 3 November 2026 against the CRA Payroll Deductions Online Calculator (PDOC, https://apps.cra-arc.gc.ca/ebci/rhpd/beta/entry, page version 2026-10-28), for the two employees worked by hand in `test_payroll_calc.py`. PDOC inputs: salary calculation, Ontario, semi-monthly (24 periods), paid 2026-11-13, no year-to-date amounts, 12 pensionable months, employer EI rate 1.4. PDOC was driven with a headless browser; the figures below were copied from its results page.
+
+**Case 1:** $72,000/yr ($3,000.00 per period), TD1 federal $16,452.00, TD1 Ontario $12,989.00 (basic amounts).
+
+| | CPP | CPP2 | EI | Federal tax | Provincial tax | Total tax |
+|---|---|---|---|---|---|---|
+| PDOC | 169.82 | 0.00 | 48.90 | 319.59 | 167.98 | 487.57 |
+| `payroll_calc.compute` | 169.82 | 0.00 | 48.90 | 319.59 | 167.98 | 487.57 |
+
+**Case 2:** $68,000/yr ($2,833.33 per period), TD1 federal $31,000.00, TD1 Ontario $23,000.00.
+
+| | CPP | CPP2 | EI | Federal tax | Provincial tax | Total tax |
+|---|---|---|---|---|---|---|
+| PDOC | 159.91 | 0.00 | 46.18 | 202.14 | 132.26 | 334.40 |
+| `payroll_calc.compute` | 159.91 | 0.00 | 46.18 | 202.14 | 132.26 | 334.40 |
+
+Every figure matches to the cent, and PDOC's "deductions for CPP additional contribution" (28.54 and 26.88) match the module's F5 (28.5412 and 26.8756, rounded). This covers a regular salary period with no year-to-date amounts. It does not cover bonuses, the CPP/EI maximum being reached mid-period, or CPP2, which this run did not trigger. Those paths are tested against hand calculations only.
 
 ## Rates and regulatory references
 
