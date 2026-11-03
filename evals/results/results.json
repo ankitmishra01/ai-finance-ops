@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generated": "2026-11-03 16:02",
-    "run_id": "20261103T160206-457330",
+    "generated": "2026-11-03 16:46",
+    "run_id": "20261103T164610-f6d07e",
     "extractor": "rules",
     "mode": "replay",
     "backend": null,
@@ -15,11 +15,11 @@
       "rules": {
         "extractor": "rules",
         "all": {
-          "messages": 36,
-          "classification_accuracy": 0.9167,
+          "messages": 40,
+          "classification_accuracy": 0.925,
           "classification_confusion": {
             "bill": {
-              "bill": 22,
+              "bill": 26,
               "other": 1
             },
             "receipt": {
@@ -34,27 +34,27 @@
               "bill": 1
             }
           },
-          "bills_labelled": 23,
+          "bills_labelled": 27,
           "field_accuracy": {
-            "vendor_name": 0.8696,
-            "gst_number": 0.913,
-            "invoice_number": 0.913,
-            "invoice_date": 0.8696,
-            "subtotal": 0.8696,
-            "tax": 0.913,
-            "total": 0.8696,
-            "currency": 0.9565,
-            "terms": 0.8696,
-            "category": 0.913
+            "vendor_name": 0.8889,
+            "gst_number": 0.9259,
+            "invoice_number": 0.9259,
+            "invoice_date": 0.8889,
+            "subtotal": 0.8889,
+            "tax": 0.9259,
+            "total": 0.8889,
+            "currency": 0.963,
+            "terms": 0.8889,
+            "category": 0.9259
           },
-          "field_accuracy_mean": 0.8957
+          "field_accuracy_mean": 0.9111
         },
         "templated": {
-          "messages": 30,
+          "messages": 34,
           "classification_accuracy": 1.0,
           "classification_confusion": {
             "bill": {
-              "bill": 19
+              "bill": 23
             },
             "receipt": {
               "receipt": 3
@@ -66,7 +66,7 @@
               "statement": 3
             }
           },
-          "bills_labelled": 19,
+          "bills_labelled": 23,
           "field_accuracy": {
             "vendor_name": 1.0,
             "gst_number": 1.0,
@@ -138,12 +138,33 @@
             "31.eml.terms: got 'net 162', want 'Net 14'"
           ]
         },
+        "provincial_tax": {
+          "bills": 6,
+          "field_accuracy": {
+            "other_tax": 0.8333,
+            "other_tax_kind": 0.8333,
+            "qst_number": 0.8333
+          },
+          "field_misses": [
+            "07.eml.other_tax: got None, want 4988",
+            "07.eml.other_tax_kind: got None, want 'QST'",
+            "07.eml.qst_number: got None, want '1006543210TQ0001'"
+          ],
+          "qst_itr_by_bill": {
+            "06.eml": "not_applicable 0.00",
+            "07.eml": "not read as a bill",
+            "37.eml": "eligible 119.70",
+            "38.eml": "not_eligible 0.00",
+            "39.eml": "eligible 14.97",
+            "40.eml": "not_applicable 0.00"
+          }
+        },
         "flags": {
-          "true_positive": 7,
+          "true_positive": 8,
           "false_positive": 8,
           "false_negative": 0,
           "recall": 1.0,
-          "precision": 0.4667
+          "precision": 0.5
         }
       },
       "claude": "not run (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
@@ -193,12 +214,18 @@
       }
     },
     "gst_hst": {
-      "n_transactions": 118,
+      "n_transactions": 127,
       "n_eval_set": 30,
       "gst34_from_gold_labels": {
         "exact_match": true,
         "lines_matching": 18,
         "lines_total": 18,
+        "mismatches_cents": {}
+      },
+      "qst_from_gold_labels": {
+        "exact_match": true,
+        "lines_matching": 7,
+        "lines_total": 7,
         "mismatches_cents": {}
       },
       "rules_extractor": {
@@ -241,34 +268,34 @@
         },
         "full_quarter": {
           "category": {
-            "correct": 116,
-            "n": 118,
-            "accuracy": 0.9831
+            "correct": 125,
+            "n": 127,
+            "accuracy": 0.9843
           },
           "supply_type_raw": {
-            "correct": 118,
-            "n": 118,
+            "correct": 127,
+            "n": 127,
             "accuracy": 1.0
           },
           "itc_treatment_raw": {
-            "correct": 116,
-            "n": 118,
-            "accuracy": 0.9831
+            "correct": 125,
+            "n": 127,
+            "accuracy": 0.9843
           },
           "supply_type_effective": {
-            "correct": 118,
-            "n": 118,
+            "correct": 127,
+            "n": 127,
             "accuracy": 1.0
           },
           "itc_treatment_effective": {
-            "correct": 116,
-            "n": 118,
-            "accuracy": 0.9831
+            "correct": 125,
+            "n": 127,
+            "accuracy": 0.9843
           },
           "place_of_supply_sales": {
-            "correct": 40,
-            "n": 42,
-            "accuracy": 0.9524
+            "correct": 45,
+            "n": 47,
+            "accuracy": 0.9574
           },
           "errors_flagged_for_human": {
             "errors": 4,
@@ -282,38 +309,57 @@
           "lines_total": 18,
           "mismatches_cents": {
             "103": {
-              "computed": 1787650,
-              "expected": 1766850
+              "computed": 1864900,
+              "expected": 1844100
             },
             "105": {
-              "computed": 1787650,
-              "expected": 1766850
+              "computed": 1864900,
+              "expected": 1844100
             },
             "106": {
-              "computed": 408914,
-              "expected": 407474
+              "computed": 419212,
+              "expected": 417772
             },
             "108": {
-              "computed": 440114,
-              "expected": 438674
+              "computed": 454412,
+              "expected": 452972
             },
             "109": {
-              "computed": 1347536,
-              "expected": 1328176
+              "computed": 1410488,
+              "expected": 1391128
             },
             "113A": {
-              "computed": 1347536,
-              "expected": 1328176
+              "computed": 1410488,
+              "expected": 1391128
             },
             "113C": {
-              "computed": 1347536,
-              "expected": 1328176
+              "computed": 1410488,
+              "expected": 1391128
             },
             "115": {
-              "computed": 1347536,
-              "expected": 1328176
+              "computed": 1410488,
+              "expected": 1391128
             }
           }
+        },
+        "quebec_rows": {
+          "n": 9,
+          "category": {
+            "correct": 9,
+            "n": 9,
+            "accuracy": 1.0
+          },
+          "place_of_supply_sales": {
+            "correct": 5,
+            "n": 5,
+            "accuracy": 1.0
+          }
+        },
+        "qst_vs_expected": {
+          "exact_match": true,
+          "lines_matching": 7,
+          "lines_total": 7,
+          "mismatches_cents": {}
         }
       },
       "claude_extractor": "not run (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
@@ -321,17 +367,17 @@
     "invoicing": {
       "task": "customer-detail extraction",
       "rules": {
-        "n_cases": 34,
+        "n_cases": 37,
         "per_field_accuracy": {
-          "legal_name": 0.941,
-          "billing_email": 0.941,
-          "province": 1.0,
-          "address": 0.941,
-          "po_number": 0.971,
-          "split_invoices": 0.971
+          "legal_name": 0.946,
+          "billing_email": 0.946,
+          "province": 0.946,
+          "address": 0.865,
+          "po_number": 0.973,
+          "split_invoices": 0.973
         },
-        "mean_field_accuracy": 0.961,
-        "all_fields_correct": 0.765,
+        "mean_field_accuracy": 0.941,
+        "all_fields_correct": 0.703,
         "errors": [
           {
             "case": "CHG-C011",
@@ -380,6 +426,36 @@
             "field": "split_invoices",
             "expected": true,
             "got": false
+          },
+          {
+            "case": "NEW-Q001",
+            "field": "province",
+            "expected": "QC",
+            "got": null
+          },
+          {
+            "case": "NEW-Q001",
+            "field": "address",
+            "expected": "752 boul. Ren\u00e9-L\u00e9vesque Ouest, Montr\u00e9al, QC H3B 2R1",
+            "got": null
+          },
+          {
+            "case": "NEW-Q002",
+            "field": "province",
+            "expected": "QC",
+            "got": null
+          },
+          {
+            "case": "NEW-Q002",
+            "field": "address",
+            "expected": "3444 rue Sherbrooke Est, Montr\u00e9al, QC H2L 8P5",
+            "got": null
+          },
+          {
+            "case": "NEW-Q003",
+            "field": "address",
+            "expected": "1444 boul. Le Corbusier, Laval, QC H7S 5C5",
+            "got": "129635852RT0001 and our QST number is 7597996327TQ0001. We do not issue purchase orders. Send invoices to comptabilite@vaughnlogistics.test; the billing address is 1444 boul. Le Corbusier, Laval, QC H7S 5C5"
           }
         ]
       },
@@ -404,6 +480,45 @@
           "eval/14_raise_and_bonus.eml",
           "eval/15_moves_rate.eml"
         ]
+      },
+      "rules_montreal_inbox": {
+        "emails": 2,
+        "labelled_adjustments": 2,
+        "email_exact_match": 1.0,
+        "adjustment_precision": 1.0,
+        "adjustment_recall": 1.0,
+        "adjustment_f1": 1.0,
+        "field_accuracy": 1.0,
+        "missed_emails": []
+      },
+      "deductions_vs_external_figures": {
+        "cases": 12,
+        "cases_exact": 12,
+        "fields": 37,
+        "fields_exact": 37,
+        "misses": []
+      },
+      "yearend_reconciliation": {
+        "ontario": {
+          "pay_runs": 24,
+          "t4_slips": 9,
+          "rl1_slips": 0,
+          "roes": 0,
+          "t4_line80_minus_line82": "0.09",
+          "checks_passed": 3,
+          "checks": 3,
+          "failed": []
+        },
+        "montreal": {
+          "pay_runs": 24,
+          "t4_slips": 6,
+          "rl1_slips": 6,
+          "roes": 1,
+          "t4_line80_minus_line82": "0.11",
+          "checks_passed": 6,
+          "checks": 6,
+          "failed": []
+        }
       },
       "claude": "not scored (set AFO_LLM_MODE=live or record with ANTHROPIC_API_KEY)"
     }
