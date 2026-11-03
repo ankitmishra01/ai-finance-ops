@@ -37,12 +37,64 @@ create table if not exists pay_runs (
 );
 """
 
+# Columns added after the first schema. Each runs as ALTER TABLE ADD COLUMN only when the column
+# is missing, so a ledger.db written by an older version opens and upgrades in place.
+MIGRATIONS = [
+    ("bills", "currency", "text default 'CAD'"),
+    ("bills", "total_cents", "integer"),
+    ("bills", "other_tax_cents", "integer default 0"),
+    ("invoices", "po_number", "text"),
+    ("invoices", "currency", "text default 'CAD'"),
+]
+
+# Columns each update_* helper may change. Keys are never interpolated unless listed here.
+CUSTOMER_FIELDS = frozenset({"name", "email", "province", "address"})
+TRANSACTION_FIELDS = frozenset({"date", "description", "amount_cents", "account", "category",
+                                "tax_code", "evidence_path"})
+
 
 def connect(path: str | Path = ":memory:") -> sqlite3.Connection:
     con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA)
+    migrate(con)
     return con
+
+
+def columns(con, table: str) -> set[str]:
+    return {r[1] for r in con.execute(f"pragma table_info({table})")}
+
+
+def migrate(con) -> list[str]:
+    """Add any MIGRATIONS columns the database lacks. Idempotent; returns what was added."""
+    added = []
+    for table, col, decl in MIGRATIONS:
+        if col not in columns(con, table):
+            con.execute(f"alter table {table} add column {col} {decl}")
+            added.append(f"{table}.{col}")
+    if added:
+        con.commit()
+    return added
+
+
+def _update(con, table: str, allowed: frozenset, row_id: int, fields: dict) -> int:
+    bad = set(fields) - allowed
+    if bad:
+        raise ValueError(f"cannot update {table} column(s): {', '.join(sorted(bad))}")
+    if not fields:
+        return 0
+    sets = ", ".join(f"{k} = ?" for k in fields)
+    return con.execute(f"update {table} set {sets} where id = ?", (*fields.values(), row_id)).rowcount
+
+
+def update_customer(con, customer_id: int, **fields) -> int:
+    """Change whitelisted columns of one customer. Returns rows updated (0 or 1)."""
+    return _update(con, "customers", CUSTOMER_FIELDS, customer_id, fields)
+
+
+def update_transaction(con, txn_id: int, **fields) -> int:
+    """Change whitelisted columns of one transaction. Returns rows updated (0 or 1)."""
+    return _update(con, "transactions", TRANSACTION_FIELDS, txn_id, fields)
 
 
 def upsert_customer(con, name: str, email: str, province: str, address: str = "") -> int:
@@ -56,12 +108,14 @@ def upsert_customer(con, name: str, email: str, province: str, address: str = ""
     return cur.lastrowid
 
 
-def create_invoice(con, *, number, customer_id, period, issue_date, due_date, lines, tax_code, tax_cents) -> int:
+def create_invoice(con, *, number, customer_id, period, issue_date, due_date, lines, tax_code, tax_cents,
+                   po_number=None, currency="CAD") -> int:
     subtotal = sum(l["amount_cents"] for l in lines)
     cur = con.execute(
         "insert into invoices (number, customer_id, period, issue_date, due_date, subtotal_cents,"
-        " tax_cents, tax_code, lines_json) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (number, customer_id, period, issue_date, due_date, subtotal, tax_cents, tax_code, json.dumps(lines)),
+        " tax_cents, tax_code, lines_json, po_number, currency) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (number, customer_id, period, issue_date, due_date, subtotal, tax_cents, tax_code, json.dumps(lines),
+         po_number, currency),
     )
     return cur.lastrowid
 

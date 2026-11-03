@@ -43,12 +43,18 @@ def read_mailbox(folder: Path) -> list[Mail]:
 
 
 def build_eml(*, sender: str, to: str, subject: str, date: str, body: str,
-              attachments: list[tuple[str, str, bytes]] = ()) -> bytes:
-    """Used by the synthetic-data generators to write fixture mailboxes."""
+              attachments: list[tuple[str, str, bytes]] = (), boundary: str | None = None) -> bytes:
+    """Used by the synthetic-data generators to write fixture mailboxes.
+
+    The stdlib picks a random MIME boundary for multipart messages; pass `boundary` to pin it
+    so regenerated fixtures are byte-identical. Ignored when there are no attachments.
+    """
     msg = EmailMessage()
     msg["From"], msg["To"], msg["Subject"], msg["Date"] = sender, to, subject, date
     msg.set_content(body)
     for name, ctype, data in attachments:
         main, sub = ctype.split("/")
         msg.add_attachment(data, maintype=main, subtype=sub, filename=name)
+    if boundary and msg.is_multipart():
+        msg.set_boundary(boundary)
     return bytes(msg)

@@ -25,6 +25,9 @@ from pathlib import Path
 from bills_extract import CHART_OF_ACCOUNTS, Extraction, categorize
 from shared import ledger
 from shared.tax import RATES, fmt
+from shared.tax import gst_hst_number_check_digit_ok as bn_check_digit_ok  # noqa: F401 (re-exported for tests)
+from shared.tax import gst_hst_number_format_ok as bn_format_ok
+from shared.tax import normalize_gst_hst_number as normalize_bn
 
 # ITC information tiers, by total paid or payable (cents). SOR/91-45 s. 3(a)-(c).
 ITC_TIER_2 = 100_00
@@ -32,42 +35,10 @@ ITC_TIER_3 = 500_00
 # ETA s. 236: 50% of the ITC on meals and entertainment is added back, so half is recoverable.
 MEALS_ITC_SHARE = (1, 2)
 
-BN_RX = re.compile(r"^\d{9}RT\d{4}$")
 BUCKETS = ("overdue", "due this week", "next 30 days", "later")
 
 
 # --- small checks ------------------------------------------------------------------------------
-
-def normalize_bn(raw: str | None) -> str | None:
-    if not raw:
-        return None
-    return re.sub(r"[\s\-]", "", raw).upper()
-
-
-def bn_format_ok(raw: str | None) -> bool:
-    """GST/HST account number: 9-digit business number + 'RT' + 4-digit account (e.g. 123456789RT0001)."""
-    bn = normalize_bn(raw)
-    return bool(bn and BN_RX.match(bn))
-
-
-def bn_check_digit_ok(raw: str | None) -> bool:
-    """Luhn mod-10 check on the 9-digit business number. A failure usually means a typo.
-
-    The CRA does not publish this as a validation rule for taxpayers; treat a failure as a
-    prompt to confirm the number in the CRA GST/HST Registry, not as proof it is invalid.
-    """
-    bn = normalize_bn(raw)
-    if not bn or not BN_RX.match(bn):
-        return False
-    total = 0
-    for i, ch in enumerate(reversed(bn[:9])):
-        d = int(ch)
-        if i % 2 == 1:
-            d *= 2
-            d = d - 9 if d > 9 else d
-        total += d
-    return total % 10 == 0
-
 
 def totals_match(e: Extraction, tolerance_cents: int = 1) -> bool:
     """subtotal + GST/HST + other provincial tax = total, within a cent of line-level rounding."""
@@ -234,12 +205,14 @@ def find_duplicate(e: Extraction, earlier: list[tuple[str, Extraction]],
 def ledger_bills(con) -> list[tuple[str, Extraction]]:
     """Bills already in the ledger, as extractions, so a re-run catches bills posted earlier."""
     rows = con.execute(
-        "select b.number, b.bill_date, b.subtotal_cents, b.tax_cents, b.source, v.name "
-        "from bills b join vendors v on v.id = b.vendor_id").fetchall()
+        "select b.number, b.bill_date, b.subtotal_cents, b.tax_cents, b.other_tax_cents, b.total_cents,"
+        " b.currency, b.source, v.name from bills b join vendors v on v.id = b.vendor_id").fetchall()
     return [(f"ledger:{r['source']}", Extraction(
         doc_type="bill", vendor_name=r["name"], invoice_number=r["number"], invoice_date=r["bill_date"],
-        subtotal_cents=r["subtotal_cents"], tax_cents=r["tax_cents"],
-        total_cents=(r["subtotal_cents"] or 0) + (r["tax_cents"] or 0))) for r in rows]
+        subtotal_cents=r["subtotal_cents"], tax_cents=r["tax_cents"], other_tax_cents=r["other_tax_cents"] or 0,
+        currency=r["currency"] or "CAD",
+        total_cents=r["total_cents"] if r["total_cents"] is not None else
+        (r["subtotal_cents"] or 0) + (r["tax_cents"] or 0) + (r["other_tax_cents"] or 0))) for r in rows]
 
 
 # --- the review record ------------------------------------------------------------------------
@@ -369,7 +342,8 @@ def post_approved(con, approved_payloads: list[dict]) -> list[int]:
         ids.append(ledger.create_bill(
             con, vendor_id=vid, number=p["number"], bill_date=p["bill_date"], due_date=p["due_date"],
             subtotal_cents=p["subtotal_cents"], tax_cents=p["tax_cents"],
-            itc_eligible=1 if p["itc_status"] == "eligible" else 0, category=p["category"],
+            other_tax_cents=p.get("other_tax_cents") or 0, total_cents=p.get("total_cents"),
+            currency=p.get("currency") or "CAD", itc_eligible=1 if p["itc_status"] == "eligible" else 0, category=p["category"],
             status="approved", source=p["source"]))
     con.commit()
     return ids

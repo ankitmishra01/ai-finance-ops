@@ -13,7 +13,6 @@ from __future__ import annotations
 import io
 import json
 import random
-import re
 import sys
 from datetime import date, datetime, time, timedelta, timezone
 from decimal import ROUND_HALF_UP, Decimal
@@ -28,6 +27,7 @@ from reportlab.lib.pagesizes import LETTER  # noqa: E402
 from reportlab.pdfgen import canvas  # noqa: E402
 
 from shared.mail import build_eml  # noqa: E402
+from shared.tax import bn_check_digit  # noqa: E402
 
 OUT = ROOT / "data" / "synthetic" / "bills"
 AS_OF = date(2026, 11, 3)
@@ -52,15 +52,8 @@ def money(x: Decimal) -> Decimal:
 
 def bn_with_check_digit() -> str:
     """9-digit business number whose last digit is a Luhn check digit, plus RT0001."""
-    base = [rng.randint(1, 9)] + [rng.randint(0, 9) for _ in range(7)]
-    total = 0
-    for i, d in enumerate(reversed(base)):
-        if i % 2 == 0:
-            d *= 2
-            d = d - 9 if d > 9 else d
-        total += d
-    check = (10 - total % 10) % 10
-    return "".join(map(str, base)) + str(check) + "RT0001"
+    base = "".join(map(str, [rng.randint(1, 9)] + [rng.randint(0, 9) for _ in range(7)]))
+    return base + str(bn_check_digit(base)) + "RT0001"
 
 
 def vendor(sector: str, prov: str | None = "ON", *, display: str | None = None, country: str = "CA") -> dict:
@@ -592,10 +585,10 @@ def main() -> None:
     for old in inbox.glob("*.eml"):
         old.unlink()
     for m in msgs:
+        # Pin the MIME boundary so reruns are byte-identical.
         raw = build_eml(sender=m["sender"], to=AP_MAILBOX, subject=m["subject"], date=m["date"],
-                        body=m["body"], attachments=m["attachments"])
-        # The stdlib picks a random MIME boundary; pin it so reruns are byte-identical.
-        raw = re.sub(rb"={15}\d+==", f"==============={m['filename'][:2]}{'0' * 17}==".encode(), raw)
+                        body=m["body"], attachments=m["attachments"],
+                        boundary=f"==============={m['filename'][:2]}{'0' * 17}==")
         (inbox / m["filename"]).write_bytes(raw)
     meta = {"as_of": AS_OF.isoformat(), "recipient": RECIPIENT, "recipient_province": "ON",
             "generator": "02_bills/bills_data.py (Faker en_CA, seed 42)", "items": labels}

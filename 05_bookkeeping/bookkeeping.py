@@ -312,14 +312,6 @@ def load_ledger(con, txns: list[dict]) -> dict[str, int]:
     return ids
 
 
-def _update_txn(con, row_id: int, **fields) -> None:
-    """Local stand-in for a shared.ledger.update_transaction helper."""
-    allowed = {"category", "evidence_path", "tax_code"}
-    assert set(fields) <= allowed, fields
-    sets = ", ".join(f"{k} = ?" for k in fields)
-    con.execute(f"update transactions set {sets} where id = ?", (*fields.values(), row_id))
-
-
 def apply_approved(con, q: ApprovalQueue, ids: dict[str, int], out_dir: Path = OUT) -> dict[str, int]:
     done = {"evidence_links": 0, "recategorised": 0}
     for p in q.items:
@@ -327,10 +319,10 @@ def apply_approved(con, q: ApprovalQueue, ids: dict[str, int], out_dir: Path = O
             continue
         if p.kind == "evidence_link":
             for tid in p.payload["txn_ids"]:
-                _update_txn(con, ids[tid], evidence_path=str(out_dir / p.payload["evidence_path"]))
+                ledger.update_transaction(con, ids[tid], evidence_path=str(out_dir / p.payload["evidence_path"]))
                 done["evidence_links"] += 1
         elif p.kind == "recategorise":
-            _update_txn(con, ids[p.payload["txn_id"]], category=p.payload["to"])
+            ledger.update_transaction(con, ids[p.payload["txn_id"]], category=p.payload["to"])
             done["recategorised"] += 1
     con.commit()
     return done

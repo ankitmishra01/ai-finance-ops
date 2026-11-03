@@ -434,14 +434,10 @@ def enforce_dependencies(q: ApprovalQueue, deps: dict[str, list[int]]) -> None:
                 p.flags = p.flags + ["customer record change not approved; invoice held"]
 
 
-def update_customer(con, customer_id: int, fields: dict) -> None:
-    """Local helper: shared.ledger.upsert_customer does not update existing rows."""
-    cols = {"email": fields.get("billing_email"), "province": fields.get("province"),
-            "address": fields.get("address")}
-    sets = {k: v for k, v in cols.items() if v}
-    if sets:
-        con.execute(f"update customers set {', '.join(f'{k} = ?' for k in sets)} where id = ?",
-                    (*sets.values(), customer_id))
+def customer_record_fields(c: dict) -> dict:
+    """Map an approved customer payload onto ledger.customers columns, skipping blanks."""
+    cols = {"email": c.get("billing_email"), "province": c.get("province"), "address": c.get("address")}
+    return {k: v for k, v in cols.items() if v}
 
 
 def commit(q: ApprovalQueue, plan: Plan, con, out_dir: Path) -> dict:
@@ -455,7 +451,7 @@ def commit(q: ApprovalQueue, plan: Plan, con, out_dir: Path) -> dict:
         c = p.payload
         cid = ledger.upsert_customer(con, c["legal_name"], c["billing_email"] or "", c["province"], c["address"] or "")
         if p.kind == "customer_update":
-            update_customer(con, cid, c)
+            ledger.update_customer(con, cid, **customer_record_fields(c))
         written["customers"] += 1
     for p in q.items:
         if p.decision != "approved" or p.kind != "invoice":
@@ -468,7 +464,8 @@ def commit(q: ApprovalQueue, plan: Plan, con, out_dir: Path) -> dict:
                   "amount_cents": ln["amount_cents"], "contract_id": ln["contract_id"]} for ln in inv["lines"]]
         iid = ledger.create_invoice(con, number=inv["number"], customer_id=cust_id, period=inv["period"],
                                     issue_date=inv["issue_date"], due_date=inv["due_date"], lines=lines,
-                                    tax_code=inv["tax_code"], tax_cents=inv["tax_cents"])
+                                    tax_code=inv["tax_code"], tax_cents=inv["tax_cents"],
+                                    po_number=inv.get("po_number"), currency="CAD")
         ledger.set_status(con, "invoices", iid, "approved")
         pdf = render_invoice(inv, plan.supplier, Path(out_dir) / "invoices" / f"{inv['number']}.pdf")
         written["invoices"] += 1

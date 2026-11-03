@@ -5,6 +5,8 @@ https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-b
 PST/QST is shown for completeness but is not recoverable as a GST/HST input tax credit.
 """
 
+import re
+
 RATES = {
     # province: (gst_or_hst_rate, pst_rate, label)
     "ON": (0.13, 0.0, "HST 13%"),
@@ -35,3 +37,55 @@ def cents(x: float) -> int:
 
 def fmt(c: int) -> str:
     return f"${c / 100:,.2f}"
+
+
+# --- GST/HST registration numbers ---------------------------------------------------------------
+# Format: 9-digit business number (BN) + program identifier "RT" + 4-digit reference number,
+# e.g. 123456782RT0001. The 9th BN digit is a Luhn mod-10 check digit over the first eight.
+# The CRA does not publish the check digit as a taxpayer-facing rule, so a failure is a prompt to
+# confirm the number in the CRA GST/HST Registry, not proof that it is invalid.
+# https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/registering-your-business/business-number.html
+
+GST_HST_NUMBER_RX = re.compile(r"^\d{9}RT\d{4}$")
+
+
+def normalize_gst_hst_number(raw: str | None) -> str | None:
+    """Strip spaces and hyphens and upper-case; None for empty input."""
+    if not raw:
+        return None
+    return re.sub(r"[\s\-]", "", raw).upper()
+
+
+def bn_check_digit(first_eight: str) -> int:
+    """Luhn check digit for the first eight digits of a business number."""
+    total = 0
+    for i, ch in enumerate(reversed(first_eight)):
+        d = int(ch)
+        if i % 2 == 0:
+            d *= 2
+            d = d - 9 if d > 9 else d
+        total += d
+    return (10 - total % 10) % 10
+
+
+def gst_hst_number_format_ok(raw: str | None) -> bool:
+    n = normalize_gst_hst_number(raw)
+    return bool(n and GST_HST_NUMBER_RX.match(n))
+
+
+def gst_hst_number_check_digit_ok(raw: str | None) -> bool:
+    """Format is right and the 9th BN digit matches the Luhn check digit of the first eight."""
+    n = normalize_gst_hst_number(raw)
+    return bool(n and GST_HST_NUMBER_RX.match(n) and int(n[8]) == bn_check_digit(n[:8]))
+
+
+def validate_gst_hst_number(raw: str | None) -> tuple[bool, str]:
+    """(ok, reason). ok is True only when format and check digit both pass."""
+    n = normalize_gst_hst_number(raw)
+    if not n:
+        return False, "missing"
+    if not GST_HST_NUMBER_RX.match(n):
+        return False, "not 9 digits + RT + 4 digits"
+    if int(n[8]) != bn_check_digit(n[:8]):
+        return False, "fails the BN check digit"
+    return True, "ok"
