@@ -2,7 +2,7 @@
 
     uv run python scripts/build_site.py                 # writes site/
     uv run python scripts/build_site.py --out /tmp/s    # somewhere else
-    uv run python scripts/build_site.py --evals evals/results.json   # reuse a saved eval run
+    uv run python scripts/build_site.py --evals evals/results/results.json   # reuse a saved eval run
 
 Nothing is approved, posted, paid or filed: each run.py runs in its default dry-run mode into a
 scratch folder, and the eval figures come from the output of evals/run_all.py, never from this file.
@@ -55,7 +55,9 @@ def run_evals(env: dict) -> dict:
                        capture_output=True, text=True)
     if r.returncode != 0:
         raise SystemExit(f"evals/run_all.py failed ({r.returncode}):\n{r.stderr}")
-    return json.loads(r.stdout)
+    # run_all.py prints the per-module scores and then the README table; the file is the clean copy.
+    saved = json.loads((ROOT / "evals" / "results" / "results.json").read_text())
+    return saved.get("results", saved)
 
 
 # ---------------------------------------------------------------- eval rendering
@@ -204,6 +206,8 @@ def build(out: Path, evals_file: Path | None = None) -> dict:
     (out / ".nojekyll").write_text("")
 
     evals = json.loads(evals_file.read_text()) if evals_file else run_evals(env)
+    if isinstance(evals, dict) and "results" in evals and "meta" in evals:
+        evals = evals["results"]
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     pages = []
     with tempfile.TemporaryDirectory(prefix="afo-site-") as tmp:

@@ -181,8 +181,8 @@ def test_build_site(tmp_path):
     sys.path.insert(0, str(ROOT / "scripts"))
     import build_site
 
-    results = json.loads((ROOT / "evals" / "results.json").read_text())
-    info = build_site.build(tmp_path / "site", ROOT / "evals" / "results.json")
+    results = json.loads((ROOT / "evals" / "results" / "results.json").read_text()).get("results", {})
+    info = build_site.build(tmp_path / "site", ROOT / "evals" / "results" / "results.json")
     site = tmp_path / "site"
     assert info["pages"] == 6 and (site / "assets" / "style.css").exists() and (site / ".nojekyll").exists()
     index = (site / "index.html").read_text()
