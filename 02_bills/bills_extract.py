@@ -4,7 +4,7 @@ Two interchangeable extractors implement `Extractor.extract(mail) -> Extraction`
 
 * `RulesExtractor` is a deterministic regex/heuristic baseline. It runs in tests and CI.
 * `ClaudeExtractor` sends the same email text to Claude through `shared.llm.extract`, which
-  forces a single JSON-schema tool call. It is used with `--extractor claude`, or automatically
+  asks for a single schema-checked JSON answer. It is used with `--extractor claude`, or automatically
   when AFO_LLM_MODE is `live` or `record`.
 
 Neither extractor does arithmetic or tax logic beyond reading numbers off the page; checks

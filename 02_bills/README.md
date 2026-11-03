@@ -36,7 +36,7 @@ flowchart TD
 | Step | Who | How |
 |---|---|---|
 | Classify each email | Extractor | `RulesExtractor` (regex) by default; `ClaudeExtractor` with `--extractor claude` or when `AFO_LLM_MODE` is `live`/`record` |
-| Read bill fields | Extractor | Same; Claude is called through `shared.llm.extract` with a forced JSON-schema tool call |
+| Read bill fields | Extractor | Same; Claude is called through `shared.llm.extract` with a schema-checked tool call |
 | Suggest an expense account | Extractor | Keyword map (rules) or a constrained enum (Claude), from an 11-line chart of accounts in `bills_extract.py` |
 | Totals, tax rate, GST/HST number, ITC tier, duplicates, due date, bucket | Code | `bills.py`, all tested |
 | Post a bill to the ledger | **Person** | `--approve` asks y/N per bill. `--auto-approve` approves only bills with no flags and holds the rest |

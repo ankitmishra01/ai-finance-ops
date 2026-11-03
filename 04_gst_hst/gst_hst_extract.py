@@ -6,7 +6,7 @@ Two interchangeable implementations:
 
 - RulesExtractor: regexes compiled from rules.yaml. Deterministic; used in tests,
   CI and by default.
-- ClaudeExtractor: shared.llm.extract with a forced JSON-schema tool call. The
+- ClaudeExtractor: shared.llm.extract with a schema-checked tool call. The
   system prompt carries the rules file, so it is cached across the quarter.
 
 Neither computes tax. The engine in gst_hst.py does that from the category.

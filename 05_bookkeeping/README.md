@@ -27,7 +27,7 @@ flowchart TD
 
 | Step | Who | Notes |
 |---|---|---|
-| Read each receipt email and attachment | Extractor (rules or Claude) | Structured fields only, via a forced JSON schema. |
+| Read each receipt email and attachment | Extractor (rules or Claude) | Structured fields only, via a schema-checked JSON answer. |
 | Match receipts to transactions | Plain code | `bookkeeping_match.py`. No model involved. |
 | Propose an account for every transaction | Extractor | Proposed only when it differs from the current category and is not the suspense account. |
 | Copy evidence into the filing structure | Plain code | Staged under `out/bookkeeping/evidence/`; harmless to re-run. |

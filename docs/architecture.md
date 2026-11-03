@@ -19,18 +19,18 @@ flowchart LR
 
     subgraph extract["Extractor, chosen per run"]
         RX["RulesExtractor<br/>deterministic baseline<br/>(tests, CI, evals)"]
-        CX["ClaudeExtractor<br/>forced JSON-schema tool call"]
+        CX["ClaudeExtractor<br/>schema-checked tool call<br/>(API or claude CLI)"]
     end
 
     subgraph shared["shared/"]
-        MAIL["mail.py<br/>read_mailbox, build_eml"]
-        LLM["llm.py<br/>replay / live / record"]
+        MAIL["Mailbox<br/>.eml folder (default),<br/>IMAP / Gmail (opt-in)"]
+        LLM["llm.py<br/>replay / live / record<br/>backend: api or cli"]
         TAX["tax.py<br/>GST/HST/PST rates,<br/>GST/HST number check"]
         APPR["approvals.py<br/>ApprovalQueue"]
-        LEDGER["ledger.py<br/>SQLite stand-in for<br/>QuickBooks / Xero / Wave"]
+        LEDGER["LedgerAdapter<br/>SQLite (default),<br/>QuickBooks or Xero (opt-in)"]
     end
 
-    API[("Anthropic API")]
+    API[("Anthropic API<br/>or local claude CLI")]
     FIX[("module/fixtures/*.json<br/>recorded responses")]
     TOK[("runs/token_log.jsonl<br/>tokens, cache hits,<br/>cost by module + task")]
     HUMAN{{"Person:<br/>approve / reject / hold"}}
@@ -54,12 +54,12 @@ flowchart LR
 
 | Piece | What it does | Why it is shaped this way |
 |---|---|---|
-| `shared/llm.py` | One function, `extract()`, that forces a single tool call validated against a JSON schema. `AFO_LLM_MODE=replay` (default) reads a recorded response from disk, `live` calls the API, `record` calls it and saves the response. | Downstream code never parses prose. Tests and CI need no key and cost nothing. The system prompt (rules, chart of accounts) is marked for prompt caching because it repeats on every document in a run. |
-| Token log | Every live call appends model, input/output/cache tokens, estimated cost and latency to `runs/token_log.jsonl`, tagged by module and task. `llm.token_report()` sums it by module. | Gives the cost side of an ROI case per automation, to set against the hours the job took by hand. |
+| `shared/llm.py` | One function, `extract()`, that asks for a single `submit` tool call (API) or a bare JSON object (`claude` CLI, `AFO_LLM_BACKEND=cli`), checks it against the JSON schema with `shared/schema.py`, and retries once if it does not fit. `AFO_LLM_MODE=replay` (default) reads a recorded response from disk, `live` calls Claude, `record` calls it and saves the response; fixtures from either backend replay the same way. | Downstream code never parses prose. Tests and CI need no key and cost nothing. The system prompt (rules, chart of accounts) is marked for prompt caching because it repeats on every document in a run. |
+| Token log | Every live call appends the model id Claude reported, input/output/cache tokens, estimated cost, billing basis (API or subscription) and latency to `runs/token_log.jsonl`, tagged by run, module, task and document. `llm.token_report()` sums it by module; `evals/run_all.py` turns it into tokens and USD per document. | Gives the cost side of an ROI case per automation, to set against the hours the job took by hand. |
 | `shared/approvals.py` | `ApprovalQueue.propose()` records a summary, the payload that would be committed, and any flags. `review()` asks y/n per item; `auto=True` approves only unflagged items and holds the rest. | Agents propose, people approve. Flags are the agent's way of saying "a person must look at this". |
-| `shared/ledger.py` | SQLite tables for customers, invoices, vendors, bills, transactions and pay runs, with integer cents. `update_customer` / `update_transaction` only touch whitelisted columns. New columns are added by idempotent migrations on connect. | A real adapter (QuickBooks, Xero) can replace it without changing agent logic. |
+| `shared/ledger.py` | SQLite tables for customers, invoices, vendors, bills, transactions and pay runs, with integer cents. `update_customer` / `update_transaction` only touch whitelisted columns. New columns are added by idempotent migrations on connect. | Wrapped by `SQLiteLedger`, which implements `shared.protocols.LedgerAdapter`; `shared/adapters/quickbooks.py` and `xero.py` implement the same Protocol and are chosen with `AFO_LEDGER` ([production.md](production.md)). |
 | `shared/tax.py` | Provincial GST/HST/PST rates, half-up rounding to the cent, GST/HST registration-number format and BN check digit. | Shared by invoicing, bills, GST/HST and bookkeeping so rates live in one place. |
-| `shared/mail.py` | Reads `.eml` exports; builds them for the synthetic-data generators, with an optional pinned MIME boundary so fixtures are byte-identical across runs. | Stands in for an IMAP or Gmail adapter. |
+| `shared/mail.py` | Reads `.eml` exports; builds them for the synthetic-data generators, with an optional pinned MIME boundary so fixtures are byte-identical across runs. | `EmlMailbox` implements `shared.protocols.Mailbox`; `shared/adapters/imap.py` (read-only IMAP, Gmail by default) implements it too and is chosen with `AFO_MAILBOX`. |
 
 ## One run, end to end (02_bills)
 
