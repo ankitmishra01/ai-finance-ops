@@ -1,0 +1,1103 @@
+{
+  "generated_by": "01_invoicing/invoicing_data.py",
+  "seed": 42,
+  "period": "2026-10",
+  "supplier": {
+    "name": "Tamarack Lane Advisory Inc.",
+    "address": "400 Example Street, Suite 210, Toronto, ON M5V 0A1",
+    "province": "ON",
+    "gst_hst_number": "786579303 RT0001",
+    "email": "billing@tamaracklane.test",
+    "contact_name": "Priya",
+    "next_invoice_seq": 1043,
+    "note": "Synthetic supplier. The GST/HST number is randomly generated and not real."
+  },
+  "clients": [
+    {
+      "client_id": "C001",
+      "name": "Fowler Foods",
+      "domain": "fowlerfoods.test",
+      "status": "active",
+      "primary_contact": "angel.hill@fowlerfoods.test"
+    },
+    {
+      "client_id": "C002",
+      "name": "Robinson Labs",
+      "domain": "robinsonlabs.test",
+      "status": "active",
+      "primary_contact": "bridget.pacheco@robinsonlabs.test"
+    },
+    {
+      "client_id": "C003",
+      "name": "Martinez Energy",
+      "domain": "martinezenergy.test",
+      "status": "active",
+      "primary_contact": "sandra.miller@martinezenergy.test"
+    },
+    {
+      "client_id": "C004",
+      "name": "Kelly Media",
+      "domain": "kellymedia.test",
+      "status": "active",
+      "primary_contact": "elizabeth.miles@kellymedia.test"
+    },
+    {
+      "client_id": "C005",
+      "name": "Adams Clinics",
+      "domain": "adamsclinics.test",
+      "status": "active",
+      "primary_contact": "jason.hahn@adamsclinics.test"
+    },
+    {
+      "client_id": "C006",
+      "name": "Campos Outfitters",
+      "domain": "camposoutfitters.test",
+      "status": "active",
+      "primary_contact": "michelle.hernandez@camposoutfitters.test"
+    },
+    {
+      "client_id": "C007",
+      "name": "Rodriguez Labs",
+      "domain": "rodriguezlabs.test",
+      "status": "active",
+      "primary_contact": "ryan.chavez@rodriguezlabs.test"
+    },
+    {
+      "client_id": "C008",
+      "name": "Allen Builders",
+      "domain": "allenbuilders.test",
+      "status": "active",
+      "primary_contact": "john.bradley@allenbuilders.test"
+    },
+    {
+      "client_id": "C009",
+      "name": "Carney Systems",
+      "domain": "carneysystems.test",
+      "status": "active",
+      "primary_contact": "debra.kim@carneysystems.test"
+    },
+    {
+      "client_id": "C010",
+      "name": "Lewis Media",
+      "domain": "lewismedia.test",
+      "status": "active",
+      "primary_contact": "david.walls@lewismedia.test"
+    },
+    {
+      "client_id": "C011",
+      "name": "West Energy",
+      "domain": "westenergy.test",
+      "status": "active",
+      "primary_contact": "robert.ramirez@westenergy.test"
+    },
+    {
+      "client_id": "C012",
+      "name": "Barrera Software",
+      "domain": "barrerasoftware.test",
+      "status": "active",
+      "primary_contact": "franklin.smith@barrerasoftware.test"
+    },
+    {
+      "client_id": "C013",
+      "name": "Stewart Health",
+      "domain": "stewarthealth.test",
+      "status": "active",
+      "primary_contact": "jose.santiago@stewarthealth.test"
+    },
+    {
+      "client_id": "C014",
+      "name": "Mahoney Analytics",
+      "domain": "mahoneyanalytics.test",
+      "status": "active",
+      "primary_contact": "nicole.suarez@mahoneyanalytics.test"
+    },
+    {
+      "client_id": "C015",
+      "name": "Robbins Systems",
+      "domain": "robbinssystems.test",
+      "status": "active",
+      "primary_contact": "james.walters@robbinssystems.test"
+    },
+    {
+      "client_id": "C016",
+      "name": "Smith Dental Group",
+      "domain": "smithdentalgroup.test",
+      "status": "active",
+      "primary_contact": "charles.ware@smithdentalgroup.test"
+    },
+    {
+      "client_id": "N001",
+      "name": "Gomez Foods",
+      "domain": "gomezfoods.test",
+      "status": "active",
+      "primary_contact": "james.sellers@gomezfoods.test"
+    },
+    {
+      "client_id": "N002",
+      "name": "Bailey Robotics",
+      "domain": "baileyrobotics.test",
+      "status": "active",
+      "primary_contact": "gregory.estes@baileyrobotics.test"
+    },
+    {
+      "client_id": "N003",
+      "name": "Diaz Builders",
+      "domain": "diazbuilders.test",
+      "status": "active",
+      "primary_contact": "james.ortega@diazbuilders.test"
+    },
+    {
+      "client_id": "N004",
+      "name": "Gray Analytics",
+      "domain": "grayanalytics.test",
+      "status": "active",
+      "primary_contact": "thomas.santana@grayanalytics.test"
+    }
+  ],
+  "customers": [
+    {
+      "client_id": "C001",
+      "legal_name": "Fowler Foods Inc.",
+      "billing_email": "ap@fowlerfoods.test",
+      "province": "ON",
+      "address": "18196 Anthony Forge, Hamilton, ON P4A 9Y7",
+      "po_number": null
+    },
+    {
+      "client_id": "C002",
+      "legal_name": "Robinson Labs Limited",
+      "billing_email": "ap@robinsonlabs.test",
+      "province": "AB",
+      "address": "65423 Garcia Light, Edmonton, AB T1P 8L9",
+      "po_number": null
+    },
+    {
+      "client_id": "C003",
+      "legal_name": "Martinez Energy Corp.",
+      "billing_email": "ap@martinezenergy.test",
+      "province": "NS",
+      "address": "959 Janet Cape Apt. 413, Dartmouth, NS B6L 3T6",
+      "po_number": null
+    },
+    {
+      "client_id": "C004",
+      "legal_name": "Kelly Media Inc.",
+      "billing_email": "ap@kellymedia.test",
+      "province": "BC",
+      "address": "283 Steven Groves, Vancouver, BC V1B 6K7",
+      "po_number": null
+    },
+    {
+      "client_id": "C005",
+      "legal_name": "Adams Clinics Corp.",
+      "billing_email": "ap@adamsclinics.test",
+      "province": "QC",
+      "address": "76724 John Points Suite 969, Laval, QC H9K 8G2",
+      "po_number": null
+    },
+    {
+      "client_id": "C006",
+      "legal_name": "Campos Outfitters Ltd.",
+      "billing_email": null,
+      "province": "ON",
+      "address": "691 James Mountain, Hamilton, ON P9A 5E6",
+      "po_number": null
+    },
+    {
+      "client_id": "C007",
+      "legal_name": "Rodriguez Labs Ltd.",
+      "billing_email": "ap@rodriguezlabs.test",
+      "province": "SK",
+      "address": "281 Skinner Parkways Apt. 252, Regina, SK S2V 6A5",
+      "po_number": null
+    },
+    {
+      "client_id": "C008",
+      "legal_name": "Allen Builders Limited",
+      "billing_email": "ap@allenbuilders.test",
+      "province": "NB",
+      "address": "71822 Arroyo Expressway, Fredericton, NB E4J 5Y7",
+      "po_number": null
+    },
+    {
+      "client_id": "C009",
+      "legal_name": "Carney Systems Ltd.",
+      "billing_email": "ap@carneysystems.test",
+      "province": "ON",
+      "address": "33150 Brianna Avenue Apt. 031, London, ON M4C 5X8",
+      "po_number": null
+    },
+    {
+      "client_id": "C010",
+      "legal_name": "Lewis Media Inc.",
+      "billing_email": "ap@lewismedia.test",
+      "province": "MB",
+      "address": "76311 Gomez Loop Suite 010, Winnipeg, MB R4E 4K9",
+      "po_number": null
+    },
+    {
+      "client_id": "C011",
+      "legal_name": "West Energy Ltd.",
+      "billing_email": "ap@westenergy.test",
+      "province": "ON",
+      "address": "78108 Tanya Terrace, Hamilton, ON L8S 4V7",
+      "po_number": "4500018812"
+    },
+    {
+      "client_id": "C012",
+      "legal_name": "Barrera Software Corp.",
+      "billing_email": "ap@barrerasoftware.test",
+      "province": "ON",
+      "address": "7468 Moore Hill Apt. 098, Ottawa, ON M8B 9B9",
+      "po_number": null
+    },
+    {
+      "client_id": "C013",
+      "legal_name": "Stewart Health Corp.",
+      "billing_email": "ap@stewarthealth.test",
+      "province": "ON",
+      "address": "46247 Hickman Cliffs Apt. 799, Kitchener, ON K9Y 5J3",
+      "po_number": null
+    },
+    {
+      "client_id": "C014",
+      "legal_name": "Mahoney Analytics Ltd.",
+      "billing_email": "ap@mahoneyanalytics.test",
+      "province": "AB",
+      "address": "2784 Elizabeth Plaza Suite 124, Red Deer, AB T5Y 5G4",
+      "po_number": null
+    },
+    {
+      "client_id": "C015",
+      "legal_name": "Robbins Systems Corp.",
+      "billing_email": "ap@robbinssystems.test",
+      "province": "AB",
+      "address": "740 Cynthia Village Suite 005, Red Deer, AB T9H 7T9",
+      "po_number": null
+    },
+    {
+      "client_id": "C016",
+      "legal_name": "Smith Dental Group Corp.",
+      "billing_email": "ap@smithdentalgroup.test",
+      "province": "PE",
+      "address": "059 Russell Canyon, Summerside, PE C4B 4P2",
+      "po_number": null
+    }
+  ],
+  "contracts": [
+    {
+      "contract_id": "K001",
+      "client_id": "C001",
+      "type": "hourly",
+      "rate_cents": 18500,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K002",
+      "client_id": "C002",
+      "type": "retainer",
+      "rate_cents": 450000,
+      "currency": "CAD",
+      "billing_province": "AB",
+      "payment_terms": "Net 15",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Monthly advisory retainer"
+    },
+    {
+      "contract_id": "K003",
+      "client_id": "C003",
+      "type": "retainer",
+      "rate_cents": 300000,
+      "currency": "CAD",
+      "billing_province": "NS",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Monthly advisory retainer"
+    },
+    {
+      "contract_id": "K004",
+      "client_id": "C004",
+      "type": "hourly",
+      "rate_cents": 17500,
+      "currency": "CAD",
+      "billing_province": "BC",
+      "payment_terms": "Net 45",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K005",
+      "client_id": "C005",
+      "type": "milestone",
+      "rate_cents": 0,
+      "currency": "CAD",
+      "billing_province": "QC",
+      "payment_terms": "Due on receipt",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Fixed-fee project"
+    },
+    {
+      "contract_id": "K006",
+      "client_id": "C006",
+      "type": "hourly",
+      "rate_cents": 16500,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K007",
+      "client_id": "C007",
+      "type": "hourly",
+      "rate_cents": 15000,
+      "currency": "CAD",
+      "billing_province": "SK",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K008",
+      "client_id": "C008",
+      "type": "hourly",
+      "rate_cents": 16000,
+      "currency": "CAD",
+      "billing_province": "NB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": true,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K009A",
+      "client_id": "C009",
+      "type": "retainer",
+      "rate_cents": 250000,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Finance transformation retainer"
+    },
+    {
+      "contract_id": "K009B",
+      "client_id": "C009",
+      "type": "hourly",
+      "rate_cents": 18500,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Data migration support (hourly)"
+    },
+    {
+      "contract_id": "K010",
+      "client_id": "C010",
+      "type": "hourly",
+      "rate_cents": 15500,
+      "currency": "CAD",
+      "billing_province": "MB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K011",
+      "client_id": "C011",
+      "type": "retainer",
+      "rate_cents": 375000,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": true,
+      "cap_cents": null,
+      "description": "Monthly advisory retainer"
+    },
+    {
+      "contract_id": "K012",
+      "client_id": "C012",
+      "type": "hourly",
+      "rate_cents": 17000,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K013",
+      "client_id": "C013",
+      "type": "hourly",
+      "rate_cents": 15000,
+      "currency": "CAD",
+      "billing_province": "ON",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": "2026-08-31",
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K014",
+      "client_id": "C014",
+      "type": "milestone",
+      "rate_cents": 0,
+      "currency": "CAD",
+      "billing_province": "AB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Fixed-fee project"
+    },
+    {
+      "contract_id": "K015",
+      "client_id": "C015",
+      "type": "hourly",
+      "rate_cents": 15000,
+      "currency": "CAD",
+      "billing_province": "AB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "K016",
+      "client_id": "C016",
+      "type": "hourly",
+      "rate_cents": 20000,
+      "currency": "CAD",
+      "billing_province": "PE",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": false,
+      "cap_cents": 250000,
+      "description": "Advisory services (hourly)"
+    },
+    {
+      "contract_id": "KN001",
+      "client_id": "N001",
+      "type": "hourly",
+      "rate_cents": 18000,
+      "currency": "CAD",
+      "billing_province": "AB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": true,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)",
+      "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Gomez Foods Ltd. (\"Client\"), having its office at 232 Nicole Burg Apt. 563, Calgary, AB T1E 8R4.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n"
+    },
+    {
+      "contract_id": "KN002",
+      "client_id": "N002",
+      "type": "milestone",
+      "rate_cents": 0,
+      "currency": "CAD",
+      "billing_province": "AB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": true,
+      "cap_cents": null,
+      "description": "Fixed-fee project",
+      "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Bailey Robotics Limited (\"Client\"), having its office at 03654 Tammy Harbors, Red Deer, AB T1Y 2N5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n"
+    },
+    {
+      "contract_id": "KN003",
+      "client_id": "N003",
+      "type": "retainer",
+      "rate_cents": 200000,
+      "currency": "CAD",
+      "billing_province": "AB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": true,
+      "cap_cents": null,
+      "description": "Monthly advisory retainer",
+      "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Diaz Builders Limited (\"Client\"), having its office at 595 Jennifer Hills, Calgary, AB T5N 9R3.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n"
+    },
+    {
+      "contract_id": "KN004",
+      "client_id": "N004",
+      "type": "hourly",
+      "rate_cents": 16500,
+      "currency": "CAD",
+      "billing_province": "NB",
+      "payment_terms": "Net 30",
+      "start": "2026-01-01",
+      "end": null,
+      "po_required": true,
+      "cap_cents": null,
+      "description": "Advisory services (hourly)",
+      "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Gray Analytics Limited (\"Client\"), having its office at 946 Kevin Fords, Saint John, NB E8T 4T9.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n"
+    }
+  ],
+  "timesheets": [
+    {
+      "entry_id": "T0007",
+      "contract_id": "K001",
+      "date": "2026-10-01",
+      "staff_role": "Senior consultant",
+      "hours": 2.5,
+      "rate_cents": 18500,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0003",
+      "contract_id": "K001",
+      "date": "2026-10-02",
+      "staff_role": "Analyst",
+      "hours": 4.0,
+      "rate_cents": 18500,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0002",
+      "contract_id": "K001",
+      "date": "2026-10-05",
+      "staff_role": "Consultant",
+      "hours": 1.0,
+      "rate_cents": 18500,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0004",
+      "contract_id": "K001",
+      "date": "2026-10-09",
+      "staff_role": "Senior consultant",
+      "hours": 1.0,
+      "rate_cents": 18500,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0005",
+      "contract_id": "K001",
+      "date": "2026-10-09",
+      "staff_role": "Consultant",
+      "hours": 0.5,
+      "rate_cents": 18500,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0001",
+      "contract_id": "K001",
+      "date": "2026-10-12",
+      "staff_role": "Senior consultant",
+      "hours": 2.0,
+      "rate_cents": 18500,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0006",
+      "contract_id": "K001",
+      "date": "2026-10-12",
+      "staff_role": "Analyst",
+      "hours": 4.0,
+      "rate_cents": 18500,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0009",
+      "contract_id": "K002",
+      "date": "2026-10-05",
+      "staff_role": "Consultant",
+      "hours": 1.0,
+      "rate_cents": 0,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0008",
+      "contract_id": "K002",
+      "date": "2026-10-09",
+      "staff_role": "Senior consultant",
+      "hours": 1.5,
+      "rate_cents": 0,
+      "note": "Status call"
+    },
+    {
+      "entry_id": "T0010",
+      "contract_id": "K002",
+      "date": "2026-10-16",
+      "staff_role": "Analyst",
+      "hours": 1.0,
+      "rate_cents": 0,
+      "note": "Status call"
+    },
+    {
+      "entry_id": "T0012",
+      "contract_id": "K004",
+      "date": "2026-10-05",
+      "staff_role": "Consultant",
+      "hours": 2.0,
+      "rate_cents": 17500,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0014",
+      "contract_id": "K004",
+      "date": "2026-10-06",
+      "staff_role": "Senior consultant",
+      "hours": 2.0,
+      "rate_cents": 17500,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0013",
+      "contract_id": "K004",
+      "date": "2026-10-14",
+      "staff_role": "Analyst",
+      "hours": 2.0,
+      "rate_cents": 17500,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0011",
+      "contract_id": "K004",
+      "date": "2026-10-16",
+      "staff_role": "Senior consultant",
+      "hours": 2.5,
+      "rate_cents": 19500,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0015",
+      "contract_id": "K004",
+      "date": "2026-10-21",
+      "staff_role": "Consultant",
+      "hours": 2.5,
+      "rate_cents": 17500,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0016",
+      "contract_id": "K006",
+      "date": "2026-10-08",
+      "staff_role": "Senior consultant",
+      "hours": 1.0,
+      "rate_cents": 16500,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0017",
+      "contract_id": "K006",
+      "date": "2026-10-08",
+      "staff_role": "Consultant",
+      "hours": 2.0,
+      "rate_cents": 16500,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0018",
+      "contract_id": "K006",
+      "date": "2026-10-13",
+      "staff_role": "Analyst",
+      "hours": 4.0,
+      "rate_cents": 16500,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0021",
+      "contract_id": "K007",
+      "date": "2026-10-09",
+      "staff_role": "Analyst",
+      "hours": 1.0,
+      "rate_cents": 15000,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0022",
+      "contract_id": "K007",
+      "date": "2026-10-09",
+      "staff_role": "Senior consultant",
+      "hours": 3.0,
+      "rate_cents": 15000,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0019",
+      "contract_id": "K007",
+      "date": "2026-10-12",
+      "staff_role": "Senior consultant",
+      "hours": 0.5,
+      "rate_cents": 15000,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0020",
+      "contract_id": "K007",
+      "date": "2026-10-19",
+      "staff_role": "Consultant",
+      "hours": 3.0,
+      "rate_cents": 15000,
+      "note": "Status call"
+    },
+    {
+      "entry_id": "T0023",
+      "contract_id": "K008",
+      "date": "2026-10-13",
+      "staff_role": "Senior consultant",
+      "hours": 1.5,
+      "rate_cents": 16000,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0024",
+      "contract_id": "K008",
+      "date": "2026-10-13",
+      "staff_role": "Consultant",
+      "hours": 2.0,
+      "rate_cents": 16000,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0025",
+      "contract_id": "K008",
+      "date": "2026-10-19",
+      "staff_role": "Analyst",
+      "hours": 4.0,
+      "rate_cents": 16000,
+      "note": "Status call"
+    },
+    {
+      "entry_id": "T0026",
+      "contract_id": "K009B",
+      "date": "2026-10-02",
+      "staff_role": "Senior consultant",
+      "hours": 1.0,
+      "rate_cents": 18500,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0028",
+      "contract_id": "K009B",
+      "date": "2026-10-05",
+      "staff_role": "Analyst",
+      "hours": 4.0,
+      "rate_cents": 18500,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0027",
+      "contract_id": "K009B",
+      "date": "2026-10-08",
+      "staff_role": "Consultant",
+      "hours": 1.5,
+      "rate_cents": 18500,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0029",
+      "contract_id": "K009B",
+      "date": "2026-10-21",
+      "staff_role": "Senior consultant",
+      "hours": 4.0,
+      "rate_cents": 18500,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0032",
+      "contract_id": "K010",
+      "date": "2026-10-01",
+      "staff_role": "Analyst",
+      "hours": 6.5,
+      "rate_cents": 15500,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0034",
+      "contract_id": "K010",
+      "date": "2026-10-14",
+      "staff_role": "Consultant",
+      "hours": 1.0,
+      "rate_cents": 15500,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0030",
+      "contract_id": "K010",
+      "date": "2026-10-15",
+      "staff_role": "Senior consultant",
+      "hours": 2.5,
+      "rate_cents": 15500,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0031",
+      "contract_id": "K010",
+      "date": "2026-10-20",
+      "staff_role": "Consultant",
+      "hours": 2.5,
+      "rate_cents": 15500,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0033",
+      "contract_id": "K010",
+      "date": "2026-10-23",
+      "staff_role": "Senior consultant",
+      "hours": 2.5,
+      "rate_cents": 15500,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0036",
+      "contract_id": "K011",
+      "date": "2026-10-22",
+      "staff_role": "Consultant",
+      "hours": 3.0,
+      "rate_cents": 0,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0035",
+      "contract_id": "K011",
+      "date": "2026-10-23",
+      "staff_role": "Senior consultant",
+      "hours": 1.5,
+      "rate_cents": 0,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0038",
+      "contract_id": "K012",
+      "date": "2026-10-05",
+      "staff_role": "Consultant",
+      "hours": 1.0,
+      "rate_cents": 17000,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0039",
+      "contract_id": "K012",
+      "date": "2026-10-05",
+      "staff_role": "Analyst",
+      "hours": 6.5,
+      "rate_cents": 17000,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0040",
+      "contract_id": "K012",
+      "date": "2026-10-07",
+      "staff_role": "Senior consultant",
+      "hours": 1.5,
+      "rate_cents": 17000,
+      "note": "Review of drafts"
+    },
+    {
+      "entry_id": "T0037",
+      "contract_id": "K012",
+      "date": "2026-10-12",
+      "staff_role": "Senior consultant",
+      "hours": 0.5,
+      "rate_cents": 17000,
+      "note": "Stakeholder interviews"
+    },
+    {
+      "entry_id": "T0041",
+      "contract_id": "K015",
+      "date": "2026-10-07",
+      "staff_role": "Consultant",
+      "hours": 0.5,
+      "rate_cents": 15000,
+      "note": "Quick review call"
+    },
+    {
+      "entry_id": "T0042",
+      "contract_id": "K016",
+      "date": "2026-10-05",
+      "staff_role": "Senior consultant",
+      "hours": 6.0,
+      "rate_cents": 20000,
+      "note": "Pricing model build"
+    },
+    {
+      "entry_id": "T0043",
+      "contract_id": "K016",
+      "date": "2026-10-09",
+      "staff_role": "Senior consultant",
+      "hours": 5.5,
+      "rate_cents": 20000,
+      "note": "Pricing model build"
+    },
+    {
+      "entry_id": "T0044",
+      "contract_id": "K016",
+      "date": "2026-10-15",
+      "staff_role": "Senior consultant",
+      "hours": 4.0,
+      "rate_cents": 20000,
+      "note": "Pricing model build"
+    },
+    {
+      "entry_id": "T0046",
+      "contract_id": "KN001",
+      "date": "2026-10-02",
+      "staff_role": "Consultant",
+      "hours": 1.0,
+      "rate_cents": 18000,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0047",
+      "contract_id": "KN001",
+      "date": "2026-10-02",
+      "staff_role": "Analyst",
+      "hours": 1.0,
+      "rate_cents": 18000,
+      "note": "Status call"
+    },
+    {
+      "entry_id": "T0045",
+      "contract_id": "KN001",
+      "date": "2026-10-12",
+      "staff_role": "Senior consultant",
+      "hours": 2.0,
+      "rate_cents": 18000,
+      "note": "Working session"
+    },
+    {
+      "entry_id": "T0048",
+      "contract_id": "KN001",
+      "date": "2026-10-23",
+      "staff_role": "Senior consultant",
+      "hours": 1.0,
+      "rate_cents": 18000,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0051",
+      "contract_id": "KN004",
+      "date": "2026-10-07",
+      "staff_role": "Analyst",
+      "hours": 6.5,
+      "rate_cents": 16500,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0050",
+      "contract_id": "KN004",
+      "date": "2026-10-09",
+      "staff_role": "Consultant",
+      "hours": 2.0,
+      "rate_cents": 16500,
+      "note": "Process mapping"
+    },
+    {
+      "entry_id": "T0052",
+      "contract_id": "KN004",
+      "date": "2026-10-13",
+      "staff_role": "Senior consultant",
+      "hours": 1.5,
+      "rate_cents": 16500,
+      "note": "Analysis and write-up"
+    },
+    {
+      "entry_id": "T0049",
+      "contract_id": "KN004",
+      "date": "2026-10-15",
+      "staff_role": "Senior consultant",
+      "hours": 4.0,
+      "rate_cents": 16500,
+      "note": "Working session"
+    }
+  ],
+  "milestones": [
+    {
+      "milestone_id": "M001",
+      "contract_id": "K005",
+      "name": "Phase 1: current-state assessment",
+      "amount_cents": 1250000,
+      "completed": "2026-09-18"
+    },
+    {
+      "milestone_id": "M002",
+      "contract_id": "K005",
+      "name": "Phase 2: target operating model",
+      "amount_cents": 1800000,
+      "completed": "2026-10-16"
+    },
+    {
+      "milestone_id": "M003",
+      "contract_id": "K005",
+      "name": "Phase 3: implementation plan",
+      "amount_cents": 900000,
+      "completed": null
+    },
+    {
+      "milestone_id": "M004",
+      "contract_id": "K014",
+      "name": "Final report",
+      "amount_cents": 2200000,
+      "completed": null
+    },
+    {
+      "milestone_id": "M005",
+      "contract_id": "KN002",
+      "name": "Discovery sprint",
+      "amount_cents": 850000,
+      "completed": "2026-10-21"
+    }
+  ],
+  "issued_invoices": [
+    {
+      "number": "INV-01038",
+      "client_id": "C007",
+      "period": "2026-10",
+      "issue_date": "2026-10-20",
+      "total_cents": 141750
+    }
+  ]
+}

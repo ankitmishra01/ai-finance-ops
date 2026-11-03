@@ -1,0 +1,274 @@
+{
+  "CHG-C009": {
+    "address": null,
+    "billing_email": null,
+    "legal_name": null,
+    "po_number": null,
+    "province": null,
+    "split_invoices": true
+  },
+  "CHG-C010": {
+    "address": null,
+    "billing_email": "finance.ops@lewismedia.test",
+    "legal_name": null,
+    "po_number": null,
+    "province": null,
+    "split_invoices": false
+  },
+  "CHG-C011": {
+    "address": null,
+    "billing_email": null,
+    "legal_name": null,
+    "po_number": "4500027719",
+    "province": null,
+    "split_invoices": false
+  },
+  "CHG-C012": {
+    "address": "81219 Emma Freeway, Regina, SK S2K 7B9",
+    "billing_email": null,
+    "legal_name": null,
+    "po_number": null,
+    "province": "SK",
+    "split_invoices": false
+  },
+  "CHG-C014": {
+    "address": null,
+    "billing_email": null,
+    "legal_name": null,
+    "po_number": null,
+    "province": null,
+    "split_invoices": false
+  },
+  "CHG-H009": {
+    "address": null,
+    "billing_email": null,
+    "legal_name": null,
+    "po_number": null,
+    "province": null,
+    "split_invoices": true
+  },
+  "NEW-E001": {
+    "address": "148 Davis Terrace, Saint John, NB E3K 1J1",
+    "billing_email": "ap@flynnsystems.test",
+    "legal_name": "Flynn Systems Inc.",
+    "po_number": "4500095477",
+    "province": "NB",
+    "split_invoices": false
+  },
+  "NEW-E002": {
+    "address": "6936 Ross Drive, Quebec City, QC G3S 9K8",
+    "billing_email": "accounts.payable@atkinsonclinics.test",
+    "legal_name": "Atkinson Clinics Inc.",
+    "po_number": null,
+    "province": "QC",
+    "split_invoices": false
+  },
+  "NEW-E003": {
+    "address": "434 Flores Plains, London, ON L7G 3K4",
+    "billing_email": "invoices@charlesbuilders.test",
+    "legal_name": "Charles Builders Limited",
+    "po_number": "4500059672",
+    "province": "ON",
+    "split_invoices": false
+  },
+  "NEW-E004": {
+    "address": "8760 Marissa Loaf Apt. 967, Brandon, MB R7M 9R9",
+    "billing_email": "lauren.hurst@brownsoftware.test",
+    "legal_name": "Brown Software Limited",
+    "po_number": null,
+    "province": "MB",
+    "split_invoices": false
+  },
+  "NEW-E005": {
+    "address": "7065 Ramsey Ville Suite 298, Victoria, BC V7A 3C8",
+    "billing_email": null,
+    "legal_name": "Freeman Freight Limited",
+    "po_number": "4500017665",
+    "province": "BC",
+    "split_invoices": false
+  },
+  "NEW-E006": {
+    "address": "5646 Conley Mountains Apt. 805, Saskatoon, SK S4B 4A1",
+    "billing_email": "billing@murphylabs.test",
+    "legal_name": "Murphy Labs Inc.",
+    "po_number": null,
+    "province": "SK",
+    "split_invoices": false
+  },
+  "NEW-E007": {
+    "address": "374 Jackson Rest, Kitchener, ON L1M 5E7",
+    "billing_email": "payables@wellsbuilders.test",
+    "legal_name": "Wells Builders Ltd.",
+    "po_number": "4500018981",
+    "province": "ON",
+    "split_invoices": false
+  },
+  "NEW-E008": {
+    "address": "49190 Patel Shore, Halifax, NS B1X 7N8",
+    "billing_email": "ap@jonesclinics.test",
+    "legal_name": "Jones Clinics Ltd.",
+    "po_number": "4500085880",
+    "province": "NS",
+    "split_invoices": false
+  },
+  "NEW-E009": {
+    "address": "262 Gilbert Plain Suite 769, Dartmouth, NS B5K 8C4",
+    "billing_email": "ap@reidlogistics.test",
+    "legal_name": "Reid Logistics Inc.",
+    "po_number": "4500097782",
+    "province": "NS",
+    "split_invoices": false
+  },
+  "NEW-E010": {
+    "address": "75273 Salinas Junctions Suite 948, Brandon, MB R7C 8K9",
+    "billing_email": "accounts.payable@barnettoutfitters.test",
+    "legal_name": "Barnett Outfitters Ltd.",
+    "po_number": null,
+    "province": "MB",
+    "split_invoices": false
+  },
+  "NEW-E011": {
+    "address": "1823 Joanna Harbor, Montreal, QC G4J 6M3",
+    "billing_email": "invoices@brewerdentalgroup.test",
+    "legal_name": "Brewer Dental Group Corp.",
+    "po_number": "4500070068",
+    "province": "QC",
+    "split_invoices": false
+  },
+  "NEW-E012": {
+    "address": "0084 Dana Terrace, Kelowna, BC V8A 8M8",
+    "billing_email": "matthew.sheppard@turnersystems.test",
+    "legal_name": "Turner Systems Corp.",
+    "po_number": null,
+    "province": "BC",
+    "split_invoices": false
+  },
+  "NEW-E013": {
+    "address": "16719 Edward Valleys Suite 131, Winnipeg, MB R8X 8R5",
+    "billing_email": null,
+    "legal_name": "King Systems Corp.",
+    "po_number": "837715",
+    "province": "MB",
+    "split_invoices": false
+  },
+  "NEW-E014": {
+    "address": "133 Guerrero Estate, Corner Brook, NL A3Y 1C7",
+    "billing_email": "billing@torresenergy.test",
+    "legal_name": "Torres Energy Inc.",
+    "po_number": null,
+    "province": "NL",
+    "split_invoices": false
+  },
+  "NEW-E015": {
+    "address": "4713 French Road, Winnipeg, MB R4E 3Y5",
+    "billing_email": "payables@cartersoftware.test",
+    "legal_name": "Carter Software Ltd.",
+    "po_number": "680097",
+    "province": "MB",
+    "split_invoices": false
+  },
+  "NEW-E016": {
+    "address": "947 Taylor Hollow Suite 488, Saskatoon, SK S7C 6B5",
+    "billing_email": "ap@martinenergy.test",
+    "legal_name": "Martin Energy Ltd.",
+    "po_number": "994343",
+    "province": "SK",
+    "split_invoices": false
+  },
+  "NEW-H001": {
+    "address": "490 Thomas Run, Winnipeg, MB R8H 2S8",
+    "billing_email": "remittance@craigmedia.test",
+    "legal_name": "Craig Media Limited",
+    "po_number": null,
+    "province": "MB",
+    "split_invoices": false
+  },
+  "NEW-H002": {
+    "address": "6746 Shawn Island, Toronto, ON M9E 1R9",
+    "billing_email": "ap@santiagoanalytics.test",
+    "legal_name": "Santiago Analytics Corp.",
+    "po_number": null,
+    "province": "ON",
+    "split_invoices": false
+  },
+  "NEW-H003": {
+    "address": "Unit 29, 703 Dunn Heights Suite 710, Burnaby, BC V1M 9Y7",
+    "billing_email": "ap@stonehealth.test",
+    "legal_name": "Stone Health Corp.",
+    "po_number": null,
+    "province": "BC",
+    "split_invoices": false
+  },
+  "NEW-H004": {
+    "address": "27484 Davenport Mountains Apt. 782, Quebec City, QC G2X 5G7",
+    "billing_email": "karen.ap@durhamlogistics.test",
+    "legal_name": "Durham Logistics Inc.",
+    "po_number": null,
+    "province": "QC",
+    "split_invoices": false
+  },
+  "NEW-H005": {
+    "address": "972 Ryan Key Suite 886, Halifax, NS B7J 4K7",
+    "billing_email": "remittance@smithenergy.test",
+    "legal_name": "Smith Energy Ltd.",
+    "po_number": null,
+    "province": "NS",
+    "split_invoices": false
+  },
+  "NEW-H006": {
+    "address": "2702 Kane Well Suite 187, Saskatoon, SK S2S 8G5",
+    "billing_email": "ap@thorntonoutfitters.test",
+    "legal_name": "Thornton Outfitters Inc.",
+    "po_number": null,
+    "province": "SK",
+    "split_invoices": false
+  },
+  "NEW-H007": {
+    "address": "Unit 11, 865 Brennan Camp Apt. 343, Regina, SK S8E 3E5",
+    "billing_email": "ap@santosdentalgroup.test",
+    "legal_name": "Santos Dental Group Inc.",
+    "po_number": null,
+    "province": "SK",
+    "split_invoices": false
+  },
+  "NEW-H008": {
+    "address": "5623 Knight Turnpike Apt. 221, Victoria, BC V4V 8G5",
+    "billing_email": "karen.ap@flynnsoftware.test",
+    "legal_name": "Flynn Software Ltd.",
+    "po_number": null,
+    "province": "BC",
+    "split_invoices": false
+  },
+  "NEW-N001": {
+    "address": "232 Nicole Burg Apt. 563, Calgary, AB T1E 8R4",
+    "billing_email": "ap@gomezfoods.test",
+    "legal_name": "Gomez Foods Ltd.",
+    "po_number": "4500087110",
+    "province": "AB",
+    "split_invoices": false
+  },
+  "NEW-N002": {
+    "address": "19655 Obrien Pass Apt. 693, St. John's, NL A9S 9A4",
+    "billing_email": "invoices@baileyrobotics.test",
+    "legal_name": "Bailey Robotics Limited",
+    "po_number": "698782",
+    "province": "NL",
+    "split_invoices": false
+  },
+  "NEW-N003": {
+    "address": "595 Jennifer Hills, Calgary, AB T5N 9R3",
+    "billing_email": null,
+    "legal_name": "Diaz Builders Limited",
+    "po_number": "551989",
+    "province": "AB",
+    "split_invoices": false
+  },
+  "NEW-N004": {
+    "address": "946 Kevin Fords, Saint John, NB E8T 4T9",
+    "billing_email": "payables@grayanalytics.test",
+    "legal_name": "Gray Analytics Limited",
+    "po_number": "785197",
+    "province": "NB",
+    "split_invoices": false
+  }
+}

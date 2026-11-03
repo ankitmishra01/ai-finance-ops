@@ -1,0 +1,345 @@
+[
+  {
+    "case_id": "NEW-N001",
+    "kind": "new_client",
+    "client_id": "N001",
+    "client_name": "Gomez Foods",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Gomez Foods Ltd. (\"Client\"), having its office at 232 Nicole Burg Apt. 563, Calgary, AB T1E 8R4.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "mailbox/N001-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-N002",
+    "kind": "new_client",
+    "client_id": "N002",
+    "client_name": "Bailey Robotics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Bailey Robotics Limited (\"Client\"), having its office at 03654 Tammy Harbors, Red Deer, AB T1Y 2N5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "mailbox/N002-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-N003",
+    "kind": "new_client",
+    "client_id": "N003",
+    "client_name": "Diaz Builders",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Diaz Builders Limited (\"Client\"), having its office at 595 Jennifer Hills, Calgary, AB T5N 9R3.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "mailbox/N003-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-N004",
+    "kind": "new_client",
+    "client_id": "N004",
+    "client_name": "Gray Analytics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Gray Analytics Limited (\"Client\"), having its office at 946 Kevin Fords, Saint John, NB E8T 4T9.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "mailbox/N004-1.eml",
+      "mailbox/N004-2.eml"
+    ]
+  },
+  {
+    "case_id": "CHG-C009",
+    "kind": "change",
+    "client_id": "C009",
+    "client_name": "Carney Systems",
+    "contract_text": null,
+    "emails": [
+      "mailbox/C009-1.eml"
+    ]
+  },
+  {
+    "case_id": "CHG-C010",
+    "kind": "change",
+    "client_id": "C010",
+    "client_name": "Lewis Media",
+    "contract_text": null,
+    "emails": [
+      "mailbox/C010-1.eml"
+    ]
+  },
+  {
+    "case_id": "CHG-C011",
+    "kind": "change",
+    "client_id": "C011",
+    "client_name": "West Energy",
+    "contract_text": null,
+    "emails": [
+      "mailbox/C011-1.eml"
+    ]
+  },
+  {
+    "case_id": "CHG-C012",
+    "kind": "change",
+    "client_id": "C012",
+    "client_name": "Barrera Software",
+    "contract_text": null,
+    "emails": [
+      "mailbox/C012-1.eml"
+    ]
+  },
+  {
+    "case_id": "CHG-C014",
+    "kind": "change",
+    "client_id": "C014",
+    "client_name": "Mahoney Analytics",
+    "contract_text": null,
+    "emails": [
+      "mailbox/C014-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E001",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Flynn Systems",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Flynn Systems Inc. (\"Client\"), having its office at 148 Davis Terrace, Saint John, NB E3K 1J1.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E001-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E002",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Atkinson Clinics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Atkinson Clinics Inc. (\"Client\"), having its office at 6936 Ross Drive, Quebec City, QC G3S 9K8.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E002-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E003",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Charles Builders",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Charles Builders Limited (\"Client\"), having its office at 78895 Salazar Stravenue Suite 872, Edmonton, AB T5L 9K8.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E003-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E004",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Brown Software",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Brown Software Limited (\"Client\"), having its office at 8760 Marissa Loaf Apt. 967, Brandon, MB R7M 9R9.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E004-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E005",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Freeman Freight",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Freeman Freight Limited (\"Client\"), having its office at 7065 Ramsey Ville Suite 298, Victoria, BC V7A 3C8.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E005-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E006",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Murphy Labs",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Murphy Labs (\"Client\"), having its office at 5646 Conley Mountains Apt. 805, Saskatoon, SK S4B 4A1.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E006-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E007",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Wells Builders",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Wells Builders Ltd. (\"Client\"), having its office at 374 Jackson Rest, Kitchener, ON L1M 5E7.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E007-1.eml",
+      "eval/mail/E007-2.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E008",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Jones Clinics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Jones Clinics Ltd. (\"Client\"), having its office at 49190 Patel Shore, Halifax, Nova Scotia B1X 7N8.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E008-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E009",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Reid Logistics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Reid Logistics Inc. (\"Client\"), having its office at 262 Gilbert Plain Suite 769, Dartmouth, NS B5K 8C4.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E009-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E010",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Barnett Outfitters",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Barnett Outfitters Ltd. (\"Client\"), having its office at 75273 Salinas Junctions Suite 948, Brandon, MB R7C 8K9.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E010-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E011",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Brewer Dental Group",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Brewer Dental Group Corp. (\"Client\"), having its office at 0143 Holt Inlet Suite 788, Fredericton, NB E6Y 8N5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E011-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E012",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Turner Systems",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Turner Systems Corp. (\"Client\"), having its office at 0084 Dana Terrace, Kelowna, BC V8A 8M8.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E012-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E013",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "King Systems",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and King Systems Corp. (\"Client\"), having its office at 16719 Edward Valleys Suite 131, Winnipeg, MB R8X 8R5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E013-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E014",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Torres Energy",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Torres Energy (\"Client\"), having its office at 133 Guerrero Estate, Corner Brook, NL A3Y 1C7.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E014-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E015",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Carter Software",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Carter Software Ltd. (\"Client\"), having its office at 4713 French Road, Winnipeg, MB R4E 3Y5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E015-1.eml",
+      "eval/mail/E015-2.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-E016",
+    "kind": "new_client",
+    "client_id": null,
+    "client_name": "Martin Energy",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Martin Energy Ltd. (\"Client\"), having its office at 947 Taylor Hollow Suite 488, Saskatoon, Saskatchewan S7C 6B5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/E016-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H001",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Craig Media",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Craig Media Limited (\"Client\"), having its office at 490 Thomas Run, Winnipeg, MB R8H 2S8.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H001-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H002",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Santiago Analytics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Santiago Analytics (\"Client\"), having its office at 6746 Shawn Island, Toronto, ON M9E 1R9.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H002-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H003",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Stone Health",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Stone Health Corp. (\"Client\"), having its office at 703 Dunn Heights Suite 710, Burnaby, BC V1M 9Y7.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H003-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H004",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Durham Logistics",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Durham Logistics Inc. (\"Client\"), having its office at 27484 Davenport Mountains Apt. 782, Quebec City, QC G2X 5G7.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H004-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H005",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Smith Energy",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Smith Energy Ltd. (\"Client\"), having its office at 972 Ryan Key Suite 886, Halifax, NS B7J 4K7.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H005-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H006",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Thornton Outfitters",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Thornton Outfitters (\"Client\"), having its office at 2702 Kane Well Suite 187, Saskatoon, SK S2S 8G5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H006-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H007",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Santos Dental Group",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Santos Dental Group Inc. (\"Client\"), having its office at 865 Brennan Camp Apt. 343, Regina, SK S8E 3E5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H007-1.eml"
+    ]
+  },
+  {
+    "case_id": "NEW-H008",
+    "kind": "new_client_heldout",
+    "client_id": null,
+    "client_name": "Flynn Software",
+    "contract_text": "ENGAGEMENT LETTER\n\nThis engagement letter is made between Tamarack Lane Advisory Inc. (\"Consultant\") and Flynn Software Ltd. (\"Client\"), having its office at 5623 Knight Turnpike Apt. 221, Victoria, BC V4V 8G5.\n\n1. Services. Consultant will provide operations advisory services as described in Schedule A.\n2. Fees. Fees as set out in Schedule A. All amounts are in Canadian dollars, plus applicable GST/HST.\n3. Payment terms. Invoices are payable net 30 days from the invoice date.\n4. Term. This letter takes effect on 1 October 2026 and continues until terminated by either party on 30 days' written notice.\n",
+    "emails": [
+      "eval/mail/H008-1.eml"
+    ]
+  },
+  {
+    "case_id": "CHG-H009",
+    "kind": "change_heldout",
+    "client_id": null,
+    "client_name": "Nolan Health",
+    "contract_text": null,
+    "emails": [
+      "eval/mail/H009-1.eml"
+    ]
+  }
+]
