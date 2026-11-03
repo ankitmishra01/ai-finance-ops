@@ -8,6 +8,8 @@
 <a href="{{ repo }}/tree/main/{{ m.id }}">GitHub</a>
 {% endblock %}
 {% block content %}
+<div class="layout">
+<div class="content">
 <div class="crumbs"><a href="../../">Overview</a> / {{ m.id }}</div>
 <p class="eyebrow">{{ m.job }}</p>
 <h1>{{ m.title }}</h1>
@@ -22,7 +24,7 @@
 </div>
 <p class="small muted">A person approves: {{ m.approves }}. Dry run of <code>{{ m.id }}/run.py</code> on the synthetic data, built {{ built }}.</p>
 
-<h2>Inputs</h2>
+<h2 id="inputs">Inputs</h2>
 <div class="grid split">
   <div>
     <div class="tablewrap"><table>
@@ -41,7 +43,7 @@
   </div>
 </div>
 
-<h2>Outputs</h2>
+<h2 id="outputs">Outputs</h2>
 <p>What the dry run printed. Nothing below was written to a ledger: every line is a proposal waiting for a decision.</p>
 <pre><code>$ uv run python {{ m.id }}/run.py
 {{ page.log }}</code></pre>
@@ -60,7 +62,7 @@
   </div>
 </details>
 
-<h2>Flags raised <span class="muted small">{{ page.flagged|length }}</span></h2>
+<h2 id="flags">Flags raised <span class="muted small">{{ page.flagged|length }}</span></h2>
 <p>Things the agent will not decide on its own. Open one to see the evidence a reviewer gets in the local web UI.</p>
 {% for f in page.flagged %}
 <details>
@@ -74,7 +76,7 @@
 <div class="card empty">No flags on this run.</div>
 {% endfor %}
 
-<h2>Evals</h2>
+<h2 id="evals">Evals</h2>
 <p>From <code>evals/run_all.py</code> on the labelled synthetic sets. These are the deterministic rules baseline; where the rules and the documents were written together the familiar-format scores flatter it, and the held-out figures are the honest baseline the Claude extractor is meant to beat.</p>
 {% for n in page.not_run %}<div class="note">{{ n }}</div>{% endfor %}
 <div class="evaltree">
@@ -94,6 +96,23 @@
   </tbody></table></div>
   {% endif %}
 {% endfor %}
+</div>
+</div>
+<aside class="sidebar" aria-label="Page navigation">
+  <div class="sidehead">On this page</div>
+  <a href="#inputs">Inputs</a>
+  <a href="#outputs">Outputs</a>
+  <a href="#flags">Flags raised</a>
+  <a href="#evals">Evals</a>
+  <div class="sidehead">This dry run</div>
+  <div class="sstat"><span>proposals</span><b>{{ page.counts.total }}</b></div>
+  <div class="sstat"><span>flagged</span><b>{{ page.counts.flagged }}</b></div>
+  {% for h in page.headline[:2] %}<div class="sstat"><span>{{ h.label|truncate(22) }}</span><b>{{ h.value }}</b></div>{% endfor %}
+  <div class="sidehead">Agents</div>
+  {% for p in MODULES %}<a href="../{{ p.slug }}/" class="{{ 'on' if p.id == m.id else '' }}">{{ p.title }}</a>{% endfor %}
+  <div class="sidehead">Source</div>
+  <a href="{{ repo }}/tree/main/{{ m.id }}">This agent on GitHub</a>
+</aside>
 </div>
 {% endblock %}
 {% block footer %}All data is synthetic. Agents propose; a person approves. Built {{ built }} · <a href="{{ repo }}">Source on GitHub</a>{% endblock %}

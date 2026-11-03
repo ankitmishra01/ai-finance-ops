@@ -6,6 +6,8 @@
 <a href="{{ repo }}">GitHub</a>
 {% endblock %}
 {% block content %}
+<div class="layout">
+<div class="content">
 <section class="hero">
   <p class="eyebrow">Reference build · synthetic data</p>
   <h1>Five finance-admin agents that stop at an approval queue</h1>
@@ -20,7 +22,7 @@
   <div class="kpi"><div class="v">0</div><div class="l">things posted, paid or filed</div></div>
 </div>
 
-<h2>The five agents</h2>
+<h2 id="agents">The five agents</h2>
 <div class="grid cols-3">
   {% for p in pages %}
   <a class="card modcard" href="modules/{{ p.m.slug }}/">
@@ -35,7 +37,7 @@
   {% endfor %}
 </div>
 
-<h2>Architecture</h2>
+<h2 id="architecture">Architecture</h2>
 <p>Each agent reads documents, proposes changes and stops. The approval gate in <code>shared/approvals.py</code> is the only way anything reaches the ledger or an output file.</p>
 <div class="flow" aria-label="Architecture flow">
   <div class="col">
@@ -66,7 +68,7 @@
 </div>
 
 {% if pieces %}
-<h3>The shared pieces</h3>
+<h3 id="pieces">The shared pieces</h3>
 <div class="tablewrap"><table>
   <thead><tr><th>Piece</th><th>What it does</th><th>Why it is shaped this way</th></tr></thead>
   <tbody>{% for r in pieces %}<tr>{% for c in r %}<td>{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
@@ -74,11 +76,31 @@
 <p class="small muted">From <a href="{{ repo }}/blob/main/docs/architecture.md">docs/architecture.md</a>, which also has the sequence diagram for one run.</p>
 {% endif %}
 
-<h2>Run it yourself</h2>
+<h2 id="run">Run it yourself</h2>
 <pre><code>git clone {{ repo }}.git && cd ai-finance-ops
 uv sync
 ./scripts/demo.sh                  # dry-run all five agents, no API key
 uv run python -m webui             # review the queue at http://127.0.0.1:8700
 uv run python -m shared.approvals  # or from the terminal: same queue files</code></pre>
+</div>
+<aside class="sidebar" aria-label="Page navigation">
+  <div class="sidehead">On this page</div>
+  <a href="#agents">The five agents</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#pieces">The shared pieces</a>
+  <a href="#run">Run it yourself</a>
+  <div class="sidehead">This dry run</div>
+  <div class="sstat"><span>agents</span><b>{{ totals.modules }}</b></div>
+  <div class="sstat"><span>proposals</span><b>{{ totals.proposals }}</b></div>
+  <div class="sstat"><span>flagged</span><b>{{ totals.flagged }}</b></div>
+  <div class="sstat"><span>posted or paid</span><b>0</b></div>
+  <div class="sidehead">Agents</div>
+  {% for p in pages %}<a href="modules/{{ p.m.slug }}/">{{ p.m.title }}</a>{% endfor %}
+  <div class="sidehead">Source</div>
+  <a href="{{ repo }}">GitHub repo</a>
+  <a href="{{ repo }}/blob/main/docs/architecture.md">Architecture doc</a>
+  <a href="{{ repo }}/blob/main/docs/production.md">Production notes</a>
+</aside>
+</div>
 {% endblock %}
 {% block footer %}All data is synthetic. Nothing here connects to a real bank, the CRA or an accounting platform. Built {{ built }} · <a href="{{ repo }}">Source on GitHub</a> · MIT{% endblock %}

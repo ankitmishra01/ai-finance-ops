@@ -90,7 +90,7 @@ uv run python -m shared.approvals review 02_bills   # decide open bills at the p
 
 Recording a decision does not post anything. The ledger, payment-file and filing steps still run only from each module's `run.py --approve`.
 
-**Static demo site.** `uv run python scripts/build_site.py` dry-runs all five agents on the synthetic data, runs `evals/run_all.py`, and writes `site/`: an overview with the architecture, and one page per module showing its inputs, the run's output, the flags raised with their evidence, and the eval figures taken from the eval output. `.github/workflows/pages.yml` builds it and deploys it to GitHub Pages on every push to `main`; once Pages is enabled for the repository (Settings > Pages > Source: GitHub Actions) it is published at https://ankitmishra01.github.io/ai-finance-ops/.
+**Static demo site.** `uv run python scripts/build_site.py` dry-runs all five agents on the synthetic data, runs `evals/run_all.py`, and writes `site/`: an overview with the architecture, and one page per module showing its inputs, the run's output, the flags raised with their evidence, and the eval figures taken from the eval output. A built copy is live at https://ai-finance-ops-three.vercel.app/. `.github/workflows/pages.yml` also builds and deploys it to GitHub Pages on every push to `main`; once Pages is enabled for the repository (Settings > Pages > Source: GitHub Actions) that copy is published at https://ankitmishra01.github.io/ai-finance-ops/.
 
 | Approval queue | Evidence for a flagged pay line |
 |---|---|
