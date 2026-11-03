@@ -322,7 +322,10 @@ def test_review_rejects_by_default(chart, tmp_path):
 
 
 def test_run_cli_dry_run(tmp_path, capsys):
-    import run as bk_run
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("bookkeeping_run", Path(__file__).parent / "run.py")
+    bk_run = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(bk_run)
 
     assert bk_run.main(["--out", str(tmp_path)]) == 0
     text = capsys.readouterr().out
